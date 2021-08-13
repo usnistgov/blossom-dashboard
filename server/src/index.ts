@@ -20,6 +20,8 @@ async function init() {
 
     const app = express();
 
+    app.use(express.json())
+
     app.use('/raw', rawTransactionRoute);
 
     app.listen(process.env.SERVER_PORT, () => {
