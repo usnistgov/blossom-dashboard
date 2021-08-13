@@ -15,7 +15,7 @@ async function init() {
         process.env.WALLET_PATH,
         process.env.IDENTITY_UNAME,
         process.env.PRIMARY_CHANNEL,
-        process.env.BLOSSOM_CONTRACT
+        process.env.BLOSSOM_CONTRACT,
     );
 
     const app = express();

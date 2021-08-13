@@ -14,7 +14,7 @@ export default class BlossomConfig {
         return BlossomConfig.instance;
     }
 
-    private state?: [Gateway, Network, Contract]
+    private state?: [Gateway, Network, Contract];
 
     public async init(profile_path: string, wallet_path: string, identity: string, primary_channel: string, blossom_contract: string) {
         if (this.state !== undefined) {
