@@ -12,7 +12,9 @@ async function init() {
     // initialize blossom config class
     await BlossomConfig.getInstance().init(
         process.env.CONNECTION_PROFILE_PATH,
-        process.env.WALLET_PATH,
+        process.env.CERT_PATH,
+        process.env.PK_PATH,
+        process.env.MSPID,
         process.env.IDENTITY_UNAME,
         process.env.PRIMARY_CHANNEL,
         process.env.BLOSSOM_CONTRACT,
