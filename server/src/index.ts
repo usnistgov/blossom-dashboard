@@ -2,7 +2,7 @@ import express from 'express';
 import * as fs from 'fs';
 import { Command } from 'commander';
 import Blossom from './blossom';
-import transactionRoute from './routes/transaction';
+import buildTransactionRoute from './routes/transaction';
 import buildIdentityRoute from './routes/indentities';
 import { Config } from './config';
 
@@ -34,7 +34,7 @@ async function init() {
     // Enable JSON serialization
     app.use(express.json())
 
-    app.use('/transaction', transactionRoute);
+    app.use('/transaction', buildTransactionRoute(blossom));
     app.use('/identity', buildIdentityRoute(blossom));
 
     app.get('/_health', (_, res) => {
@@ -42,7 +42,7 @@ async function init() {
     });
 
     app.listen(process.env.SERVER_PORT, () => {
-        console.log(`server started at http://localhost:${process.env.SERVER_PORT}`);
+        console.log(`server started at http://0.0.0.0:${process.env.SERVER_PORT}`);
     });
 }
 

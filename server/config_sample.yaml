@@ -1,3 +1,4 @@
+# Sample Config File (edit to fit your needs)
 connectionProfilePath: ~/profile.yaml
 channel: test
 contract: blossom
