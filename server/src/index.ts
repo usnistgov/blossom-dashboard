@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 import BlossomConfig from './blossom';
-import rawTransactionRoute from './routes/raw-transaction';
+import transactionRoute from './routes/transaction';
 
 
 async function init() {
@@ -24,7 +24,11 @@ async function init() {
 
     app.use(express.json())
 
-    app.use('/raw', rawTransactionRoute);
+    app.use('/transaction', transactionRoute);
+
+    app.get('/_health', (req, res) => {
+        res.status(200).send('ok');
+    });
 
     app.listen(process.env.SERVER_PORT, () => {
         console.log(`server started at http://localhost:${process.env.SERVER_PORT}`);
