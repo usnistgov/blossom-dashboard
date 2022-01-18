@@ -1,10 +1,5 @@
 import { Router, Request } from 'express';
-import BlossomConfig from '../blossom'
-
-const blossom = BlossomConfig.getInstance();
-
-const router = Router();
-export default router;
+import Blossom from '../blossom';
 
 type TransactionRequestBody = {
     name: string;
@@ -12,10 +7,11 @@ type TransactionRequestBody = {
     transient?: {
         [key: string]: string;
     };
+    identity: string;
 }
 
 /**
- * Convert string-buffer map to string-string
+ * Convert string-string map to string-buffer
  */
 function convertTransientToBuffer(transient: {
     [key: string]: string;
@@ -28,28 +24,35 @@ function convertTransientToBuffer(transient: {
     }, {})
 }
 
-router.post('/query', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
-    const transaction = blossom.contract.createTransaction(req.body.name);
-    if (req.body.transient) {
-        transaction.setTransient(convertTransientToBuffer(req.body.transient))
-    }
+export default function buildTransactionRoute(blossom: Blossom) {
+    const router = Router();
 
-    transaction.submit(...req.body.args).then((buff) => {
-        res.send(buff);
-    }, (err) => {
-        next(err);
+    router.post('/query', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
+        const transaction = blossom.getContractForIdentity(req.body.identity).createTransaction(req.body.name);
+        if (req.body.transient) {
+            transaction.setTransient(convertTransientToBuffer(req.body.transient))
+        }
+    
+        transaction.submit(...req.body.args).then((buff) => {
+            res.send(buff);
+        }, (err) => {
+            next(err);
+        });
     });
-});
-
-router.post('/invoke', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
-    const transaction = blossom.contract.createTransaction(req.body.name);
-    if (req.body.transient) {
-        transaction.setTransient(convertTransientToBuffer(req.body.transient))
-    }
-
-    transaction.evaluate(...req.body.args).then((buff) => {
-        res.send(buff);
-    }, (err) => {
-        next(err);
+    
+    router.post('/invoke', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
+        const transaction = blossom.getContractForIdentity(req.body.identity).createTransaction(req.body.name);
+        if (req.body.transient) {
+            transaction.setTransient(convertTransientToBuffer(req.body.transient))
+        }
+    
+        transaction.evaluate(...req.body.args).then((buff) => {
+            res.send(buff);
+        }, (err) => {
+            next(err);
+        });
     });
-});
+
+    return router;
+}
+

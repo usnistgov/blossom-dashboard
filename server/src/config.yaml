@@ -1,0 +1,8 @@
+connectionProfilePath: ~/profile.yaml
+channel: test
+contract: blossom
+identities:
+  - name: client1
+    mspid: m-...
+    certPath: ~/
+    privateKeyPath: ~/
