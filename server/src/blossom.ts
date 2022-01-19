@@ -1,78 +1,79 @@
 import { Gateway, Wallets, Network, Contract } from 'fabric-network';
 import * as fs from 'fs';
 import YAML from 'yaml';
+import { Config, Identity as IdentityConfig } from './config';
 
-export default class BlossomConfig {
-    private static instance: BlossomConfig;
+async function connectWithIdentity(profile: any, channel: string, identityConfig: IdentityConfig) {
+    const identity = {
+        credentials: {
+            certificate: fs.readFileSync(identityConfig.certPath).toString(),
+            privateKey: fs.readFileSync(identityConfig.privateKeyPath).toString(),
+        },
+        mspId: identityConfig.mspId,
+        type: 'X.509',
+    }
+    const wallet = await Wallets.newInMemoryWallet();
+    wallet.put(identityConfig.name, identity);
 
-    private constructor() { }
-
-    public static getInstance(): BlossomConfig {
-        if (!BlossomConfig.instance) {
-            BlossomConfig.instance = new BlossomConfig();
+    const options = {
+        identity,
+        wallet,
+        discovery: {
+            asLocalhost: false,
         }
-
-        return BlossomConfig.instance;
     }
 
-    private state?: [Gateway, Network, Contract];
+    const gateway = new Gateway();
+    await gateway.connect(profile, options);
 
-    public async init(profile_path: string, cert_path: string, pk_path: string, mspId: string, username: string, primary_channel: string, blossom_contract: string) {
-        if (this.state !== undefined) {
-            throw new Error('Cannot call init() more then once');
-        }
+    const network = await gateway.getNetwork(channel);
+    return network;
+}
 
-        const profile = YAML.parse(fs.readFileSync(profile_path).toString());
+type IdentityMap = {
+    [username: string]: {
+        mspId: string;
+        network: Network;
+    };
+};
 
-        const identity = {
-            credentials: {
-                certificate: fs.readFileSync(cert_path).toString(),
-                privateKey: fs.readFileSync(pk_path).toString(),
-            },
-            mspId,
-            type: 'X.509',
-        }
+export default class Blossom {
+    private contractName: string;
+    private identities: IdentityMap;
 
-        const wallet = await Wallets.newInMemoryWallet();
-        wallet.put(username, identity);
+    private constructor(contractName: string, identities: IdentityMap) {
+        this.contractName = contractName;
+        this.identities = identities;
+    }
 
-        const options = {
-            identity,
-            wallet,
-            discovery: {
-                // enabled: false,
-                asLocalhost: false,
+    public getIdentities(): {name: string, mspId: string}[] {
+        return Object.keys(this.identities).map((name) => ({
+            name,
+            mspId: this.identities[name].mspId
+        }));
+    }
+
+    public getContractForIdentity(identity: string): Contract {        
+        return this.identities[identity].network.getContract(this.contractName);
+
+    }
+
+    public static async build(config: Config): Promise<Blossom> {
+        const profile = YAML.parse(fs.readFileSync(config.connectionProfilePath).toString());
+
+        const identityMap: IdentityMap = {};
+        
+        for (const identityConfig of config.identities) {
+            if (identityMap[identityConfig.name]) {
+                throw new Error(`Identity name clash, ${identityConfig.name} defined twice`);
             }
-        };
 
-        const gateway = new Gateway();
-        await gateway.connect(profile, options);
-
-        const network = await gateway.getNetwork(primary_channel);
-
-        const contract = network.getContract(blossom_contract);
-
-        this.state = [gateway, network, contract];
-    }
-
-    public get gateway(): Gateway {
-        if (this.state === undefined) {
-            throw new Error('Must call init() first');
+            identityMap[identityConfig.name] = {
+                mspId: identityConfig.mspId,
+                network: await connectWithIdentity(profile, config.channel, identityConfig),
+            }
         }
-        return this.state[0];
-    }
 
-    public get network(): Network {
-        if (this.state === undefined) {
-            throw new Error('Must call init() first');
-        }
-        return this.state[1];
-    }
-
-    public get contract(): Contract {
-        if (this.state === undefined) {
-            throw new Error('Must call init() first');
-        }
-        return this.state[2];
+        return new Blossom(config.contract, identityMap);
     }
 }
