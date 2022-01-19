@@ -23,7 +23,7 @@ export const ParamGroup = (incomingData: IParamGroup) => {
   function renderSwitch(param: ParamType, index: number) {
     switch (param) {
       case undefined:
-        return <div>Not Defined</div>
+        return <div>-= None =-</div>
       default:
         return (
         <TextField className={classes.textField} style={{ marginTop: 6, marginBottom: 24,color:"darkBlue", width:"600px",}}

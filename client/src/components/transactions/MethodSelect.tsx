@@ -101,9 +101,9 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
                 </Select>
                 <FormLabel className={classes.inputLabel} style={{ marginTop: 6, marginBottom: 24,color:"darkBlue"}}>{updateDescription(localValue)}</FormLabel>
 
-                <ParamGroup values={getParams()} title="Public Params for the Call"/>
+                <ParamGroup values={getParams()} title="Public Parameters:"/>
 
-                <ParamGroup values={getTrans()} title="Trans Params for the Call"/>
+                <ParamGroup values={getTrans()} title="Transient Parameters:"/>
 
                 <TextField className={classes.textField} label="Service URL"  helperText="Please enter desired URL if different from default" value={defaultUrl}/>
                 <Button variant="outlined"
