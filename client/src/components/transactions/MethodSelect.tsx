@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { Theme, } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select/Select';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel'
@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button/Button';
 
 import {IParamGroup, ParamGroup} from "./ParamGroup";
 import {ParamType, MethodInfo, tranApiMethods} from "../../pages/transactions/DataTypes";
-import {generateClasses} from "../../pages/transactions/AllStyling";
+import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyling";
 
 
 
@@ -73,15 +73,11 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
         }
     };
 
-    const getStyle = ()=>{
-        return {
-            innerHeight: 180,
-        }
-    }
+
 
     return (
         <div>
-            <FormControl required sx={{ m: 1, minWidth: 180 }} style={getStyle()} className='classes.FormControl'>
+            <FormControl required style={{ m: 1, minWidth: "640px", width: "640px", marginTop: 24, marginBottom: 124,}} className='classes.FormControl'>
                 <InputLabel  id="demo-simple-select-required-label" className={classes.inputLabel} >Select Method</InputLabel>
                 <Select  id="demo-simple-select-required-label" autoWidth className={classes.select}
                     label="demo-simple-select-required-label"
@@ -103,30 +99,19 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
                         );
                     })}
                 </Select>
-                <FormLabel className={classes.inputLabel}>{updateDescription(localValue)}</FormLabel>
-                
-                {getParams().map( (param: ParamType, index: number)=>{
-                    if( param && param.type){
-                        return (<div>{`${index+1}. ${param.name} of-type ${param.type}`}</div>)
-                    }else{
-                        return (<div>No Public Parameters</div>)
-                    }
-                })}
-                {getTrans().map( (param: ParamType, index: number)=>{
-                    if( param && param.type){
-                        (<div>{`${index+1}. ${param.name} of-type ${param.type}`}</div>)
-                    }else{
-                        (<div>No Transient Parameters</div>)
-                    }
-                })}
-
+                <FormLabel className={classes.inputLabel} style={{ marginTop: 6, marginBottom: 24,color:"darkBlue"}}>{updateDescription(localValue)}</FormLabel>
 
                 <ParamGroup values={getParams()} title="Public Params for the Call"/>
+
                 <ParamGroup values={getTrans()} title="Trans Params for the Call"/>
 
-
                 <TextField className={classes.textField} label="Service URL"  helperText="Please enter desired URL if different from default" value={defaultUrl}/>
-                <Button variant="outlined">Submit Request to {defaultUrl}</Button>
+                <Button variant="outlined"
+                    onClick={ ()=>{
+                            console.log(`value=${value}`);
+                        }
+                    }
+                >Submit Request to {defaultUrl}</Button>
             </FormControl>
         </div>
     );

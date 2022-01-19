@@ -25,13 +25,17 @@ export const ParamGroup = (incomingData: IParamGroup) => {
       case undefined:
         return <div>Not Defined</div>
       default:
-        return (<TextField className={classes.textField} helperText={`${param.info}`} value={param.value} label={`${index+1}. ${param.name}`}/>);
+        return (
+        <TextField className={classes.textField} style={{ marginTop: 6, marginBottom: 24,color:"darkBlue", width:"600px",}}
+            helperText={`${param.info}`} 
+            value={param.value} label={`${index+1}. ${param.name}`}
+            />);
     }
   }
 
 return(  
-        <div style={{ border: "1px solid green", margin: 0, marginBottom: 8}} className={classes.containerDiv}>
-            <h3 style={{margin: 0, marginBottom: 8}}>{incomingData.title}</h3>
+        <div style={{ border: "1px solid #0000aa", margin: 0, marginBottom: 18, paddingBottom: 11}} className={classes.containerDiv}>
+            <h3 style={{margin: 0, marginBottom: 18, minWidth: "100%", maxWidth:"100%"}}>{incomingData.title}</h3>
             {incomingData.values.map((param: ParamType, index: number) => (
             <div>
                 {renderSwitch(param, index)}
