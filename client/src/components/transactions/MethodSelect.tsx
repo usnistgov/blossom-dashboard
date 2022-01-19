@@ -5,75 +5,55 @@ import Select from '@material-ui/core/Select/Select';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel'
 import FormControl from '@material-ui/core/FormControl/FormControl';
-import { makeStyles } from "@material-ui/core/styles";
+
 import FormLabel from '@material-ui/core/FormLabel/FormLabel';
+import TextField from '@material-ui/core/TextField/TextField';
+
 //import InputMask from "react-input-mask";
 //import TextField from '@material-ui/core/TextField/TextField';
+import Button from '@material-ui/core/Button/Button';
 
+import {IParamGroup, ParamGroup} from "./ParamGroup";
+import {ParamType, MethodInfo, tranApiMethods} from "../../pages/transactions/DataTypes";
+import {generateClasses} from "../../pages/transactions/AllStyling";
 
-const useStyles = makeStyles(theme => ({
-    formControl: {
-        margin: theme.spacing(3),
-        width: "34vw",
-        height: "8vh",
-        alignSelf: "center"
-    },
-    selectEmpty: {
-        alignSelf: "center",
-        marginTop: theme.spacing(2)
-    },
-    select: {
-        alignSelf: "center",
-        width: "34vw",
-        marginTop: theme.spacing(2),
-        height: "3vh"
-    },
-    inputLabel: {
-        fontSize: "1.5vh",
-        alignSelf: "center"
-    },
-    menuItem: {
-        alignSelf: "center",
-        height: "15vh"
-    },
-    formLabel:{
-        marginTop: theme.spacing(1),
-        alignSelf: "center",
-        height: "10vh",
-        width: "34vw"
-    },
-    textField:{
-
-    }
-}));
 
 
 
 export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }) => {
 
 
-
-    const classes = useStyles();
+    let defaultUrl = 'http://localhost:8080';
+    
     const [localValue, setLocalValue] = useState(value ?? -1);  // we want to keep value locally
     useEffect( () => setLocalValue(value ?? -1), [value]);       // we want to update local value on prop value change
 
-    const updateDescription = (index) => {
+    const classes = generateClasses;
+    const updateDescription = (index: number) => {
         console.log(`index:${index}`);
         // setLocalValue(index)
         if (index >=0){
-            return  options[index].description;
+            return  options[index].info;
         }else{
             return 'No method selected yet';
         }
     }   
     
     const getParams = ()=>{
-        if (localValue && options[localValue]){
-            return options[localValue].params;
+        if (localValue && options[localValue] && options[localValue].public && options[localValue].public.length>0){
+            return options[localValue].public;
         }
         return [undefined];
     }
     
+    const getTrans = ()=>{
+            if (localValue && options[localValue] && options[localValue].trans && options[localValue].trans.length>0){
+                return options[localValue].trans;
+            }
+            return [undefined];
+        }
+
+
     const handleFocus = () => {
         if (onFocus) {
             onFocus();
@@ -92,7 +72,6 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
             onBlur(e.target.value);
         }
     };
-    const theme = useTheme();
 
     const getStyle = ()=>{
         return {
@@ -105,7 +84,7 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
             <FormControl required sx={{ m: 1, minWidth: 180 }} style={getStyle()} className='classes.FormControl'>
                 <InputLabel  id="demo-simple-select-required-label" className={classes.inputLabel} >Select Method</InputLabel>
                 <Select  id="demo-simple-select-required-label" autoWidth className={classes.select}
-                    labelId="demo-simple-select-required-label"
+                    label="demo-simple-select-required-label"
                     placeholder="Method to Call"
                     name={name}
                     value={localValue}      // we want to work in controlled mode
@@ -124,16 +103,31 @@ export const MethodSelect = ({ name, value, options, onFocus, onChange, onBlur }
                         );
                     })}
                 </Select>
-                <FormLabel className={classes.formLabel}>{updateDescription(localValue)}</FormLabel>
-
-                {getParams().map( (param, index: number)=>{
+                <FormLabel className={classes.inputLabel}>{updateDescription(localValue)}</FormLabel>
+                
+                {getParams().map( (param: ParamType, index: number)=>{
                     if( param && param.type){
                         return (<div>{`${index+1}. ${param.name} of-type ${param.type}`}</div>)
                     }else{
-                        return (<div>No Parameters</div>)
+                        return (<div>No Public Parameters</div>)
                     }
                 })}
-            </FormControl>         
+                {getTrans().map( (param: ParamType, index: number)=>{
+                    if( param && param.type){
+                        (<div>{`${index+1}. ${param.name} of-type ${param.type}`}</div>)
+                    }else{
+                        (<div>No Transient Parameters</div>)
+                    }
+                })}
+
+
+                <ParamGroup values={getParams()} title="Public Params for the Call"/>
+                <ParamGroup values={getTrans()} title="Trans Params for the Call"/>
+
+
+                <TextField className={classes.textField} label="Service URL"  helperText="Please enter desired URL if different from default" value={defaultUrl}/>
+                <Button variant="outlined">Submit Request to {defaultUrl}</Button>
+            </FormControl>
         </div>
     );
 };
