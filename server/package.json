@@ -9,15 +9,15 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN ../LICENSE.md",
   "dependencies": {
-    "dotenv": "^10.0.0",
+    "@types/commander": "^2.12.2",
+    "commander": "^8.3.0",
     "express": "^4.17.1",
     "fabric-network": "^2.2.8",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
-    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/node": "^16.6.1",
     "ts-node": "^10.2.0",
