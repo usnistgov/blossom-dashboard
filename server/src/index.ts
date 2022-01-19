@@ -29,7 +29,7 @@ const program = new Command()
     .version('0.0.1')
     .description('BLOSSOM Relay Server')
     .argument('<configPath>', 'config yaml file')
-    .option('-p --port', 'Port to run the server on', "8080")
+    .option('-p --port [port]', 'Port to run the server on', "8080")
     .action(async (configPath, options) => {
         const config = (YAML.parse(fs.readFileSync(configPath).toString())) as Config;
         const blossom = await Blossom.build(config as Config);
