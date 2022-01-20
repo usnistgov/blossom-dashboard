@@ -22,12 +22,16 @@ export interface IMethodSelect{
 
 
 export const tranApiMethods: Array<MethodInfo> = [
+    {
+        name: "No Method Selected",
+        info:'Select method to call',        
+    },
         {   name:'UploadATO',
             info:'Allows the [system_owner] of an account to upload an [ATO Attestation] string.'+
                 ' Calling this function will not update the status of the account.'+ 
                 ' Update must be done by the SAMS admin (next) using UpdateAccountStatus() method.', 
             warn:'WARNING! We are not uploading or advocate uploading of the entire ATO!',
-            trans:[ {name:'ato', type:'string', info:'a string value representing an ATO'} ]
+            trans:[ {name:'ato', type:'string|JSON', info:'Value representing ATO'} ]
         },
         {   name:'UpdateAccountStatus', 
             info:'The SAMS admin can update the status of an account.'+
@@ -95,8 +99,7 @@ export const tranApiMethods: Array<MethodInfo> = [
                     {name:'account', type:'string', info:'name of the account that initiated the checkin process'},]
         },        
 
-
-
+/* 
         {   name:'InitNGAC (Optional)',
             info:'D0', 
             public:[{name:'', type:'', info:''}]
@@ -108,5 +111,7 @@ export const tranApiMethods: Array<MethodInfo> = [
         {   name:'ApproveAccount  (Optional)', 
             info:'D2', 
             public:[{name:'', type:'', info:''}]
-        },
+        }, 
+*/
+
 ];

@@ -18,48 +18,37 @@ export interface IParamGroup{
 
 export const ParamGroup = (incomingData: IParamGroup) => {
 
-    const classes = generateClasses;
+  const classes = generateClasses;
 
+  const isDataPresent = (incomingData.values && incomingData.values.length>0 && incomingData.values[0]);
+  const titleColor = isDataPresent?"darkBlue":"lightGrey";
+  const blockBorder = isDataPresent?`2px solid #660066`:`1px solid #888888`;
+  const titleMargin = isDataPresent?"0 6 0 18":"0 0 0 0"; 
+  
   function renderSwitch(param: ParamType, index: number) {
     switch (param) {
       case undefined:
-        return <div>-= None =-</div>
+        return <div style={{color: titleColor}}>-= None =-</div>
       default:
         return (
-        <TextField className={classes.textField} style={{ marginTop: 6, marginBottom: 24,color:"darkBlue", width:"600px",}}
-            helperText={`${param.info}`} 
-            value={param.value} label={`${index+1}. ${param.name}`}
+        <TextField  className={classes.textField} 
+                    style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"600px",}}
+                    helperText={`${param.info}. Type:[${(param.type)}]`} 
+                    value={param.value} label={`${index+1}. ${param.name}`}
             />);
+            // (param.type)?`Type-of ${param.type}:`
     }
   }
 
 return(  
-        <div style={{ border: "1px solid #0000aa", margin: 0, marginBottom: 18, paddingBottom: 11}} className={classes.containerDiv}>
-            <h3 style={{margin: 0, marginBottom: 18, minWidth: "100%", maxWidth:"100%"}}>{incomingData.title}</h3>
+        <div style={{ border: blockBorder, margin: 0, marginBottom: 18, paddingBottom: 11}} className={classes.containerDiv}>
+            <h3 style={{margin: titleMargin, color: titleColor}}>{incomingData.title}</h3>
             {incomingData.values.map((param: ParamType, index: number) => (
-            <div>
-                {renderSwitch(param, index)}
-            </div>
+                <div>
+                    {renderSwitch(param, index)}
+                </div>
             ))}
         </div>
-       )
+       );
 }
-
-
-/* 
-{}    <div>
-        <h3 style={{margin: 0, marginBottom: 15}}>{incomingData.title}</h3>
-        {incomingData.values.map(
-            <div>
-            (param: ParamType, index: number)=>{
-              {  switch()
-                return(<TextField helperText={`${index+1}. ${param.info}`} value={param.value} label={`${param.name}`}/>)}
-            })
-        </div>
-        }
-    </div>
-    )
-    }}
- */
-
 export default ParamGroup;

@@ -20,7 +20,7 @@ import {generateClasses} from "./AllStyling";
 
 
 const TransactionsApi  = () =>{
-    const [selectedIndex, setIndex] = useState(-1);
+    const [selectedIndex, setIndex] = useState(0);
     const [info, setInfo] = useState('No method selected yet')
     const classes = generateClasses;
     // const [name, setName] = useState('Mary');
@@ -37,7 +37,11 @@ const TransactionsApi  = () =>{
         <div>
              <FormControl required sx={{ m: 1, minWidth: 180 }} style={classes.FormControl} >
             <h2>Execute &#9939;API Method</h2>
-                <MethodSelect  value={selectedIndex} options={tranApiMethods} onChange={setIndex}></MethodSelect>
+                <MethodSelect  
+                    defaultMethod={tranApiMethods[selectedIndex].name} 
+                    defaultValue={selectedIndex} 
+                    options={tranApiMethods} 
+                    onChange={setIndex} />
             </FormControl>                   
         </div>
     );
