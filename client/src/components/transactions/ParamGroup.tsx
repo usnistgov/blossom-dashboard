@@ -31,8 +31,8 @@ export const ParamGroup = (incomingData: IParamGroup) => {
         return <div style={{color: titleColor}}>-= None =-</div>
       default:
         return (
-        <TextField  className={classes.textField} 
-                    style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"600px",}}
+        <TextField  
+                    style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"640px",}}
                     helperText={`${param.info}. Type:[${(param.type)}]`} 
                     value={param.value} label={`${index+1}. ${param.name}`}
             />);
@@ -41,7 +41,7 @@ export const ParamGroup = (incomingData: IParamGroup) => {
   }
 
 return(  
-        <div style={{ border: blockBorder, margin: 0, marginBottom: 18, paddingBottom: 11}} className={classes.containerDiv}>
+        <div style={{ border: blockBorder, margin: 0, marginBottom: 18, paddingBottom: 11}} >
             <h3 style={{margin: titleMargin, color: titleColor}}>{incomingData.title}</h3>
             {incomingData.values.map((param: ParamType, index: number) => (
                 <div>
