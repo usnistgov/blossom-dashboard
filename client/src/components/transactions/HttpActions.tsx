@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 
 export interface ITransactionRequestBody{
     name: string;
@@ -55,13 +55,13 @@ export default class RequestHandler{
 
 
 
-    public static GetIdentity(endpointUrl:string = 'http://10.208.253.184:8888'){
+    public static async GetOrgIdentity(endpointUrl:string = 'http://10.208.253.184:8888'): Promise<AxiosResponse<any, any>>{
         // http://10.208.253.184:8888/identity
-        let formedJson ='';
         let jsonArray:any;
-        let testArray:any;
+        let response:any;
         const identityPath:string='/identity';
-        axios.get(endpointUrl+identityPath/* ,
+        return await axios.get(endpointUrl+identityPath
+            /* ,
             {headers:
                 {
                     "Content-Type": "application/json",
@@ -71,27 +71,35 @@ export default class RequestHandler{
                     "Access-Control-Allow-Headers": "Content-Type, Authorization",
                 }
             } */
-            ).then((response)=>
+            )
+            /* 
+            .then((response)=>
                     {
-                        console.log(`GetIdentity::response data was: ${response.data} & status:${response.status}`);
-                        if(response.status===200){
-                            // formedJson = JSON.stringify(response.data, null, spaceSteps /* Spaces to prettify*/);
+                        RequestHandler.parseResponseInDepth(response, '@ Then')
+                        if(response.status<500){
+                            // formedJson = JSON.stringify(response.data, null, spaceSteps );
 
                             // testArray = JSON.parse('[{"name":"samsclient3","mspId":"m-IOQVHF6NJZBOPG6TGXGPUZAQX4"},'+
                             //                         '{"name":"nistclient2","mspId":"m-32D73UGIRRH4BCJMJ5OKEGAVF4"},'+
                             //                         '{"name":"shdclient1","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"}]');
-                            
-                            jsonArray = JSON.parse(response.data);
+
+                            console.log(`JSON Array Assigning`);
+                            jsonArray = response.data;
+                            if(jsonArray){
+                                    console.log(`jsonArray || formedJson`);
+                                }
                         }
                     }
-            ).catch(
-                (expected: Error)=>{
-                    console.log(`Exception:${expected.message}/${expected.stack}`)
-                });
-                
-            if( jsonArray || formedJson){
+                ).catch(
+                    (expected: Error)=>{
+                        console.log(`Catch-Exception:${expected.message}/${expected.stack}`)
+                        RequestHandler.logReaponseDetails(response);
+                    });
+                */
+/* 
+            if(jsonArray){
                 console.log(`jsonArray || formedJson`);
-                return jsonArray || formedJson
+                return jsonArray;
             }else if(testArray){
                 console.log(`return testArray;`);
                 return testArray;
@@ -107,5 +115,31 @@ export default class RequestHandler{
                         // {"name":"shdclient2","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"},
                         {"name":"shdclient3","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"}]
             }
+*/
     }
+
+    private static logReaponseDetails(response) {
+        if(response){
+            const keys = Object.keys(response.data);            
+            console.log(`logReaponseDetails::response data was:\n\t` +
+                `${response.data}\n\t` +
+                `status:${response.status}/${response.statusText}` +
+                `keys:${keys}`
+            );
+        }
+    }
+
+    public static parseResponseInDepth(response, context?:string='No Context'){
+        if(response){
+            console.log(`${context}\n\t`+
+                        `Response:\n\tWhole-Obj:${response}`+
+                        `\n\tListKeys:{${Object.keys(response)}}`+
+                        `\n\tData:${response.data}`+
+                        `\n\tData[0]:Keys:${Object.keys(response.data[0])}`+
+                        `\n\t`+
+                        ``
+                        );
+        }
+    }
+
 }

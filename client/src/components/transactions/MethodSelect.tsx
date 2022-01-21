@@ -15,18 +15,63 @@ import {ParamType, MethodInfo, tranApiMethods} from "../../pages/transactions/Da
 import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyling";
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
 import { setOriginalNode } from 'typescript';
+import { Suspense } from 'react';
+import axios, {AxiosResponse} from "axios";
 
 
 
 export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, onChange, onBlur }) => {
 
     // orgsIds:Array<IBlossomIdentity>
-    const [orgsIds, setOrgsIds] = useState(RequestHandler.GetIdentity());
+    const [orgsIds, setOrgsIds] = useState( [{name:'Loading...', mspId:'-1'}] );
+
+    const selectOrgPadItem:IBlossomIdentity = {name: 'Select Organization (Optional)', mspId:'0'};
+    const resetOrgsDataModel = 
+    (orgList: Array<IBlossomIdentity>)=>{
+        orgList.unshift(selectOrgPadItem)
+        setOrgsIds(orgList);
+        if(orgList.length>0){
+            setOrgName(orgList[0].name);
+            setOrgId(orgList[0].mspId);
+        }
+    }
+
+    // This is the weirdest Promise hook-up ever and also forced into the control !!!
+    useEffect( 
+        ()=>{
+            if( orgsIds.length<1 
+                || (orgsIds.length===1 && orgsIds[0].mspId==='-1')){
+                RequestHandler.GetOrgIdentity().then(
+                    (response)=>{
+                        RequestHandler.parseResponseInDepth(response); // Debugging
+                        if(response.status!==200){
+                            resetOrgsDataModel(
+                                [{  name:`Error Loading IDs ${response.status}:${response.statusText}`, 
+                                    mspId:'-100'
+                                }]
+                            );
+                        }
+                        if(response && response.data){
+                            resetOrgsDataModel(response.data);
+                        }
+                    }
+                ).catch(
+                    (error: Error)=>{
+                        console.log(`Catch-Exception:${error.message}/${error.stack}`)
+                        resetOrgsDataModel(
+                            [{  name:`Error Loading IDs ${error.message}:${error.stack}`, 
+                                mspId:'-100'
+                            }]
+                        );                        
+                    });;
+            }
+        }, [orgsIds]);
+
     const [localValue, setLocalValue] = useState(defaultValue ?? 0);  // we want to keep value locally
     const [methodName, setMethodName] = useState(options[defaultValue].name ?? undefined);  // we want to keep value locally
     const [orgValue, setOrgValue]=useState(0);
-    const [orgName, setOrgName]=useState(orgsIds[0].name);
-    const [orgId, setOrgId]=useState(orgsIds[0].mspId);
+    const [orgName, setOrgName]=useState('');
+    const [orgId, setOrgId]=useState('');
     // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
     const [endpointUrl, setEndpointUrl]=useState('http://10.208.253.184:8888');
 
@@ -111,7 +156,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                 { /* BEGIN-METHOD-SELECT MENU */ }
                 <InputLabel 
                             id="demo-method-select-label" 
-                            forHtml="demo-method-select"
+                            htmlFor="demo-method-select"
                             >Select Method</InputLabel>
                 <Select  
                     style={{height:34}}
@@ -129,7 +174,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     {options?.map((option, index: number) => {
                         return (
                             <MenuItem key={option.name} value={index}>
-                            {`${index>0?index+'.':''} ${option.name}` ?? index}
+                                {`${index>0?index+'.':''} ${option.name}` ?? index}
                             </MenuItem>
                         );
                     })}
@@ -157,9 +202,9 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
             <FormControl    style={{minWidth: "680px", width: "680px", marginTop: 9, marginBottom: 9,}} >
                 {/* BEGIN-ORGANIZATION-ID MENU */}
                 <InputLabel  
-                        id="org-id-select-4-demo-label" 
-                        htmlFor="org-id-select-4-demo"
-                        >Organization ID</InputLabel>
+                    id="org-id-select-4-demo-label" 
+                    htmlFor="org-id-select-4-demo"
+                    >Organization ID</InputLabel>
                 <Select   
                     style={{marginBottom: 18,paddingBottom:0,height:34}}
                     id="org-id-select-4-demo"
@@ -171,17 +216,15 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     value={orgValue}
                     defaultValue={orgValue}
                     >
-                    {orgsIds?.map((org, index: number) => {
+                    {orgsIds?.map((org: IBlossomIdentity, index: number) => {
                         return (
-                            <MenuItem 
-                            value={index} key={org.mspId} name={org.name}>
-                            {`${index+1}. Org[${org.name}] Id:${org.mspId}`}
+                            <MenuItem value={index} key={org.mspId} name={org.name}>
+                                { index===0?`${org.name}`:`${index}. Org[${org.name}] Id:${org.mspId}`}
                             </MenuItem>
                         );
                     })}
-                </Select>    
+                </Select>
                 {/* END-ORGANIZATION-ID MENU */}
-
                 <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:colorStatus}}
                     onClick={ ()=>{
                             console.log(`Values:`+
@@ -192,8 +235,8 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                                         `\n\tName2Use:${orgName}`
                                         );
                         }
-                    }
-                >Submit Request </Button>
+                    }>Submit Request
+                </Button>
                 <FormLabel  style={{ marginTop: 4, marginBottom: 4,color:colorStatus,}}>
                     For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
                 </FormLabel>
