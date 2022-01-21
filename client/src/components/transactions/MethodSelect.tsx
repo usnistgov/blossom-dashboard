@@ -14,9 +14,8 @@ import {IParamGroup, ParamGroup} from "./ParamGroup";
 import {ParamType, MethodInfo, tranApiMethods} from "../../pages/transactions/DataTypes";
 import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyling";
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
-import { setOriginalNode } from 'typescript';
-import { Suspense } from 'react';
 import axios, {AxiosResponse} from "axios";
+import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 
 
 
@@ -25,20 +24,21 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
     // orgsIds:Array<IBlossomIdentity>
     const [orgsIds, setOrgsIds] = useState( [{name:'Loading...', mspId:'-1'}] );
 
-    const selectOrgPadItem:IBlossomIdentity = {name: 'Select Organization (Optional)', mspId:'0'};
-    const resetOrgsDataModel = 
-    (orgList: Array<IBlossomIdentity>)=>{
-        orgList.unshift(selectOrgPadItem)
-        setOrgsIds(orgList);
-        if(orgList.length>0){
-            setOrgName(orgList[0].name);
-            setOrgId(orgList[0].mspId);
-        }
-    }
-
     // This is the weirdest Promise hook-up ever and also forced into the control !!!
     useEffect( 
         ()=>{
+            const selectOrgPadItem:IBlossomIdentity = { name: 'Select Organization (Optional)', 
+                                                        mspId:'0'};
+            const resetOrgsDataModel = 
+                (orgList: Array<IBlossomIdentity>)=>{
+                    orgList.unshift(selectOrgPadItem)
+                    setOrgsIds(orgList);
+                    if(orgList.length>0){
+                        setOrgName(orgList[0].name);
+                        setOrgId(orgList[0].mspId);
+                    }
+                }
+
             if( orgsIds.length<1 
                 || (orgsIds.length===1 && orgsIds[0].mspId==='-1')){
                 RequestHandler.GetOrgIdentity().then(
@@ -144,6 +144,12 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
         }
     }
 
+    const handleOrgChanges=(org: IBlossomIdentity)=>{
+        console.log(org);
+        setOrgName(org.name);
+        setOrgId(org.mspId);
+    }
+
     const handleBlur = (event) => {
         if (onBlur) {
             onBlur(event.target.value);
@@ -151,7 +157,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
     };
 
     return (
-        <div>
+        <div style={{ minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}}>
             <FormControl    style={{ m: 1, minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}} >
                 { /* BEGIN-METHOD-SELECT MENU */ }
                 <InputLabel 
@@ -219,7 +225,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     {orgsIds?.map((org: IBlossomIdentity, index: number) => {
                         return (
                             <MenuItem value={index} key={org.mspId} name={org.name}>
-                                { index===0?`${org.name}`:`${index}. Org[${org.name}] Id:${org.mspId}`}
+                                { index===0?`${org.name}`:`${index}. Org:[${org.name}] Id:[${org.mspId}]`}
                             </MenuItem>
                         );
                     })}
@@ -241,6 +247,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
                 </FormLabel>
             </FormControl>
+            <OrganizationSelect onOrgSelectChanges={handleOrgChanges}></OrganizationSelect>
         </div>
     );
 };

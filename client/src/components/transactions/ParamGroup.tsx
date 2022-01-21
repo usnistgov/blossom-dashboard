@@ -13,6 +13,7 @@ import {generateClasses} from "../../pages/transactions/AllStyling";
 export interface IParamGroup{
     title: string;
     values: Array<ParamType>;
+    //onChanges
 }
 
 
