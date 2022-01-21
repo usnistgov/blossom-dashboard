@@ -10,8 +10,8 @@ import TextField from '@material-ui/core/TextField/TextField';
 //import TextField from '@material-ui/core/TextField/TextField';
 import Button from '@material-ui/core/Button/Button';
 
-import {IParamGroup, ParamGroup} from "./ParamGroup";
-import {ParamType, MethodInfo, tranApiMethods} from "../../pages/transactions/DataTypes";
+import {IParamGroup, IParamValue, ParamGroup} from "./ParamGroup";
+import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
 import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyling";
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
 import axios, {AxiosResponse} from "axios";
@@ -21,67 +21,22 @@ import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 
 export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, onChange, onBlur }) => {
 
-    // orgsIds:Array<IBlossomIdentity>
-    const [orgsIds, setOrgsIds] = useState( [{name:'Loading...', mspId:'-1'}] );
-
-    // This is the weirdest Promise hook-up ever and also forced into the control !!!
-    useEffect( 
-        ()=>{
-            const selectOrgPadItem:IBlossomIdentity = { name: 'Select Organization (Optional)', 
-                                                        mspId:'0'};
-            const resetOrgsDataModel = 
-                (orgList: Array<IBlossomIdentity>)=>{
-                    orgList.unshift(selectOrgPadItem)
-                    setOrgsIds(orgList);
-                    if(orgList.length>0){
-                        setOrgName(orgList[0].name);
-                        setOrgId(orgList[0].mspId);
-                    }
-                }
-
-            if( orgsIds.length<1 
-                || (orgsIds.length===1 && orgsIds[0].mspId==='-1')){
-                RequestHandler.GetOrgIdentity().then(
-                    (response)=>{
-                        RequestHandler.parseResponseInDepth(response); // Debugging
-                        if(response.status!==200){
-                            resetOrgsDataModel(
-                                [{  name:`Error Loading IDs ${response.status}:${response.statusText}`, 
-                                    mspId:'-100'
-                                }]
-                            );
-                        }
-                        if(response && response.data){
-                            resetOrgsDataModel(response.data);
-                        }
-                    }
-                ).catch(
-                    (error: Error)=>{
-                        console.log(`Catch-Exception:${error.message}/${error.stack}`)
-                        resetOrgsDataModel(
-                            [{  name:`Error Loading IDs ${error.message}:${error.stack}`, 
-                                mspId:'-100'
-                            }]
-                        );                        
-                    });;
-            }
-        }, [orgsIds]);
-
-    const [localValue, setLocalValue] = useState(defaultValue ?? 0);  // we want to keep value locally
+    const [methodIndex, setMethodIndex] = useState(defaultValue ?? 0);  // we want to keep value locally
     const [methodName, setMethodName] = useState(options[defaultValue].name ?? undefined);  // we want to keep value locally
-    const [orgValue, setOrgValue]=useState(0);
     const [orgName, setOrgName]=useState('');
     const [orgId, setOrgId]=useState('');
+    const [pubParams, setPubParams]=useState({});
+    const [tranParams, setTranParams]=useState({});
+
     // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
     const [endpointUrl, setEndpointUrl]=useState('http://10.208.253.184:8888');
 
-    useEffect( () => setLocalValue(defaultValue ?? 0), [defaultValue] );     // we want to update local value on prop value change
+    useEffect( () => setMethodIndex(defaultValue ?? 0), [defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(defaultMethod ?? ''), [defaultMethod] );
 
-    const isDataReady = (localValue>0 && endpointUrl);
+    const isDataReady = (methodIndex>0 && endpointUrl);
     const colorStatus = isDataReady?'#003300':'grey';
 
-    const classes = generateClasses;
     const updateDescription = (index: number) => {        
         // setLocalValue(index)
         if (index >=0 && options && options[index] && options[index].info){
@@ -93,25 +48,24 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
     }   
     
     const getParams = ()=>{
-        if (    localValue 
-            && options[localValue] 
-            && options[localValue].public 
-            && options[localValue].public.length>0){
-            return options[localValue].public;
+        if (    methodIndex 
+            && options[methodIndex] 
+            && options[methodIndex].public 
+            && options[methodIndex].public.length>0){
+            return options[methodIndex].public;
         }
         return [undefined];
     }
     
     const getTrans = ()=>{
-        if (    localValue 
-            && options[localValue] 
-            && options[localValue].trans 
-            && options[localValue].trans.length>0){
-            return options[localValue].trans;
+        if (    methodIndex 
+            && options[methodIndex] 
+            && options[methodIndex].trans 
+            && options[methodIndex].trans.length>0){
+            return options[methodIndex].trans;
         }
         return [undefined];
     }
-
 
     const handleFocus = () => {
         if (onFocus) {
@@ -129,21 +83,6 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
         }
     };
 
-    const handleOrgChange = (event)=>{
-        const value = event.target.value;
-        const keys = Object.keys(event.target);
-        console.log(`handleOrgChange::e.target.value:${event.target.value}, name:${event.target.name} Keys:${keys}`);
-        if(value>=0){
-            setOrgValue(value);
-            if(orgsIds && orgsIds[value]){
-                if (orgsIds[value].name){
-                    setOrgName(orgsIds[value].name);}
-                if(orgsIds[value].mspId){
-                    setOrgId(orgsIds[value].mspId);}
-            }
-        }
-    }
-
     const handleOrgChanges=(org: IBlossomIdentity)=>{
         console.log(org);
         setOrgName(org.name);
@@ -155,6 +94,27 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
             onBlur(event.target.value);
         }
     };
+
+    const handleParamsChanged=(param:IParamValue)=>{
+        let  newCopy = {...pubParams};
+        if(param.paramName in Object.keys(pubParams) ){
+            newCopy[param.paramName] = param.newValue;
+        }else{
+            newCopy[`${param.paramName}`]=param.newValue;
+        }
+        setPubParams(newCopy);
+    }
+
+    const handleTransChanged=(param:IParamValue)=>{
+        let  newCopy = {...tranParams};
+        if(param.paramName in Object.keys(tranParams) ){
+            newCopy[param.paramName] = param.newValue;
+        }else{
+            newCopy[`${param.paramName}`]=param.newValue;
+        }
+        setPubParams(newCopy);
+    }
+
 
     return (
         <div style={{ minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}}>
@@ -174,7 +134,7 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     onBlur={handleBlur}
                     key={methodName}
                     name={methodName}
-                    value={localValue}
+                    value={methodIndex}
                     defaultValue={defaultValue}
                 >
                     {options?.map((option, index: number) => {
@@ -185,69 +145,52 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                         );
                     })}
                 </Select>
+
                 <FormLabel  
                             style={{ marginTop: 6, marginBottom: 24,color:"darkBlue"}}>
-                                {updateDescription(localValue)}
+                                {updateDescription(methodIndex)}
                 </FormLabel>
                 { /* END-METHOD-SELECT MENU */ }
-            </FormControl>
 
-            <FormControl    style={{ m: 1, minWidth: "680px", width: "680px", marginTop: 9, marginBottom: 0,}} >
-                 { /* BEGIN-PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
-                <ParamGroup values={getParams()} title="Public Parameters:"/>
-                <ParamGroup values={getTrans()} title="Transient Parameters:"/>
+                { /* BEGIN-PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
+                <ParamGroup values={getParams()} title="Public Parameters:" onParamChanges={handleParamsChanged}/>
+                <ParamGroup values={getTrans()} title="Transient Parameters:" onParamChanges={handleTransChanged}/>
+                { /* END--PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
+
                 <TextField  
                             style={{marginBottom:9}}
                             label="Service URL"  
                             helperText="Please enter endpoint URL if different from default" 
                             value={endpointUrl}
                             onChange={(e)=> setEndpointUrl(e.target.value)}/>
-                { /* END--PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
-            </FormControl>
-
-            <FormControl    style={{minWidth: "680px", width: "680px", marginTop: 9, marginBottom: 9,}} >
+                
                 {/* BEGIN-ORGANIZATION-ID MENU */}
-                <InputLabel  
-                    id="org-id-select-4-demo-label" 
-                    htmlFor="org-id-select-4-demo"
-                    >Organization ID</InputLabel>
-                <Select   
-                    style={{marginBottom: 18,paddingBottom:0,height:34}}
-                    id="org-id-select-4-demo"
-                    label="Select Organization"
-                    labelId="org-id-select-4-demo-label"
-                    onChange={handleOrgChange}
-                    key={orgName}
-                    name={orgName}
-                    value={orgValue}
-                    defaultValue={orgValue}
-                    >
-                    {orgsIds?.map((org: IBlossomIdentity, index: number) => {
-                        return (
-                            <MenuItem value={index} key={org.mspId} name={org.name}>
-                                { index===0?`${org.name}`:`${index}. Org:[${org.name}] Id:[${org.mspId}]`}
-                            </MenuItem>
-                        );
-                    })}
-                </Select>
+                <OrganizationSelect onOrgSelectChanges={handleOrgChanges}></OrganizationSelect>
                 {/* END-ORGANIZATION-ID MENU */}
+
                 <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:colorStatus}}
                     onClick={ ()=>{
                             console.log(`Values:`+
                                         `\n\tMethod${methodName}`+
                                         `\n\tUrl:${endpointUrl}`+
-                                        `\n\tKey2Use:${orgValue}`+
                                         `\n\tId2Use:${orgId}`+
-                                        `\n\tName2Use:${orgName}`
+                                        `\n\tName2Use:${orgName}`+
+                                        `\n\tPub:${Object.keys(pubParams)}`+
+                                        `\n\tPVals:${Object.values(pubParams)}`+
+                                        `\n\tTrans:${Object.keys(tranParams)}`+
+                                        `\n\tTVals:${Object.values(tranParams)}`
+
                                         );
                         }
                     }>Submit Request
                 </Button>
+                
+                {/* INFORMATIVE LABEL */}
                 <FormLabel  style={{ marginTop: 4, marginBottom: 4,color:colorStatus,}}>
                     For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
                 </FormLabel>
             </FormControl>
-            <OrganizationSelect onOrgSelectChanges={handleOrgChanges}></OrganizationSelect>
+            
         </div>
     );
 };

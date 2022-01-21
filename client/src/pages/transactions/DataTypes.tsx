@@ -1,18 +1,18 @@
 import React from 'react';
 
 
-export interface ParamType{
+export interface IParamType{
     name: string;
     type?: string;
     info?: string; 
     value?:string;
 }
 
-export interface MethodInfo{
+export interface IMethodInfo{
     name: string;
     info: string;
-    public?: Array<ParamType>;
-    trans?: Array<ParamType>;
+    public?: Array<IParamType>;
+    trans?: Array<IParamType>;
     warn?: string;
 }
 
@@ -21,7 +21,7 @@ export interface IMethodSelect{
 }
 
 
-export const tranApiMethods: Array<MethodInfo> = [
+export const serviceApiMethods: Array<IMethodInfo> = [
     {
         name: "No Method Selected",
         info:'Select method to call',        

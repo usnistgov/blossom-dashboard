@@ -2,7 +2,7 @@ import React, {useState } from "react";
 import MethodSelect from "../../components/transactions/MethodSelect";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import FormLabel from "@material-ui/core/FormLabel/FormLabel";
-import {ParamType, MethodInfo, tranApiMethods} from "./DataTypes";
+import {IParamType, IMethodInfo, serviceApiMethods} from "./DataTypes";
 import TextField from "@material-ui/core/TextField/TextField";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import {generateClasses} from "./AllStyling";
@@ -38,9 +38,9 @@ const TransactionsApi  = () =>{
              <FormControl required sx={{ m: 1, minWidth: 180 }} style={classes.FormControl} >
             <h2>Execute &#9939;API Method</h2>
                 <MethodSelect  
-                    defaultMethod={tranApiMethods[selectedIndex].name} 
+                    defaultMethod={serviceApiMethods[selectedIndex].name} 
                     defaultValue={selectedIndex} 
-                    options={tranApiMethods} 
+                    options={serviceApiMethods} 
                     onChange={setIndex} />
             </FormControl>                   
         </div>

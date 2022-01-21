@@ -102,14 +102,14 @@ const OrganizationSelect =(props:IOrgIdParams) =>{
                     label="Select Organization"
                     labelId="org-id-select-4-demo-label"
                     onChange={handleOrgChange}
-                    key={orgName}
+                    key={orgValue}
                     name={orgName}
                     value={orgValue}
                     defaultValue={orgValue}
                     >
                     {orgsIds?.map((org: IBlossomIdentity, index: number) => {
                         return (
-                            <MenuItem value={index} key={org.mspId} name={org.name}>
+                            <MenuItem value={index} key={index} name={org.name}>
                                 { index===0?`${org.name}`:`${index}. Org:[${org.name}] Id:[${org.mspId}]`}
                             </MenuItem>
                         );
