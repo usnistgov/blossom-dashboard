@@ -16,6 +16,7 @@ import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyli
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
 import axios, {AxiosResponse} from "axios";
 import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
+import ResponseResult from './ResponseResult';
 
 
 
@@ -190,7 +191,9 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
                 </FormLabel>
             </FormControl>
-            
+            <ResponseResult
+                responseTitle={`${methodName} Call Produced the Following:`}
+            />
         </div>
     );
 };

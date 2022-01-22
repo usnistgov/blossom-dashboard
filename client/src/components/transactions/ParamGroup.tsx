@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button/Button';
 import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
 import {generateClasses} from "../../pages/transactions/AllStyling";
 
+// Used to update Parameters at the Main Level
 export interface IParamValue{
     paramName: string;    
     newValue: string;

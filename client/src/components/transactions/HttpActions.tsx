@@ -31,12 +31,14 @@ export default class RequestHandler{
      * @param {ITransactionRequestBody} request: THe JSON Request wrapped in the conformant interface ITransactionRequestBody
      * @memberof RequestHandler
      */
-    public static PostRequest(
+    public static async PostRequest(
         endpointUrl: string,
         request: ITransactionRequestBody
     ){
-        let formedJson ='';
-        axios.post(endpointUrl, request).then(
+        //let formedJson ='';
+        return await axios.post(endpointUrl, request)
+        
+/*         .then(
             (response) => {                
                 console.log(`PostRequest::response was: ${response.data} & status:${response.status}`);
                 try{
@@ -49,8 +51,9 @@ export default class RequestHandler{
                             }, null, spaceSteps
                         )
                 }
-                return formedJson;
-            });
+            } );
+*/
+           
     }
 
 
