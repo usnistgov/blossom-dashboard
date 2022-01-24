@@ -40,20 +40,23 @@ export const ParamGroup = (props: IParamGroup) => {
         }
     };
 
-    function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
-        return o[propertyName]; // o[propertyName] is of type T[K]
-    }
+    // function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
+    //     return o[propertyName]; // o[propertyName] is of type T[K]
+    // }
 
-    function renderSwitch(param: IParamType, index: number) {
+    function renderSwitch(param: IParamType|undefined, index: number) {
     switch (param) {
         case undefined:
            return <div style={{color: titleColor}}>-= None =-</div>
         default:
-            console.log(`${getProperty(props.valuesHistory,param.name as keyof IParamValues)} ---!!!`);
-            if(param.name in Object.keys(props.valuesHistory) && props.useHistoryValues){
-                console.log(`${props.valuesHistory[param.name as keyof IParamValues]}`);
-                param.value = getProperty(props.valuesHistory,param.name as keyof IParamValues);
-            }
+            // if(!param.value){
+            //     param.value = '';
+            // }
+            // console.log(`${getProperty(props.valuesHistory,param.name as keyof IParamValues)} ---!!!`);
+            // if(param.name in Object.keys(props.valuesHistory) && props.useHistoryValues){
+            //     console.log(`${props.valuesHistory[param.name as keyof IParamValues]}`);
+            //     param.value = getProperty(props.valuesHistory,param.name as keyof IParamValues);
+            // }
             return (
                 <TextField  id={`text-field-${param.name}-${index}`}
                             name={param.name}
@@ -70,7 +73,7 @@ export const ParamGroup = (props: IParamGroup) => {
     return(  
         <div style={{ border: blockBorder, margin: 0, marginBottom: 18, paddingBottom: 11}} >
             <h3 style={{margin: titleMargin, color: titleColor}}>{props.title}</h3>
-            {props.values.map((param: IParamType, index: number) => (
+            {props.values.map((param: IParamType|undefined, index: number) => (
                 <div>
                     {renderSwitch(param, index)}
                 </div>

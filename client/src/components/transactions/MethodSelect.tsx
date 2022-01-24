@@ -23,14 +23,16 @@ export interface IMethodSelect{
     defaultMethod: string;
     defaultValue: number;
     options:Array<IMethodInfo>;
-    onFocus?: (e: Event)=>void;
-    onChange?: (e: Event)=>void;
-    onBlur?: (e: Event)=>void;
+    onFocus?: (e: Event|undefined)=>void;
+    onChange?: (e: Event|undefined)=>void;
+    onBlur?: (e: Event|undefined)=>void;
 }
 
 // { defaultMethod, defaultValue, options, onFocus, onChange, onBlur }
 export const MethodSelect = (props: IMethodSelect) => {
 
+    const [isWaiting, setIsWaiting] = useState(false);
+    const [resultReady, setResultReady]=useState(false);
     const [methodIndex, setMethodIndex] = useState(props.defaultValue ?? 0);  // we want to keep value locally
     const [methodName, setMethodName] = useState(props.options[props.defaultValue].name ?? undefined);  // we want to keep value locally
     const [orgName, setOrgName]=useState('');
@@ -87,13 +89,13 @@ export const MethodSelect = (props: IMethodSelect) => {
         return [undefined];
     }
 
-    const handleFocus = () => {
+    const handleFocus = (event: Event) => {
         if (props.onFocus) {
-            props.onFocus();
+            props.onFocus(event);
         }
     };
 
-    const handleMethodChange = (event) => {
+    const handleMethodChange = (event: Event) => {
         const value = event.target.value;
         const keys = Object.keys(event.target);
         console.log(`handleMethodChange::e.target.value:${event.target.value}, name:${event.target.name} Keys:${keys}`);
@@ -104,14 +106,14 @@ export const MethodSelect = (props: IMethodSelect) => {
     };
 
     const handleOrgChanges=(org: IBlossomIdentity)=>{
-        console.log(org);
+        // console.log(org);
         setOrgName(org.name);
         setOrgId(org.mspId);
     }
 
-    const handleBlur = (event) => {
+    const handleBlur = (event: Event) => {
         if (props.onBlur) {
-            props.onBlur(event.target.value);
+            props.onBlur(event);
         }
     };
 
@@ -133,18 +135,67 @@ export const MethodSelect = (props: IMethodSelect) => {
             newCopy[`${param.paramName}`]=param.newValue;
         }
         setTranParams(newCopy);
-        if (   methodIndex 
-            && props.options[methodIndex] 
-            && props.options[methodIndex].trans 
-            && props.options[methodIndex].trans.length>0){
-                props.options[methodIndex].trans.forEach(
-                    (element: IParamType)=>{
-                        if(element.name === param.paramName){
-                            element.value = newCopy;
-                        }
-                    }
-                );
-            }
+        // Can not do that in COntrolled element !!!!
+        // Only allowed to hang the object in the state!!!
+        // if (   methodIndex 
+        //     && props.options[methodIndex] 
+        //     && props.options[methodIndex].trans 
+        //     && props.options[methodIndex].trans.length>0){
+        //         props.options[methodIndex].trans.forEach(
+        //             (element: IParamType)=>{
+        //                 if(element.name === param.paramName){
+        //                     element.value = newCopy;
+        //                 }
+        //             }
+        //         );
+        //     }
+    }
+
+    const getSetParams = (methodParams: Array<IParamType>|undefined, setParams:Object): Array<IParamType>=>{
+        const retArray = new Array<IParamType>();
+        if (methodParams){
+            const keys = Object.keys(setParams);
+            const values = Object.values(setParams);
+            methodParams.forEach( 
+                (param:IParamType, order:number) => {
+                    keys.forEach(
+                        (setKey:string, idx:number) => {
+                            if(setKey === param.name){
+                                const paramCopy = {...param};
+                                paramCopy.value = `${values[idx]}`;
+                                retArray.push(paramCopy);
+                                // console.log(`Pushed:[${paramCopy.name}]=${paramCopy.value}`);
+                            }
+                    });
+            });
+        }
+        return retArray;
+    }
+
+    const callWasFinished = (e: Event)=>{
+        setResultReady(true);
+        setIsWaiting(false);
+    }
+
+
+    const renderResultTab=(isReady:boolean)=>{
+        if(isReady){
+            return(
+                <ResponseResult
+                    responseWaitingTitle={`Post for ${methodName} call may take some time.`}
+                    resultWaitingText={`Result is not ready yet. Loading...`}
+                    onResultFinished={callWasFinished}
+                    endPointUrl={endpointUrl}
+                    call_name={methodName}
+                    id_for_call={orgId}
+                    trans={getSetParams(props.options[methodIndex].trans, tranParams)}
+                    params={getSetParams(props.options[methodIndex].public, pubParams)}
+                    requestBody={request}
+                />
+            );
+        }else{
+            return ('Press [Submit Request] Button, When Ready');
+        }
     }
 
 
@@ -189,13 +240,13 @@ export const MethodSelect = (props: IMethodSelect) => {
                             valuesHistory={pubParams}
                             title="Public Parameters:" 
                             onParamChanges={handleParamsChanged}
-                            useHistoryValues={true}
+                            useHistoryValues={false}
                         />
                 <ParamGroup values={getTrans()} 
                             valuesHistory={tranParams}
                             title="Transient Parameters:" 
                             onParamChanges={handleTransChanged}
-                            useHistoryValues={true}
+                            useHistoryValues={false}
                         />
                 { /* END--PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
 
@@ -211,6 +262,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                 {/* END-ORGANIZATION-ID MENU */}
 
                 <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:colorStatus}}
+                    disabled = {(isWaiting)}
                     onClick={ ()=>{
                             console.log(`Values:`+
                                         `\n\tMethod${methodName}`+
@@ -221,21 +273,13 @@ export const MethodSelect = (props: IMethodSelect) => {
                                         `\n\tPVals:${Object.values(pubParams)}`+
                                         `\n\tTrans:${Object.keys(tranParams)}`+
                                         `\n\tTVals:${Object.values(tranParams)}`+
-                                        '\n\tGetTrans:${getTrans()}'+
-                                        ''+
-                                        ''+
-                                        ''
+                                        `\n\tGetTrans:${Object.keys(getTrans())}`+
+                                        `\n\tGetTransV:${Object.values(getTrans())}`+
+                                        ``+
+                                        ``
                                         );
-                             let objRequest:ITransactionRequestBody={ 
-                                        name:methodName, 
-                                        args:new Array<string>(), 
-                                        identity: orgId,
-                                    };
-                                const trans = getTrans();
-                                if(trans && trans[0]){
-
-                                } 
-                            setRequest(objRequest);
+                            setIsWaiting(true);
+                            setResultReady(false);
                         }
                     }>Submit Request
                 </Button>
@@ -245,14 +289,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                     For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
                 </FormLabel>
             </FormControl>
-            <ResponseResult
-                responseTitle={`${methodName} Call Produced the Following:`}
-                endPointUrl={endpointUrl}
-                
-                requestBody={request}
-            />
+            <div>
+                {renderResultTab(isWaiting)}
+            </div>
+
         </div>
     );
+
+
 };
 
 export default MethodSelect;

@@ -35,8 +35,8 @@ export default class RequestHandler{
         endpointUrl: string,
         request: ITransactionRequestBody
     ){
-        //let formedJson ='';
-        return await axios.post(endpointUrl, request)
+        const url=`${endpointUrl}/${request.name}`;
+        return await axios.post(url, request)
         
 /*         .then(
             (response) => {                
