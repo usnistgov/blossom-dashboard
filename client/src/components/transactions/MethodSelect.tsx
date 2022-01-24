@@ -11,66 +11,85 @@ import TextField from '@material-ui/core/TextField/TextField';
 import Button from '@material-ui/core/Button/Button';
 
 import {IParamGroup, IParamValue, ParamGroup} from "./ParamGroup";
-import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
 import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyling";
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
 import axios, {AxiosResponse} from "axios";
 import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 import ResponseResult from './ResponseResult';
+import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
 
 
+export interface IMethodSelect{
+    defaultMethod: string;
+    defaultValue: number;
+    options:Array<IMethodInfo>;
+    onFocus?: (e: Event)=>void;
+    onChange?: (e: Event)=>void;
+    onBlur?: (e: Event)=>void;
+}
 
-export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, onChange, onBlur }) => {
+// { defaultMethod, defaultValue, options, onFocus, onChange, onBlur }
+export const MethodSelect = (props: IMethodSelect) => {
 
-    const [methodIndex, setMethodIndex] = useState(defaultValue ?? 0);  // we want to keep value locally
-    const [methodName, setMethodName] = useState(options[defaultValue].name ?? undefined);  // we want to keep value locally
+    const [methodIndex, setMethodIndex] = useState(props.defaultValue ?? 0);  // we want to keep value locally
+    const [methodName, setMethodName] = useState(props.options[props.defaultValue].name ?? undefined);  // we want to keep value locally
     const [orgName, setOrgName]=useState('');
     const [orgId, setOrgId]=useState('');
     const [pubParams, setPubParams]=useState({});
     const [tranParams, setTranParams]=useState({});
+    const [request, setRequest] = useState( 
+        ()=>{
+            let objRequest:ITransactionRequestBody={ 
+                    name:'', 
+                    args:new Array<string>(), 
+                    transient:{},
+                    identity: '',
+                }; 
+                return objRequest
+            });
 
     // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
     const [endpointUrl, setEndpointUrl]=useState('http://10.208.253.184:8888');
 
-    useEffect( () => setMethodIndex(defaultValue ?? 0), [defaultValue] );     // we want to update local value on prop value change
-    useEffect( () => setMethodName(defaultMethod ?? ''), [defaultMethod] );
+    useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
+    useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
     const isDataReady = (methodIndex>0 && endpointUrl);
     const colorStatus = isDataReady?'#003300':'grey';
 
     const updateDescription = (index: number) => {        
         // setLocalValue(index)
-        if (index >=0 && options && options[index] && options[index].info){
+        if (index >=0 && props.options && props.options[index] && props.options[index].info){
             console.log(`index:${index}`);
-            return  options[index].info;
+            return  props.options[index].info;
         }else{
             return 'No method selected yet';
         }
     }   
     
-    const getParams = ()=>{
+    const getParams = ():Array<IParamType|undefined> =>{
         if (    methodIndex 
-            && options[methodIndex] 
-            && options[methodIndex].public 
-            && options[methodIndex].public.length>0){
-            return options[methodIndex].public;
+            && props.options[methodIndex] 
+            && props.options[methodIndex].public 
+            && props.options[methodIndex].public.length>0){
+            return props.options[methodIndex].public;
         }
         return [undefined];
     }
     
-    const getTrans = ()=>{
+    const getTrans = ():Array<IParamType|undefined>=>{
         if (    methodIndex 
-            && options[methodIndex] 
-            && options[methodIndex].trans 
-            && options[methodIndex].trans.length>0){
-            return options[methodIndex].trans;
+            && props.options[methodIndex] 
+            && props.options[methodIndex].trans 
+            && props.options[methodIndex].trans.length>0){
+            return props.options[methodIndex].trans;
         }
         return [undefined];
     }
 
     const handleFocus = () => {
-        if (onFocus) {
-            onFocus();
+        if (props.onFocus) {
+            props.onFocus();
         }
     };
 
@@ -79,8 +98,8 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
         const keys = Object.keys(event.target);
         console.log(`handleMethodChange::e.target.value:${event.target.value}, name:${event.target.name} Keys:${keys}`);
         // setLocalValue(value);
-        if (onChange) {
-            onChange(value);
+        if (props.onChange) {
+            props.onChange(value);
         }
     };
 
@@ -91,8 +110,8 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
     }
 
     const handleBlur = (event) => {
-        if (onBlur) {
-            onBlur(event.target.value);
+        if (props.onBlur) {
+            props.onBlur(event.target.value);
         }
     };
 
@@ -113,7 +132,19 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
         }else{
             newCopy[`${param.paramName}`]=param.newValue;
         }
-        setPubParams(newCopy);
+        setTranParams(newCopy);
+        if (   methodIndex 
+            && props.options[methodIndex] 
+            && props.options[methodIndex].trans 
+            && props.options[methodIndex].trans.length>0){
+                props.options[methodIndex].trans.forEach(
+                    (element: IParamType)=>{
+                        if(element.name === param.paramName){
+                            element.value = newCopy;
+                        }
+                    }
+                );
+            }
     }
 
 
@@ -136,9 +167,9 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                     key={methodName}
                     name={methodName}
                     value={methodIndex}
-                    defaultValue={defaultValue}
+                    defaultValue={props.defaultValue}
                 >
-                    {options?.map((option, index: number) => {
+                    {props.options?.map((option, index: number) => {
                         return (
                             <MenuItem key={option.name} value={index}>
                                 {`${index>0?index+'.':''} ${option.name}` ?? index}
@@ -154,8 +185,18 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                 { /* END-METHOD-SELECT MENU */ }
 
                 { /* BEGIN-PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
-                <ParamGroup values={getParams()} title="Public Parameters:" onParamChanges={handleParamsChanged}/>
-                <ParamGroup values={getTrans()} title="Transient Parameters:" onParamChanges={handleTransChanged}/>
+                <ParamGroup values={getParams()} 
+                            valuesHistory={pubParams}
+                            title="Public Parameters:" 
+                            onParamChanges={handleParamsChanged}
+                            useHistoryValues={true}
+                        />
+                <ParamGroup values={getTrans()} 
+                            valuesHistory={tranParams}
+                            title="Transient Parameters:" 
+                            onParamChanges={handleTransChanged}
+                            useHistoryValues={true}
+                        />
                 { /* END--PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
 
                 <TextField  
@@ -179,9 +220,22 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
                                         `\n\tPub:${Object.keys(pubParams)}`+
                                         `\n\tPVals:${Object.values(pubParams)}`+
                                         `\n\tTrans:${Object.keys(tranParams)}`+
-                                        `\n\tTVals:${Object.values(tranParams)}`
-
+                                        `\n\tTVals:${Object.values(tranParams)}`+
+                                        '\n\tGetTrans:${getTrans()}'+
+                                        ''+
+                                        ''+
+                                        ''
                                         );
+                             let objRequest:ITransactionRequestBody={ 
+                                        name:methodName, 
+                                        args:new Array<string>(), 
+                                        identity: orgId,
+                                    };
+                                const trans = getTrans();
+                                if(trans && trans[0]){
+
+                                } 
+                            setRequest(objRequest);
                         }
                     }>Submit Request
                 </Button>
@@ -193,6 +247,9 @@ export const MethodSelect = ({ defaultMethod, defaultValue, options, onFocus, on
             </FormControl>
             <ResponseResult
                 responseTitle={`${methodName} Call Produced the Following:`}
+                endPointUrl={endpointUrl}
+                
+                requestBody={request}
             />
         </div>
     );

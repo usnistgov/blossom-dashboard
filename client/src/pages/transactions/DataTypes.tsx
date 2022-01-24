@@ -20,6 +20,23 @@ export interface IMethodSelect{
     name? : string;
 }
 
+// Without protoType the TypeScript makes it too difficult 
+// to index properties and use them on as needed basis
+// only by indexes in Keys and Values of the Object type
+export interface IParamValues{
+    ato?: string;
+    account?:string;
+    status?: string;
+    id?: string;
+    asset_id?:string;
+    amount?:string;
+    account_name?:string;
+    assetId?: string;
+    primary_tag?:string;
+    license?:string;
+    xml?:string;
+    licenses?: string;
+}
 
 export const serviceApiMethods: Array<IMethodInfo> = [
     {

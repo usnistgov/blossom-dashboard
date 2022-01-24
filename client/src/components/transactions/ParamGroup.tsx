@@ -7,8 +7,9 @@ import FormLabel from '@material-ui/core/FormLabel/FormLabel';
 import TextField from '@material-ui/core/TextField/TextField';
 import Button from '@material-ui/core/Button/Button';
 
-import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
+import {IParamType, IMethodInfo, serviceApiMethods, IParamValues} from "../../pages/transactions/DataTypes";
 import {generateClasses} from "../../pages/transactions/AllStyling";
+import { useHistory } from 'react-router-dom';
 
 // Used to update Parameters at the Main Level
 export interface IParamValue{
@@ -17,8 +18,10 @@ export interface IParamValue{
 }
 export interface IParamGroup{
     title: string;
-    values: Array<IParamType>;
-    onParamChanges?: (info: IParamValues)=>any;
+    values: Array<IParamType|undefined>;
+    useHistoryValues?:boolean;
+    valuesHistory: IParamValues;
+    onParamChanges?: (param: IParamValue)=>void;
 }
 
 export const ParamGroup = (props: IParamGroup) => {
@@ -37,20 +40,29 @@ export const ParamGroup = (props: IParamGroup) => {
         }
     };
 
+    function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
+        return o[propertyName]; // o[propertyName] is of type T[K]
+    }
 
     function renderSwitch(param: IParamType, index: number) {
     switch (param) {
         case undefined:
-        return <div style={{color: titleColor}}>-= None =-</div>
+           return <div style={{color: titleColor}}>-= None =-</div>
         default:
-        return (
-        <TextField  id={`text-field-${param.name}-${index}`}
-                    name={param.name}
-                    style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"640px",}}
-                    helperText={`${param.info}. Type:[${(param.type)}]`} 
-                    value={param.value} label={`${index+1}. ${param.name}`}
-                    onChange={onLocalParamChange}
-            />);
+            console.log(`${getProperty(props.valuesHistory,param.name as keyof IParamValues)} ---!!!`);
+            if(param.name in Object.keys(props.valuesHistory) && props.useHistoryValues){
+                console.log(`${props.valuesHistory[param.name as keyof IParamValues]}`);
+                param.value = getProperty(props.valuesHistory,param.name as keyof IParamValues);
+            }
+            return (
+                <TextField  id={`text-field-${param.name}-${index}`}
+                            name={param.name}
+                            style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"640px",}}
+                            helperText={`${param.info}. Type:[${(param.type)}]`} 
+                            value={param.value} label={`${index+1}. ${param.name}`}
+                            onChange={onLocalParamChange}
+                />
+                );
             // (param.type)?`Type-of ${param.type}:`
         }
     }
