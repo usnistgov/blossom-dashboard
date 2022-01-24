@@ -28,11 +28,15 @@ const ResponseResult = (props:IResponseResult)=>{
     const [isReady, setIsReady]= useState(false);
     const [isError, setIsError]= useState(false);
     const [result, setResult] = useState('');
-    const [error, setError] = useState('');
+    const [errorStatus, setErrorStatus] = useState('');
+
+    const frameBorder = ()=> {return (isReady)?((isError)?'1px red':'1px green'):'';} 
+    const textColor = ()=> {return ((isError)?'#aa0000':'#006600');} 
 
     const resetResponseModel=()=>{};
     useEffect( 
             ()=>{
+                setErrorStatus(``);
                 const request = prepareRequest();
                 RequestHandler.PostRequest(props.endPointUrl, request)
                 .then(
@@ -41,22 +45,36 @@ const ResponseResult = (props:IResponseResult)=>{
                         if(response.status!==200){
                             setIsError(true);
                             resetResponseModel();
-                            setError(response);
+                            setErrorStatus(response);
                         }
                         if(response && response.data){
                             setResult(response.data);
                             resetResponseModel();
                         }
                         setIsError(false);
-                        setIsReady(true);
-                    }
-                ).catch(
+                    })
+                .catch(
                     (error: Error)=>{
                         setIsError(true);
-                        setIsReady(true);
-                        setError(`${error.name}!\n\t${error.message}`);
+                        setErrorStatus(`IsError:${isError}! ${error.name}!\n\t${error.message}`);
                         console.log(`${error.name}!\n\t${error.message}`);
-                    });
+                    })
+                // Runs for all cases - Errors and otherwise!!!
+                .then(
+                    (data)=>{
+                        setIsReady(true);
+                        console.log(`IsError:${isError} - ${errorStatus}`);
+                        // in either case - must reset submit button
+                        if( !isError){
+                            props.onResultFinished(new Event("generated", undefined));
+                        }else{
+                            setTimeout(
+                                ()=>{props.onResultFinished(new Event("generated", undefined));},
+                                15000 
+                            );
+                        }
+                    }
+                );
             }, []);
 
 
@@ -123,10 +141,10 @@ const ResponseResult = (props:IResponseResult)=>{
     }
 
     return (
-        <div>
-            <h2>{renderTitle()}</h2>
-            <div>
-                {renderResult()}
+        <div style={{ border: frameBorder(), margin: 0, marginBottom: 18, paddingBottom: 11}}>
+            <h2  style={{color:textColor(), }}>{renderTitle()}</h2>
+            <div style={{color:textColor(), }}>
+                {(isError)?errorStatus:renderResult()}
             </div>
         </div>
 

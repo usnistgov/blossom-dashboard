@@ -187,7 +187,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                     onResultFinished={callWasFinished}
                     endPointUrl={endpointUrl}
                     call_name={methodName}
-                    id_for_call={orgId}
+                    id_for_call={orgName}
                     trans={getSetParams(props.options[methodIndex].trans, tranParams)}
                     params={getSetParams(props.options[methodIndex].public, pubParams)}
                     requestBody={request}
@@ -198,6 +198,17 @@ export const MethodSelect = (props: IMethodSelect) => {
         }
     }
 
+    /*
+            {
+            "name": "UploadATO",
+            "args": [],
+            "transient": {
+            "ato": "{\"ato\": \"jfkdljfkldasjfklas\"}"
+            },
+            "identity": "samsadmin"
+            }
+
+    */
 
     return (
         <div style={{ minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}}>
