@@ -2,16 +2,15 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import axios, {AxiosResponse} from "axios";
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
-import { IParamType } from '../../pages/transactions/DataTypes';
+import { IParamType, IMethodInfo } from '../../pages/transactions/DataTypes';
 
 
 export interface IResponseResult{
     responseWaitingTitle: string;
     resultWaitingText?: string;
-    onResultFinished: (e: Event)=>void;
-    resultSource?:()=>Promise<AxiosResponse<any, any>>;
-    requestBody?: ITransactionRequestBody;
+    onResultFinished: (data: IPostResponse)=>void;
 
+    call_info: IMethodInfo;
     endPointUrl: string;
     call_name: string;
     id_for_call:string;
@@ -19,9 +18,10 @@ export interface IResponseResult{
     params?: Array<IParamType|undefined>;
 }
 
-
-
-
+export interface IPostResponse{
+    isError:boolean;
+    response: string;
+}
 
 const ResponseResult = (props:IResponseResult)=>{
 
@@ -100,18 +100,28 @@ const ResponseResult = (props:IResponseResult)=>{
     }
 
     const getTransientParams = ()=>{ // Prepare Trans-Params
-        let transParams: {[key:string]:string} = {};
+        let allTrans: {[key:string]:string|number}={};
+        let transParams: {[key:string]:string|number} = {};
         if(props.trans && props.trans.length>0){
             props.trans.forEach(
                 (param:IParamType)=>{
-                    transParams[`${param.name}`]=`${param.value}`;
+                    if(param.type && param.type==='number'){
+                        transParams[`${param.name}`]=Number(`${param.value}`);
+                    }else{
+                        transParams[`${param.name}`]=`${param.value}`;
+                    }
                     console.log(`Tran ${param.name}=${param.value}`);
                 });
         }
-        return transParams;
+        // Extra step of wrapping the object !
+        if(props.call_info.transWrapper){
+            allTrans[`${props.call_info.transWrapper}`]=JSON.stringify(transParams);
+        }
+        return allTrans;
     }
 
     const prepareRequest = (): ITransactionRequestBody=>{
+
         const request:ITransactionRequestBody  = {
             name: props.call_name,
             identity: props.id_for_call,  

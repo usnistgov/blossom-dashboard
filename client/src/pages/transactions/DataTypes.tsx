@@ -105,7 +105,7 @@ export const serviceApiMethods: Array<IMethodInfo> = [
         {   name:'ReportSwID', 
             info:'Report a SwID tag that uses a checked out license', 
             trans:[ {name:'primary_tag', type:'string', info:'Primary tag of SwID'},
-                    {name:'asset_id', type:'string', info:'ID of asset'},
+                    {name:'asset', type:'string', info:'ID of asset'},
                     {name:'license', type:'string', info:'Licenses associated with this SwID'},
                     {name:'xml', type:'string', info:'SwID xml document'},],
             transWrapper: 'swid',
@@ -158,7 +158,7 @@ export const serviceApiMethods: Array<IMethodInfo> = [
         // 17. 
         {   name:'ApproveAccount', 
             info:'D2', 
-            // public:[{name:'', type:'', info:''}],
+            public:[{name:'account', type:'string', info:'Name of the account to be approved'},],
             isOptional: true,
         }, 
 

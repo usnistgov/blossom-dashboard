@@ -26,7 +26,7 @@ export interface IParamGroup{
 
 export const ParamGroup = (props: IParamGroup) => {
 
-    const [params, setParams] = useState()
+    //const [params, setParams] = useState()
     const isDataPresent = (props.values && props.values.length>0 && props.values[0]);
     const titleColor = isDataPresent?"darkBlue":"lightGrey";
     const blockBorder = isDataPresent?`2px solid #660066`:`1px solid #888888`;

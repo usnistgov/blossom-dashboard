@@ -15,7 +15,7 @@ import {generateClasses, CommonSettings} from "../../pages/transactions/AllStyli
 import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpActions";
 import axios, {AxiosResponse} from "axios";
 import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
-import ResponseResult from './ResponseResult';
+import ResponseResult, { IPostResponse } from './ResponseResult';
 import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
 
 
@@ -39,6 +39,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     const [orgId, setOrgId]=useState('');
     const [pubParams, setPubParams]=useState({});
     const [tranParams, setTranParams]=useState({});
+    const [allResponses, setAllResponses]=useState(new Array<IPostResponse>());
     const [request, setRequest] = useState( 
         ()=>{
             let objRequest:ITransactionRequestBody={ 
@@ -172,13 +173,14 @@ export const MethodSelect = (props: IMethodSelect) => {
         return retArray;
     }
 
-    const callWasFinished = (e: Event)=>{
+    const callWasFinished = (data: IPostResponse)=>{
+
         setResultReady(true);
         setIsWaiting(false);
     }
 
 
-    const renderResultTab=(isReady:boolean)=>{
+    const renderRequestingTab=(isReady:boolean)=>{
         if(isReady){
             return(
                 <ResponseResult
@@ -190,7 +192,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                     id_for_call={orgName}
                     trans={getSetParams(props.options[methodIndex].trans, tranParams)}
                     params={getSetParams(props.options[methodIndex].public, pubParams)}
-                    requestBody={request}
+                    call_info={props.options[methodIndex]}
                 />
             );
         }else{
@@ -235,6 +237,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                         return (
                             <MenuItem key={option.name} value={index}>
                                 {`${index>0?index+'.':''} ${option.name}` ?? index}
+                                {(option.isOptional)?` - (Optional for Demo)`:``}
                             </MenuItem>
                         );
                     })}
@@ -297,13 +300,20 @@ export const MethodSelect = (props: IMethodSelect) => {
                 
                 {/* INFORMATIVE LABEL */}
                 <FormLabel  style={{ marginTop: 4, marginBottom: 4,color:colorStatus,}}>
-                    For [{methodName}] to [{endpointUrl}] as [{orgName}] Organization
+                    For [{methodName}] to [{endpointUrl}] <br/>
+                    As [{orgName}] Organization ID:[{orgId}]
                 </FormLabel>
             </FormControl>
-            <div>
-                {renderResultTab(isWaiting)}
-            </div>
+            <FormControl>
+                <div>
+                    {renderRequestingTab(isWaiting)}
+                </div>
+                <Button onClick={
+                    setAllResponses[new Array<IPostResponse>()]}></Button>
+                <div>
 
+                </div>
+            </FormControl>
         </div>
     );
 
