@@ -9,6 +9,7 @@ import Blossom from './blossom';
 import buildTransactionRoute from './routes/transaction';
 import buildIdentityRoute from './routes/indentities';
 import { Config } from './config';
+import path from 'path';
 
 function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrigin='*') {
     const { app } = expressWs(express());
@@ -59,6 +60,7 @@ function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrig
 
     if (staticPath) {
         app.use(express.static(staticPath));
+        app.get('*', (_, res) => res.sendFile(path.resolve(staticPath, 'index.html')));
     }
 
     app.listen(port, () => {
