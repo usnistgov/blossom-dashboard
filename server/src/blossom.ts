@@ -34,7 +34,6 @@ type IdentityMap = {
     [username: string]: {
         mspId: string;
         network: Network;
-        listenToEvents: boolean;
     };
 };
 
@@ -42,11 +41,13 @@ export default class Blossom {
     private contractName: string;
     private identities: IdentityMap;
     private endorsingOrgs: string[] | undefined;
+    private listeningClient: string;
 
-    private constructor(contractName: string, identities: IdentityMap, endorsingOrgs?: string[]) {
+    private constructor(contractName: string, identities: IdentityMap, listeningClient: string, endorsingOrgs?: string[]) {
         this.contractName = contractName;
         this.identities = identities;
         this.endorsingOrgs = endorsingOrgs;
+        this.listeningClient = listeningClient;
     }
 
     public getIdentities(): {name: string, mspId: string}[] {
@@ -61,26 +62,20 @@ export default class Blossom {
     }
 
     public getContractForIdentity(identity: string): Contract {   
-        this.identities[identity]
-        
         return this.identities[identity].network.getContract(this.contractName);
     }
 
-    public assignContractListener(listener: ContractListener) {
-        for (const username in this.identities) {
-            if (this.identities[username].listenToEvents) {
-                console.log(`${username} attached to listener`);
-                const contract = this.getContractForIdentity(username);
-                contract.addContractListener(listener, {type: 'private'});
-            }
-        }
+    public getListeningIdentityInfo(): [Network, Contract] {
+        const network = this.identities[this.listeningClient].network;
+        const contract = network.getContract(this.contractName);
+        return [network, contract];
     }
 
     public static async build(config: Config): Promise<Blossom> {
         const profile = YAML.parse(fs.readFileSync(config.connectionProfilePath).toString());
 
         const identityMap: IdentityMap = {};
-        
+
         for (const identityConfig of config.identities) {
             if (identityMap[identityConfig.name]) {
                 throw new Error(`Identity name clash, ${identityConfig.name} defined twice`);
@@ -89,10 +84,9 @@ export default class Blossom {
             identityMap[identityConfig.name] = {
                 mspId: identityConfig.mspId,
                 network: await connectWithIdentity(profile, config.channel, identityConfig),
-                listenToEvents: identityConfig.listenToEvents
             }
         }
 
-        return new Blossom(config.contract, identityMap, config.endorsingOrganizations);
+        return new Blossom(config.contract, identityMap, config.listeningClient, config.endorsingOrganizations);
     }
 }
