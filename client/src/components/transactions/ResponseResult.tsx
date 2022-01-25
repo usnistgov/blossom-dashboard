@@ -85,14 +85,14 @@ const ResponseResult = (props:IResponseResult)=>{
                                 fatResponse.responseInfo ={
                                     status: response.status.toString(),
                                     text: response.statusText,
-                                    data: response.data ?? 'Empty-Response',
+                                    data: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
                                     essence: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
                                 };
                             }else{ // Case of no Response.Data
                                 fatResponse.responseInfo ={
                                     status: response.status.toString(),
                                     text: response.statusText,
-                                    data: response.data ?? 'No-Data-Response',
+                                    data: response.data?JSON.stringify(response.data, null, 2): 'No-Data-Response',
                                     essence:response.data?JSON.stringify(response.data, null, 2): 'No-Data-Response',
                                 };
                             }

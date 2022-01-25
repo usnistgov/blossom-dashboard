@@ -177,7 +177,7 @@ export const MethodSelect = (props: IMethodSelect) => {
 
     const callWasFinished = (newData: IPostResponse)=>{
         console.log(`IsError:${newData.isError} URL:${newData.originalUrl}`)
-        const newCopy = [...allResponses];
+        const newCopy = allResponses.slice();
         newCopy.unshift(newData);
         setAllResponses(newCopy);
         setResultReady(true);
@@ -379,14 +379,16 @@ export const MethodSelect = (props: IMethodSelect) => {
                                     <FormLabel style={styleResponseTimeInfo(response)}
                                         value={`@${response.timeStamp} done in `+
                                                 `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
-                                        {`@${response.timeStamp} done in `+
-                                        `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
+                                        {`@${response.timeStamp} call [${response.originalRequest.name}]`+
+                                            ` for [${response.originalRequest.identity}] `+
+                                            ((!response.isError)?`finished in `:`failed in`)+
+                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
                                     </FormLabel>
-                                    <FormLabel style={styleResponse(response)}>
-                                        {`${index>0?`${index+1}`+'.':''} ${response.isError}` ?? index}
+                                    <br/>
+                                    <div style={styleResponse(response)}>
                                         {response.responseInfo?response.responseInfo.data:
                                                 (response.errorInfo)?response.errorInfo.data:'no info'}
-                                    </FormLabel>
+                                    </div>
                                 </div>
                             );
                         }
