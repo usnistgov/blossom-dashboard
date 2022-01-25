@@ -17,6 +17,7 @@ import axios, {AxiosResponse} from "axios";
 import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 import ResponseResult, { IPostResponse } from './ResponseResult';
 import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
+import ButtonGroup from '@material-ui/core/ButtonGroup/ButtonGroup';
 
 
 export interface IMethodSelect{
@@ -58,7 +59,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
     const isDataReady = (methodIndex>0 && endpointUrl);
-    const colorStatus = isDataReady?'#003300':'grey';
+    const colorStatus = isDataReady?'#006600':'grey';
 
     const updateDescription = (index: number) => {        
         // setLocalValue(index)
@@ -173,8 +174,11 @@ export const MethodSelect = (props: IMethodSelect) => {
         return retArray;
     }
 
-    const callWasFinished = (data: IPostResponse)=>{
-
+    const callWasFinished = (newData: IPostResponse)=>{
+        console.log(`IsError:${newData.isError} URL:${newData.originalUrl}`)
+        const newCopy = [...allResponses];
+        newCopy.unshift(newData);
+        setAllResponses(newCopy);
         setResultReady(true);
         setIsWaiting(false);
     }
@@ -184,7 +188,7 @@ export const MethodSelect = (props: IMethodSelect) => {
         if(isReady){
             return(
                 <ResponseResult
-                    responseWaitingTitle={`Post for ${methodName} call may take some time.`}
+                    responseWaitingTitle={`Posting ${methodName} call may take some time... Please, wait.`}
                     resultWaitingText={`Result is not ready yet. Loading...`}
                     onResultFinished={callWasFinished}
                     endPointUrl={endpointUrl}
@@ -198,6 +202,20 @@ export const MethodSelect = (props: IMethodSelect) => {
         }else{
             return ('Press [Submit Request] Button, When Ready');
         }
+    }
+
+    const styleResponseTimeInfo = (response:IPostResponse)=>{
+        return ((response.isError)?
+                {color:'darkred', fontWeight: 'bold', textAlign:'left'}
+                :{color:'black',fontWeight: 'bold', textAlign:'left'});
+    }
+
+    const styleResponse = (response:IPostResponse)=>{
+        return (response.isError)?{color:'darkred',} :{color:'darkblue',};
+    }
+
+    const keepLast=(toKeep:number)=>{
+
     }
 
     /*
@@ -236,7 +254,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                     {props.options?.map((option, index: number) => {
                         return (
                             <MenuItem key={option.name} value={index}>
-                                {`${index>0?index+'.':''} ${option.name}` ?? index}
+                                {`${index>0?index+'. ':''} ${option.name}` ?? index}
                                 {(option.isOptional)?` - (Optional for Demo)`:``}
                             </MenuItem>
                         );
@@ -299,19 +317,68 @@ export const MethodSelect = (props: IMethodSelect) => {
                 </Button>
                 
                 {/* INFORMATIVE LABEL */}
-                <FormLabel  style={{ marginTop: 4, marginBottom: 4,color:colorStatus,}}>
-                    For [{methodName}] to [{endpointUrl}] <br/>
-                    As [{orgName}] Organization ID:[{orgId}]
+                <hr/>
+                <FormLabel  style={{ marginTop: 4, marginBottom: 4, color:colorStatus, 
+                                justifyContent: 'left',alignItems: 'left', textAlign:`left`}}>
+                    Calling Method: &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;[{methodName}] <br/>
+                    Endpoint URL: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[{endpointUrl}] <br/>
+                    Organization Name: &nbsp; [{orgName}]  <br/>
+                    Organization ID: &nbsp; &nbsp; &nbsp; &nbsp; [{orgId}]
                 </FormLabel>
-            </FormControl>
-            <FormControl>
+                <hr/>
                 <div>
                     {renderRequestingTab(isWaiting)}
-                </div>
-                <Button onClick={
-                    setAllResponses[new Array<IPostResponse>()]}></Button>
-                <div>
+                </div>            
+                <hr/>            
+            </FormControl>
 
+            <FormControl style={{ m: 1, minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} >
+                <div>
+                    <ButtonGroup style={{width:`100%`, itemAlign:`center`, textAlign:`center`, }}>                    
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
+                            onClick={
+                            setAllResponses[new Array<IPostResponse>()]}>
+                            Delete All Responses
+                        </Button>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkorange`}/*backgroundColor*/ }
+                            onClick={
+                                setAllResponses[new Array<IPostResponse>()]}>
+                            Remove Oldest {}
+                        </Button>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,backgroundColor:`lightgrey`}} disabled={true}>
+                        </Button>
+
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
+                            onClick={
+                                setAllResponses[new Array<IPostResponse>()]}>
+                            Keep Last 12
+                        </Button>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
+                            onClick={
+                                setAllResponses[new Array<IPostResponse>()]}>
+                            Keep Last 3
+                        </Button>
+                    </ButtonGroup>
+                </div>
+                <div>
+                {`LenResp:${allResponses.length}`}
+                {
+                    allResponses.map( (response: IPostResponse, index:number)=>{
+                            return (
+                                <div key={`Key-For-Div-${index}`}>
+                                    <FormLabel style={styleResponseTimeInfo(response)}
+                                        value={`@${response.timeStamp} done in `+
+                                                `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
+                                    />
+                                    <FormLabel style={styleResponse(response)}
+                                        value={response.response}>
+                                        {`${index>0?index+'.':''} ${response.isError}` ?? index}
+                                    </FormLabel>
+                                </div>
+                            );
+                        }
+                    )
+                }
                 </div>
             </FormControl>
         </div>

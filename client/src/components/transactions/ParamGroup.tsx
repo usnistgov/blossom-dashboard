@@ -74,7 +74,7 @@ export const ParamGroup = (props: IParamGroup) => {
         <div style={{ border: blockBorder, margin: 0, marginBottom: 18, paddingBottom: 11}} >
             <h3 style={{margin: titleMargin, color: titleColor}}>{props.title}</h3>
             {props.values.map((param: IParamType|undefined, index: number) => (
-                <div>
+                <div key={`Param-Id-${index}`}>
                     {renderSwitch(param, index)}
                 </div>
             ))}

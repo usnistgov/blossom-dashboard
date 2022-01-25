@@ -18,30 +18,60 @@ export interface IResponseResult{
     params?: Array<IParamType|undefined>;
 }
 
+export interface IResponseData{
+    status?: string;
+    data?:string;
+    text?:string;
+}
 export interface IPostResponse{
-    isError:boolean;
-    response: string;
+    timeSent:number;
+    timeBack?:number;
+    timeStamp?:string;
+    originalUrl:string;
+    originalRequest: ITransactionRequestBody;
+    isError?:boolean;
+    responseInfo?: IResponseData;
+    errorInfo?: IResponseData;
 }
 
 const ResponseResult = (props:IResponseResult)=>{
+
+    const prepareRequest = (): ITransactionRequestBody=>{
+
+        const request:ITransactionRequestBody  = {
+            name: props.call_name,
+            identity: props.id_for_call,  
+            args: getPublicParams(),          
+            transient: getTransientParams(),
+        }
+        return request;
+    }
 
     const [isReady, setIsReady]= useState(false);
     const [isError, setIsError]= useState(false);
     const [result, setResult] = useState('');
     const [errorStatus, setErrorStatus] = useState('');
-
+    const [fatResponse, setFatResponse] = useState({
+                    timeSent:Date.now(),
+                    originalRequest: prepareRequest(),
+                    originalUrl: props.endPointUrl,
+                });
     const frameBorder = ()=> {return (isReady)?((isError)?'1px red':'1px green'):'';} 
-    const textColor = ()=> {return ((isError)?'#aa0000':'#006600');} 
-
+    const textColor = ()=> {return ((isError)?'#aa0000':'#660066');} 
+    
     const resetResponseModel=()=>{};
     useEffect( 
             ()=>{
                 setErrorStatus(``);
-                const request = prepareRequest();
-                RequestHandler.PostRequest(props.endPointUrl, request)
-                .then(
+                fatResponse: IPostResponse={
+                    timeSent:Date.now(),
+                    originalRequest: prepareRequest(),
+                    originalUrl: props.endPointUrl,
+                }
+                RequestHandler.PostRequest(props.endPointUrl, fatResponse.originalRequest)
+                    .then(
                     (response)=>{
-                        RequestHandler.parseResponseInDepth(response); // <== Debugging
+                        RequestHandler.parseResponseInDepth(response); // <== Debugging]\
                         if(response.status!==200){
                             setIsError(true);
                             resetResponseModel();
@@ -50,33 +80,60 @@ const ResponseResult = (props:IResponseResult)=>{
                         if(response && response.data){
                             setResult(response.data);
                             resetResponseModel();
+                            fatResponse.responseInfo ={
+                                status: response.status.toString(),
+                                text: response.statusText,
+                                data: response.data,
+                            }
                         }
                         setIsError(false);
+                        setFatResponse(fatResponse)
+                        dispatchResponseBack(fatResponse);
                     })
-                .catch(
-                    (error: Error)=>{
+                    .catch(
+                    (error)=>{
                         setIsError(true);
+                        fatResponse.isError = true;
+                        if (error && error.response) {
+                            // Request made and server responded
+                            console.log(`Error-Status:${error.response.status}`);
+                            console.log(`Error-Data:${error.response.data}`);
+                            console.log(`Error-Headers${error.response.headers}`);
+                            fatResponse.errorInfo = {
+                                data: error.response.data,
+                                status: error.response.status,
+                                text: '',
+                            }
+                        } 
                         setErrorStatus(`IsError:${isError}! ${error.name}!\n\t${error.message}`);
                         console.log(`${error.name}!\n\t${error.message}`);
-                    })
+                        setFatResponse(fatResponse)
+                        dispatchResponseBack(fatResponse);
+                    })              
                 // Runs for all cases - Errors and otherwise!!!
                 .then(
                     (data)=>{
+                        fatResponse.timeBack=Date.now();
+                        fatResponse.timeStamp = new Date().toISOString();
                         setIsReady(true);
                         console.log(`IsError:${isError} - ${errorStatus}`);
                         // in either case - must reset submit button
-                        if( !isError){
-                            props.onResultFinished(new Event("generated", undefined));
-                        }else{
-                            setTimeout(
-                                ()=>{props.onResultFinished(new Event("generated", undefined));},
-                                15000 
-                            );
-                        }
+                        setFatResponse(fatResponse)
+                        dispatchResponseBack(fatResponse);
                     }
                 );
             }, []);
 
+    function dispatchResponseBack(fatResponse: IPostResponse) {
+        if (!isError) {
+            props.onResultFinished(fatResponse);
+        } else {
+            setTimeout(
+                () => { props.onResultFinished(fatResponse); },
+                15000
+            );
+        }
+    }
 
 // export interface ITransactionRequestBody{
 //     name: string;
@@ -120,16 +177,7 @@ const ResponseResult = (props:IResponseResult)=>{
         return allTrans;
     }
 
-    const prepareRequest = (): ITransactionRequestBody=>{
 
-        const request:ITransactionRequestBody  = {
-            name: props.call_name,
-            identity: props.id_for_call,  
-            args: getPublicParams(),          
-            transient: getTransientParams(),
-        }
-        return request;
-    }
 
     const renderTitle= ()=>{
         if(!isReady){
@@ -146,16 +194,20 @@ const ResponseResult = (props:IResponseResult)=>{
             </div>
             );
         }else{
-            return (`${result?result:"No Result Yet. Loading..."}`);
+            return (
+                    <div style={{color:textColor(), }}>
+                        {
+                            `${result?result:"No Result Yet. Loading..."}`
+                            //(isError)?errorStatus:renderResult()
+                        }
+                    </div>
+                );
         }
     }
 
     return (
-        <div style={{ border: frameBorder(), margin: 0, marginBottom: 18, paddingBottom: 11}}>
+        <div style={{ border: frameBorder()}}>
             <h2  style={{color:textColor(), }}>{renderTitle()}</h2>
-            <div style={{color:textColor(), }}>
-                {(isError)?errorStatus:renderResult()}
-            </div>
         </div>
 
     );

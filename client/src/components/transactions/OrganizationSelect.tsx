@@ -59,7 +59,7 @@ const OrganizationSelect =(props:IOrgIdParams) =>{
                         console.log(`Catch-Exception:${error.message}/${error.stack}`)
                         resetOrgsDataModel(
                             [{  name:`Error Loading IDs ${error.message}:${error.stack}`, 
-                                mspId:'-100'
+                                mspId:'-1000'
                             }]
                         );                        
                     });
@@ -102,14 +102,14 @@ const OrganizationSelect =(props:IOrgIdParams) =>{
                     label="Select Organization"
                     labelId="org-id-select-4-demo-label"
                     onChange={handleOrgChange}
-                    key={orgId}
-                    name={orgName}
+                    key={orgName}
+                    name={orgId}
                     value={orgValue}
                     defaultValue={orgValue}
                     >
                     {orgsIds?.map((org: IBlossomIdentity, index: number) => {
                         return (
-                            <MenuItem value={index} key={org.mspId} name={org.name}>
+                            <MenuItem value={index} key={org.name} name={org.mspId}>
                                 { index===0?`${org.name}`:`${index}. Org:[${org.name}] Id:[${org.mspId}]`}
                             </MenuItem>
                         );
