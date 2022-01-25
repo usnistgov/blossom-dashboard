@@ -59,7 +59,7 @@ export default class RequestHandler{
 
 
 
-    public static async GetOrgIdentity(endpointUrl:string = 'http://10.208.253.184:8888'): Promise<AxiosResponse<any, any>>{
+    public static async GetOrgIdentity(endpointUrl:string = ''): Promise<AxiosResponse<any, any>>{
         // http://10.208.253.184:8888/identity
         let jsonArray:any;
         let response:any;

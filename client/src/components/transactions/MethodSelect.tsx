@@ -53,7 +53,7 @@ export const MethodSelect = (props: IMethodSelect) => {
             });
 
     // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
-    const [endpointUrl, setEndpointUrl]=useState('http://10.208.253.184:8888');
+    const [endpointUrl, setEndpointUrl]=useState('');
 
     useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
