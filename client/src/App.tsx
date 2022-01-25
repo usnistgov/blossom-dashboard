@@ -20,6 +20,7 @@ import Breadcrumbs from "./components/Breadcrumbs";
 import Agency from "./pages/Agency";
 import Software from "./pages/Software";
 import Section from "./pages/Section";
+import TransactionsApi from "./pages/transactions/TransactionsFun";
 
 export const App = () => {
   return (
@@ -32,8 +33,11 @@ export const App = () => {
         display="flex"
         flexDirection="column"
       >
+        {/** The  Header Stack */}
         <Stack direction={"row"}>
-          <b>BLOSS🌸M</b> <Spacer />
+          <Link to="/"><b>BLOSS🌸M</b></Link>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+          <Link to="/api-demo"><b>Transactions &#9939;API</b></Link> <Spacer />
           <ColorModeSwitcher justifySelf="flex-end" />
         </Stack>
 
@@ -41,6 +45,11 @@ export const App = () => {
           <Route path="/" exact>
             <Agency />
           </Route>
+
+          <Route path="/api-demo" exact>
+            <TransactionsApi />
+          </Route>
+
           <Route path="/:agency" exact>
             <Breadcrumbs />
             <Software />
@@ -53,6 +62,7 @@ export const App = () => {
             <Breadcrumbs />
             section
           </Route> */}
+
         </Switch>
       </Box>
     </ChakraProvider>
