@@ -52,14 +52,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                 return objRequest
             });
 
-    // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
-    const [endpointUrl, setEndpointUrl]=useState('http://10.208.253.184:8888');
+    // 'http://10.208.253.184:8888'; // 'http://localhost:8080'; //http://10.208.253.184:8888
+    const [endpointUrl, setEndpointUrl]=useState('');
 
     useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
     const formWidth="800px";
-    const isDataReady = (methodIndex>0 && endpointUrl);
+    const isDataReady = (methodIndex>0);
     const colorStatus = isDataReady?'#006600':'grey';
 
     const updateDescription = (index: number) => {        
@@ -395,7 +395,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                                     <br/>
                                     <div style={styleResponse(response)}>
                                         {response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?response.errorInfo.data:'No Info'}
+                                                (response.errorInfo)?response.errorInfo.essence:'No Info'}
                                     </div>
                                 </div>
                             );
