@@ -110,7 +110,10 @@ const ResponseResult = (props:IResponseResult)=>{
                             console.log(`Error-Data:${error.response.data}`);
                             console.log(`Error-Headers${error.response.headers}`);
                             fatResponse.errorInfo = {
-                                data: error.response.data,
+                                data: error.response.data?JSON.stringify(error.response.data, null, 2 ): 'No-Error-Details',
+                                essence: error.response.data?((error.response.data.message)
+                                                                ?JSON.stringify(error.response.data.message, null, 2 ):'No-Error-Message')
+                                                            : 'No-Error-Details',
                                 status: error.response.status,
                                 text: '',
                             }

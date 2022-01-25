@@ -52,14 +52,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                 return objRequest
             });
 
-    // 'http://10.208.253.184:8888'; // 'http://localhost:8080';
+    // 'http://10.208.253.184:8888'; // 'http://localhost:8080'; //http://10.208.253.184:8888
     const [endpointUrl, setEndpointUrl]=useState('');
 
     useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
     const formWidth="800px";
-    const isDataReady = (methodIndex>0 && endpointUrl);
+    const isDataReady = (methodIndex>0);
     const colorStatus = isDataReady?'#006600':'grey';
 
     const updateDescription = (index: number) => {        
@@ -216,14 +216,18 @@ export const MethodSelect = (props: IMethodSelect) => {
         return (response.isError)?{color:'darkred',} :{color:'darkblue',};
     }
 
-    const keepLast=(toKeep:number)=>{
-        
+    const keepLatest=(toKeep:number)=>{
+      const keepNumber = toKeep ?? (allResponses.length>3)?Math.ceil(allResponses.length/1.68):3;
+        if(allResponses && allResponses.length>keepNumber){
+            const newCopy = allResponses.slice(0, keepNumber);
+            setAllResponses(newCopy)
+        }  
     }
 
     const killOldest=(toKill?:number)=>{
         const killNumber = toKill ?? (allResponses.length>3)?Math.floor(allResponses.length/2):1;
         if(allResponses && allResponses.length>killNumber){
-            const newCopy = allResponses.slice(0, -killNumber)
+            const newCopy = allResponses.slice(0, -killNumber);
             setAllResponses(newCopy)
         }
     }
@@ -231,17 +235,17 @@ export const MethodSelect = (props: IMethodSelect) => {
     const killAll = ()=>{
         setAllResponses(new Array<IPostResponse>());
     }
-    /*
-            {
-            "name": "UploadATO",
-            "args": [],
-            "transient": {
-            "ato": "{\"ato\": \"jfkdljfkldasjfklas\"}"
-            },
-            "identity": "samsadmin"
-            }
 
-    */
+    const getStatusCode = (response: IPostResponse)=>{
+        if(response){
+            if(response.isError && response.errorInfo){
+                return response.errorInfo?.status ?? 'No Error Status';
+            }else if(response.responseInfo){
+                return response.responseInfo.status ?? 'No Response Status';
+            }
+        }
+        return 'No Status'; 
+    }
 
     return (
         <div style={{ minWidth: "680px", width: formWidth, marginTop: 18, marginBottom: 9,}}>
@@ -353,21 +357,23 @@ export const MethodSelect = (props: IMethodSelect) => {
                                 disabled={true}>
                             <h4>{`${allResponses.length} Responses`}</h4>
                         </Button>
-               
-
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`red`}}
                             onClick={killAll}>
                             Remove All 
                         </Button>
-
-                        <Button variant="contained" style={{ marginTop:'4px', marginBottom:'4px', color:'darkorange', }} onClick={killOldest} >
-                            Remove Oldest {((allResponses.length>3)?Math.floor(allResponses.length/1.68):'')}
+                        <Button 
+                            variant="contained" 
+                            style={{ marginTop: 4, marginBottom: 4,color:`orangered`}} 
+                            onClick={ ()=> {killOldest((allResponses.length>3)?Math.floor(allResponses.length/1.68):1);}} >
+                            Remove Oldest {(allResponses.length>3)?Math.floor(allResponses.length/1.68):''}
                         </Button>
-
-
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
-                            onClick={ ()=> {return;}}>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`indigo`}/*backgroundColor*/ }
+                            onClick={ ()=> {keepLatest((allResponses.length>=3)?Math.ceil(allResponses.length/1.68):2);}}>
                             Keep Latest {(allResponses.length>=3)?Math.ceil(allResponses.length/1.68):''}
+                        </Button>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
+                            onClick={ ()=> {killOldest(1);}}>
+                            Remove End One
                         </Button>
  
                     </ButtonGroup>
@@ -382,13 +388,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                                                 `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
                                         {`@${response.timeStamp} call [${response.originalRequest.name}]`+
                                             ` for [${response.originalRequest.identity}] `+
-                                            ((!response.isError)?`finished in `:`failed in`)+
-                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
+                                            ((!response.isError)?`finished in `:`failed in `)+
+                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`+
+                                            ` with status ${getStatusCode(response)}`}
                                     </FormLabel>
                                     <br/>
                                     <div style={styleResponse(response)}>
                                         {response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?response.errorInfo.data:'no info'}
+                                                (response.errorInfo)?response.errorInfo.essence:'No Info'}
                                     </div>
                                 </div>
                             );
