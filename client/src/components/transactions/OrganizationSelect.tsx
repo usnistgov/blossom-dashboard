@@ -90,7 +90,7 @@ const OrganizationSelect =(props:IOrgIdParams) =>{
     }
 
     return (
-            <FormControl    style={{minWidth: "680px", width: "680px", marginTop: 9, marginBottom: 9,}} >
+            <FormControl    style={{minWidth: "100%", width: "100%", marginTop: 9, marginBottom: 9,}} >
                 {/* BEGIN-ORGANIZATION-ID MENU */}
                 <InputLabel  
                     id="org-id-select-4-demo-label" 

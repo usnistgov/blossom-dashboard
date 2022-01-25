@@ -51,11 +51,7 @@ const ResponseResult = (props:IResponseResult)=>{
     const [isError, setIsError]= useState(false);
     const [result, setResult] = useState('');
     const [errorStatus, setErrorStatus] = useState('');
-    const [fatResponse, setFatResponse] = useState({
-                    timeSent:Date.now(),
-                    originalRequest: prepareRequest(),
-                    originalUrl: props.endPointUrl,
-                });
+    const [fatResponse, setFatResponse] = useState({});
     const frameBorder = ()=> {return (isReady)?((isError)?'1px red':'1px green'):'';} 
     const textColor = ()=> {return ((isError)?'#aa0000':'#660066');} 
     
@@ -63,30 +59,41 @@ const ResponseResult = (props:IResponseResult)=>{
     useEffect( 
             ()=>{
                 setErrorStatus(``);
-                fatResponse: IPostResponse={
+                let fatResponse: IPostResponse={
                     timeSent:Date.now(),
                     originalRequest: prepareRequest(),
                     originalUrl: props.endPointUrl,
                 }
+                setFatResponse(fatResponse);
                 RequestHandler.PostRequest(props.endPointUrl, fatResponse.originalRequest)
                     .then(
                     (response)=>{
                         RequestHandler.parseResponseInDepth(response); // <== Debugging]\
+                        fatResponse = {...fatResponse};
                         if(response.status!==200){
+                            fatResponse.isError = true;
                             setIsError(true);
                             resetResponseModel();
                             setErrorStatus(response);
-                        }
-                        if(response && response.data){
-                            setResult(response.data);
-                            resetResponseModel();
-                            fatResponse.responseInfo ={
-                                status: response.status.toString(),
-                                text: response.statusText,
-                                data: response.data,
+                        }else{ // Response Status===200!!!
+                            setIsError(false);
+                            fatResponse.isError = false;                            
+                            if(response && response.data){
+                                setResult(response.data);
+                                resetResponseModel();
+                                fatResponse.responseInfo ={
+                                    status: response.status.toString(),
+                                    text: response.statusText,
+                                    data: JSON.stringify(response.data, null, 2),
+                                };
+                            }else{ // Case of no Response.Data
+                                fatResponse.responseInfo ={
+                                    status: response.status.toString(),
+                                    text: response.statusText,
+                                    data: `No Data Returned`,
+                                };
                             }
-                        }
-                        setIsError(false);
+                        }                        
                         setFatResponse(fatResponse)
                         dispatchResponseBack(fatResponse);
                     })

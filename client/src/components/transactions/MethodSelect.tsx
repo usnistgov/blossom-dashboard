@@ -58,6 +58,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
+    const formWidth="740px";
     const isDataReady = (methodIndex>0 && endpointUrl);
     const colorStatus = isDataReady?'#006600':'grey';
 
@@ -231,8 +232,8 @@ export const MethodSelect = (props: IMethodSelect) => {
     */
 
     return (
-        <div style={{ minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}}>
-            <FormControl    style={{ m: 1, minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9,}} >
+        <div style={{ minWidth: "680px", width: formWidth, marginTop: 18, marginBottom: 9,}}>
+            <FormControl    style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}} >
                 { /* BEGIN-METHOD-SELECT MENU */ }
                 <InputLabel 
                             id="demo-method-select-label" 
@@ -332,7 +333,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                 <hr/>            
             </FormControl>
 
-            <FormControl style={{ m: 1, minWidth: "680px", width: "680px", marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} >
+            <FormControl style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} >
                 <div>
                     <ButtonGroup style={{width:`100%`, itemAlign:`center`, textAlign:`center`, }}>                    
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
@@ -368,11 +369,16 @@ export const MethodSelect = (props: IMethodSelect) => {
                                 <div key={`Key-For-Div-${index}`}>
                                     <FormLabel style={styleResponseTimeInfo(response)}
                                         value={`@${response.timeStamp} done in `+
-                                                `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
-                                    />
+                                                `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
+                                        {`@${response.timeStamp} done in `+
+                                        `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
+                                    </FormLabel>
                                     <FormLabel style={styleResponse(response)}
-                                        value={response.response}>
+                                        value={response.responseInfo?response.responseInfo.data:
+                                                (response.errorInfo)?'response.errorInfo.data': 'no info' }>
                                         {`${index>0?index+'.':''} ${response.isError}` ?? index}
+                                        {response.responseInfo?response.responseInfo.data:
+                                                (response.errorInfo)?response.errorInfo.data: 'no info' }
                                     </FormLabel>
                                 </div>
                             );
