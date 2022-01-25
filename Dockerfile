@@ -1,9 +1,8 @@
-FROM node:16-alpine
+FROM gcr.io/distroless/nodejs:16
 
-WORKDIR /client
 COPY client ./
 
-RUN yarn build
+RUN yarn install && yarn build
 
 WORKDIR /server
 COPY server ./
