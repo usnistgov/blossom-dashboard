@@ -65,8 +65,10 @@ export default class Blossom {
         return this.identities[identity].network.getContract(this.contractName);
     }
 
-    public getListeningIdentityContract(): Contract {
-        return this.identities[this.listeningClient].network.getContract(this.contractName);
+    public getListeningIdentityInfo(): [Network, Contract] {
+        const network = this.identities[this.listeningClient].network;
+        const contract = network.getContract(this.contractName);
+        return [network, contract];
     }
 
     public static async build(config: Config): Promise<Blossom> {

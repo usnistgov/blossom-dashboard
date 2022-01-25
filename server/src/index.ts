@@ -23,23 +23,34 @@ function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrig
         optionsSuccessStatus: 200,
     }));
 
-    app.ws('/', (ws, req) => {
+    app.ws('/', async (ws, req) => {
         console.log('new websocket connection from ', req.ip);
 
-        let listener: ContractListener;
-        blossom.getListeningIdentityContract().addContractListener(async (event) => {
+        const [network, contract] = blossom.getListeningIdentityInfo()
+        
+        const contractListener = await contract.addContractListener(async (event) => {
             console.log(`contract_event: ${event.chaincodeId}, ${event.eventName}`);
             const transactionData = event.getTransactionEvent();
             const blockData = transactionData.getBlockEvent();
-            ws.send({
+            ws.send(JSON.stringify({
+                'type': 'contract_event',
                 'event': event,
                 'transaction': transactionData,
                 'block': blockData,
-            });
-        }).then((l) => {
-            console.log('contract listener attached ', l.name);
-            listener = l;
-        });
+            }));
+        }, {type: 'private'});
+        console.log('contract listener attached');
+
+        const blockListener = await network.addBlockListener(async (event) => {
+            console.log(`block_event: ${event.blockNumber}`);
+
+            ws.send(JSON.stringify({
+                'type': 'block_event',
+                'data': event.blockData,
+                'transactions': event.getTransactionEvents(),
+            }));
+        }, {type: 'private'});
+        console.log('block listener attached');
         
         ws.on('message', (msg) => {
             console.log(msg);
@@ -48,9 +59,8 @@ function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrig
 
         ws.on('close', (code, reason) => {
             console.log(`websocket connection from closed ${code} ${reason}`);
-            if (listener) {
-                blossom.getListeningIdentityContract().removeContractListener(listener);
-            }
+            contract.removeContractListener(contractListener);
+            network.removeBlockListener(blockListener);
         });
     });
 
