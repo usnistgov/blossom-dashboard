@@ -236,6 +236,17 @@ export const MethodSelect = (props: IMethodSelect) => {
         setAllResponses(new Array<IPostResponse>());
     }
 
+    const getStatusCode = (response: IPostResponse)=>{
+        if(response){
+            if(response.isError && response.errorInfo){
+                return response.errorInfo?.status ?? 'No Error Status';
+            }else if(response.responseInfo){
+                return response.responseInfo.status ?? 'No Response Status';
+            }
+        }
+        return 'No Status'; 
+    }
+
     return (
         <div style={{ minWidth: "680px", width: formWidth, marginTop: 18, marginBottom: 9,}}>
             <FormControl    style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}} >
@@ -377,13 +388,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                                                 `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
                                         {`@${response.timeStamp} call [${response.originalRequest.name}]`+
                                             ` for [${response.originalRequest.identity}] `+
-                                            ((!response.isError)?`finished in `:`failed in`)+
-                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
+                                            ((!response.isError)?`finished in `:`failed in `)+
+                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`+
+                                            ` with status ${getStatusCode(response)}`}
                                     </FormLabel>
                                     <br/>
                                     <div style={styleResponse(response)}>
                                         {response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?response.errorInfo.data:'no info'}
+                                                (response.errorInfo)?response.errorInfo.data:'No Info'}
                                     </div>
                                 </div>
                             );
