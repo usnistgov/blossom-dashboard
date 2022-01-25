@@ -1,4 +1,4 @@
-import { Gateway, Wallets, Network, Contract } from 'fabric-network';
+import { Gateway, Wallets, Network, Contract, ContractListener } from 'fabric-network';
 import * as fs from 'fs';
 import YAML from 'yaml';
 import { Config, Identity as IdentityConfig } from './config';
@@ -34,16 +34,19 @@ type IdentityMap = {
     [username: string]: {
         mspId: string;
         network: Network;
+        listenToEvents: boolean;
     };
 };
 
 export default class Blossom {
     private contractName: string;
     private identities: IdentityMap;
+    private endorsingOrgs: string[] | undefined;
 
-    private constructor(contractName: string, identities: IdentityMap) {
+    private constructor(contractName: string, identities: IdentityMap, endorsingOrgs?: string[]) {
         this.contractName = contractName;
         this.identities = identities;
+        this.endorsingOrgs = endorsingOrgs;
     }
 
     public getIdentities(): {name: string, mspId: string}[] {
@@ -53,9 +56,24 @@ export default class Blossom {
         }));
     }
 
-    public getContractForIdentity(identity: string): Contract {        
-        return this.identities[identity].network.getContract(this.contractName);
+    public getEndorsingOrgs(): string[] | undefined {
+        return this.endorsingOrgs;
+    }
 
+    public getContractForIdentity(identity: string): Contract {   
+        this.identities[identity]
+        
+        return this.identities[identity].network.getContract(this.contractName);
+    }
+
+    public assignContractListener(listener: ContractListener) {
+        for (const username in this.identities) {
+            if (this.identities[username].listenToEvents) {
+                console.log(`${username} attached to listener`);
+                const contract = this.getContractForIdentity(username);
+                contract.addContractListener(listener, {type: 'private'});
+            }
+        }
     }
 
     public static async build(config: Config): Promise<Blossom> {
@@ -71,9 +89,10 @@ export default class Blossom {
             identityMap[identityConfig.name] = {
                 mspId: identityConfig.mspId,
                 network: await connectWithIdentity(profile, config.channel, identityConfig),
+                listenToEvents: identityConfig.listenToEvents
             }
         }
 
-        return new Blossom(config.contract, identityMap);
+        return new Blossom(config.contract, identityMap, config.endorsingOrganizations);
     }
 }

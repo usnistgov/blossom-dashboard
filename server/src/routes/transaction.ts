@@ -27,10 +27,15 @@ function convertTransientToBuffer(transient: {
 export default function buildTransactionRoute(blossom: Blossom) {
     const router = Router();
 
-    router.post('/query', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
+    router.post('/invoke', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
         const transaction = blossom.getContractForIdentity(req.body.identity).createTransaction(req.body.name);
         if (req.body.transient) {
             transaction.setTransient(convertTransientToBuffer(req.body.transient))
+        }
+
+        const endorsingOrgs = blossom.getEndorsingOrgs();
+        if (endorsingOrgs) {
+            transaction.setEndorsingOrganizations(...endorsingOrgs);
         }
     
         transaction.submit(...req.body.args).then((buff) => {
@@ -40,10 +45,15 @@ export default function buildTransactionRoute(blossom: Blossom) {
         });
     });
     
-    router.post('/invoke', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
+    router.post('/query', (req: Request<{}, {}, TransactionRequestBody>, res, next) => {
         const transaction = blossom.getContractForIdentity(req.body.identity).createTransaction(req.body.name);
         if (req.body.transient) {
             transaction.setTransient(convertTransientToBuffer(req.body.transient))
+        }
+
+        const endorsingOrgs = blossom.getEndorsingOrgs();
+        if (endorsingOrgs) {
+            transaction.setEndorsingOrganizations(...endorsingOrgs);
         }
     
         transaction.evaluate(...req.body.args).then((buff) => {

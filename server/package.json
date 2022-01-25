@@ -12,9 +12,13 @@
   "license": "SEE LICENSE IN ../LICENSE.md",
   "dependencies": {
     "@types/commander": "^2.12.2",
+    "@types/cors": "^2.8.12",
+    "@types/ws": "^8.2.2",
     "commander": "^8.3.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "fabric-network": "^2.2.8",
+    "ws": "^8.4.2",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
