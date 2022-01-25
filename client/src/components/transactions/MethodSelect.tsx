@@ -386,11 +386,14 @@ export const MethodSelect = (props: IMethodSelect) => {
                                     <FormLabel style={styleResponseTimeInfo(response)}
                                         value={`@${response.timeStamp} done in `+
                                                 `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
-                                        {`@${response.timeStamp} call [${response.originalRequest.name}]`+
-                                            ` for [${response.originalRequest.identity}] `+
-                                            ((!response.isError)?`finished in `:`failed in `)+
-                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`+
-                                            ` with status ${getStatusCode(response)}`}
+                                        {
+                                            `@${response.timeStamp}`+
+                                            ` Call:[${response.originalRequest.name}]`+
+                                            ` ID:[${response.originalRequest.identity}] `+
+                                            ((!response.isError)?`finished. `:`failed. `)+
+                                            ` Status:${getStatusCode(response)}` +
+                                            ` in ${(Number(response.timeBack)-response.timeSent)/1000.0}sec.`
+                                        }
                                     </FormLabel>
                                     <br/>
                                     <div style={styleResponse(response)}>
