@@ -216,14 +216,18 @@ export const MethodSelect = (props: IMethodSelect) => {
         return (response.isError)?{color:'darkred',} :{color:'darkblue',};
     }
 
-    const keepLast=(toKeep:number)=>{
-        
+    const keepLatest=(toKeep:number)=>{
+      const keepNumber = toKeep ?? (allResponses.length>3)?Math.ceil(allResponses.length/1.68):3;
+        if(allResponses && allResponses.length>keepNumber){
+            const newCopy = allResponses.slice(0, keepNumber);
+            setAllResponses(newCopy)
+        }  
     }
 
     const killOldest=(toKill?:number)=>{
         const killNumber = toKill ?? (allResponses.length>3)?Math.floor(allResponses.length/2):1;
         if(allResponses && allResponses.length>killNumber){
-            const newCopy = allResponses.slice(0, -killNumber)
+            const newCopy = allResponses.slice(0, -killNumber);
             setAllResponses(newCopy)
         }
     }
@@ -231,17 +235,6 @@ export const MethodSelect = (props: IMethodSelect) => {
     const killAll = ()=>{
         setAllResponses(new Array<IPostResponse>());
     }
-    /*
-            {
-            "name": "UploadATO",
-            "args": [],
-            "transient": {
-            "ato": "{\"ato\": \"jfkdljfkldasjfklas\"}"
-            },
-            "identity": "samsadmin"
-            }
-
-    */
 
     return (
         <div style={{ minWidth: "680px", width: formWidth, marginTop: 18, marginBottom: 9,}}>
@@ -353,21 +346,23 @@ export const MethodSelect = (props: IMethodSelect) => {
                                 disabled={true}>
                             <h4>{`${allResponses.length} Responses`}</h4>
                         </Button>
-               
-
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`red`}}
                             onClick={killAll}>
                             Remove All 
                         </Button>
-
-                        <Button variant="contained" style={{ marginTop:'4px', marginBottom:'4px', color:'darkorange', }} onClick={killOldest} >
-                            Remove Oldest {((allResponses.length>3)?Math.floor(allResponses.length/1.68):'')}
+                        <Button 
+                            variant="contained" 
+                            style={{ marginTop: 4, marginBottom: 4,color:`orangered`}} 
+                            onClick={ ()=> {killOldest((allResponses.length>3)?Math.floor(allResponses.length/1.68):1);}} >
+                            Remove Oldest {(allResponses.length>3)?Math.floor(allResponses.length/1.68):''}
                         </Button>
-
-
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
-                            onClick={ ()=> {return;}}>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`indigo`}/*backgroundColor*/ }
+                            onClick={ ()=> {keepLatest((allResponses.length>=3)?Math.ceil(allResponses.length/1.68):2);}}>
                             Keep Latest {(allResponses.length>=3)?Math.ceil(allResponses.length/1.68):''}
+                        </Button>
+                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
+                            onClick={ ()=> {killOldest(1);}}>
+                            Remove End One
                         </Button>
  
                     </ButtonGroup>
