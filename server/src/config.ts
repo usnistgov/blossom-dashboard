@@ -3,6 +3,7 @@ export interface Config {
     channel: string;
     contract: string;
     endorsingOrganizations?: string[];
+    listeningClient: string;
     identities: Identity[];
 }
 
@@ -11,5 +12,4 @@ export interface Identity {
     mspId: string;
     certPath: string;
     privateKeyPath: string;
-    listenToEvents?: boolean;
 };

@@ -10,6 +10,7 @@ import buildTransactionRoute from './routes/transaction';
 import buildIdentityRoute from './routes/indentities';
 import { Config } from './config';
 import path from 'path';
+import { ContractListener } from 'fabric-network';
 
 function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrigin='*') {
     const { app } = expressWs(express());
@@ -23,17 +24,34 @@ function mapRoutes(blossom: Blossom, port: string, staticPath?: string, corsOrig
     }));
 
     app.ws('/', (ws, req) => {
+        console.log('new websocket connection from ', req.ip);
+
+        let listener: ContractListener;
+        blossom.getListeningIdentityContract().addContractListener(async (event) => {
+            console.log(`contract_event: ${event.chaincodeId}, ${event.eventName}`);
+            const transactionData = event.getTransactionEvent();
+            const blockData = transactionData.getBlockEvent();
+            ws.send({
+                'event': event,
+                'transaction': transactionData,
+                'block': blockData,
+            });
+        }).then((l) => {
+            console.log('contract listener attached ', l.name);
+            listener = l;
+        });
+        
         ws.on('message', (msg) => {
             console.log(msg);
             ws.send('pong');
         });
 
-        blossom.assignContractListener(async (event) => {
-            console.log(event);
-            ws.send({'contract_event': event});
+        ws.on('close', (code, reason) => {
+            console.log(`websocket connection from closed ${code} ${reason}`);
+            if (listener) {
+                blossom.getListeningIdentityContract().removeContractListener(listener);
+            }
         });
-
-        console.log('new websocket connection from ', req.ip);
     });
 
     // transaction and identity routes
