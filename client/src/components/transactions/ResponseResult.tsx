@@ -9,13 +9,9 @@ export interface IResponseResult{
     responseWaitingTitle: string;
     resultWaitingText?: string;
     onResultFinished: (data: IPostResponse)=>void;
-
     call_info: IMethodInfo;
     endPointUrl: string;
-    call_name: string;
-    id_for_call:string;
-    trans?: Array<IParamType|undefined>;
-    params?: Array<IParamType|undefined>;
+    request: ITransactionRequestBody;
 }
 
 export interface IResponseData{
@@ -37,79 +33,88 @@ export interface IPostResponse{
 
 const ResponseResult = (props:IResponseResult)=>{
 
-    const prepareRequest = (): ITransactionRequestBody=>{
-
-        const request:ITransactionRequestBody  = {
-            name: props.call_name,
-            identity: props.id_for_call,  
-            args: getPublicParams(),          
-            transient: getTransientParams(),
-        }
-        return request;
-    }
-
     const [isReady, setIsReady]= useState(false);
     const [isError, setIsError]= useState(false);
     const [result, setResult] = useState('');
     const [errorStatus, setErrorStatus] = useState('');
     const [fatResponse, setFatResponse] = useState({});
+    const [outRequest, setOutRequest] = useState(props.request);
+
     const frameBorder = ()=> {return (isReady)?((isError)?'1px red':'1px green'):'';} 
     const textColor = ()=> {return ((isError)?'#aa0000':'#660066');} 
+
     
     const resetResponseModel=()=>{};
     useEffect( 
             ()=>{
+                const requestToPost = outRequest || props.request;
                 setErrorStatus(``);
-                let fatResponse: IPostResponse={
+                let initFatResponse: IPostResponse={
                     timeSent:Date.now(),
-                    originalRequest: prepareRequest(),
+                    originalRequest: requestToPost,
                     originalUrl: props.endPointUrl,
+                    timeStamp: new Date().toISOString(),
                 }
-                setFatResponse(fatResponse);
-                RequestHandler.PostRequest(props.endPointUrl, fatResponse.originalRequest)
+                setOutRequest(requestToPost);
+                setFatResponse(initFatResponse);
+                const newFatResponse = {...initFatResponse as IPostResponse};
+                newFatResponse.originalRequest=outRequest;
+                console.log(`@${new Date().toLocaleTimeString()} BEFORE:RequestHandler.PostRequest(...) RqN:${newFatResponse.originalRequest.name}`);
+
+                RequestHandler.PostRequest(props.endPointUrl, outRequest)
                     .then(
                     (response)=>{
                         RequestHandler.parseResponseInDepth(response); // <== Debugging]\
-                        fatResponse = {...fatResponse};
-                        if(response.status!==200){
-                            fatResponse.isError = true;
+                        console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(). Before Status??=??200`);
+                        if(response && response.status!==200){
+                            console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status!=200`);
+
+                            newFatResponse.isError = true;
                             setIsError(true);
                             resetResponseModel();
                             setErrorStatus(response);
                         }else{ // Response Status===200!!!
+                            console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status==200 && ??Data`);
+
                             setIsError(false);
-                            fatResponse.isError = false;                            
+                            newFatResponse.isError = false;                            
                             if(response && response.data){
+                                console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status==200 && ++Data`);
+
                                 setResult(response.data);
                                 resetResponseModel();
-                                fatResponse.responseInfo ={
+                                newFatResponse.responseInfo ={
                                     status: response.status.toString(),
-                                    text: response.statusText,
+                                    text: response.statusText.toString(),
                                     data: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
                                     essence: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
                                 };
                             }else{ // Case of no Response.Data
-                                fatResponse.responseInfo ={
+                                console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): ELSE{}`);
+
+                                newFatResponse.responseInfo ={
                                     status: response.status.toString(),
-                                    text: response.statusText,
+                                    text: response.statusText.toString(),
                                     data: response.data?JSON.stringify(response.data, null, 2 ): 'No-Data-Response',
                                     essence:response.data?JSON.stringify(response.data, null, 2 ): 'No-Data-Response',
                                 };
                             }
                         }                        
-                        setFatResponse(fatResponse)
-                        dispatchResponseBack(fatResponse);
+                        setFatResponse(newFatResponse)
+                        dispatchResponseBack(newFatResponse as IPostResponse);
                     })
                     .catch(
                     (error)=>{
+                        console.log(`@${new Date().toLocaleTimeString()} in CATCH(). First Line.`);
                         setIsError(true);
-                        fatResponse.isError = true;
+                        newFatResponse.isError = true;
                         if (error && error.response) {
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). ++Response`);
                             // Request made and server responded
                             console.log(`Error-Status:${error.response.status}`);
                             console.log(`Error-Data:${error.response.data}`);
                             console.log(`Error-Headers${error.response.headers}`);
-                            fatResponse.errorInfo = {
+                            newFatResponse.errorInfo = {
                                 data: error.response.data?JSON.stringify(error.response.data, null, 2 ): 'No-Error-Details',
                                 essence: error.response.data?((error.response.data.message)
                                                                 ?JSON.stringify(error.response.data.message, null, 2 ):'No-Error-Message')
@@ -117,22 +122,36 @@ const ResponseResult = (props:IResponseResult)=>{
                                 status: error.response.status,
                                 text: '',
                             }
+                            console.log(`Status:${newFatResponse.errorInfo.status}!\n\tEssence:${newFatResponse.errorInfo.essence}`);
+                        }else if(error && error.stack && error.message){
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). Error:TypeError`);
+                            console.log(`\t\t\tin CATCH(). Error:${error}`+
+                                        `\n\t\t\tName:${error.name?error.name:'No-Error-Name'}`+
+                                        `\n\t\t\tStack:${error.stack}`+
+                                        `\n\t\t\tMsg:${error.message}`+
+                                        `\n\t\t\tKeys:${Object.keys(error).length>0?Object.keys(error):'No-Keys'}`+
+                                        `\n\t\t\tValues:${Object.values(error).length>0?Object.values(error):'No-Values'}`
+                                        );
+                        }
+                        else{
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). !!!Response`);
+                            console.log(`\t\t\t in CATCH(). Error:${error} Keys:${Object.keys(error)}`);
                         } 
                         setErrorStatus(`IsError:${isError}! ${error.name}!\n\t${error.message}`);
-                        console.log(`${error.name}!\n\t${error.message}`);
-                        setFatResponse(fatResponse)
-                        dispatchResponseBack(fatResponse);
+                        setFatResponse(newFatResponse)
+                        dispatchResponseBack(newFatResponse as IPostResponse);
                     })              
                 // Runs for all cases - Errors and otherwise!!!
                 .then(
-                    (data)=>{
-                        fatResponse.timeBack=Date.now();
-                        fatResponse.timeStamp = new Date().toISOString();
+                    (response)=>{
+                        console.log(`@${new Date().toLocaleTimeString()} in 2nd THEN().`);
+                        newFatResponse.timeBack=Date.now();
+                        newFatResponse.timeStamp = new Date().toISOString();
                         setIsReady(true);
                         console.log(`IsError:${isError} - ${errorStatus}`);
                         // in either case - must reset submit button
-                        setFatResponse(fatResponse)
-                        dispatchResponseBack(fatResponse);
+                        setFatResponse(newFatResponse)
+                        dispatchResponseBack(newFatResponse as IPostResponse);
                     }
                 );
             }, []);
@@ -143,78 +162,16 @@ const ResponseResult = (props:IResponseResult)=>{
         } else {
             setTimeout(
                 () => { props.onResultFinished(fatResponse); },
-                15000
+                1000
             );
         }
     }
-
-// export interface ITransactionRequestBody{
-//     name: string;
-//     args: string[];
-//     transient?: {
-//         [key: string]: string;
-//     };
-//     identity: string;
-// };
-
-    const getPublicParams = ():Array<string> => { // Prepare Pub-Params
-        const publicParams = Array<string>();
-        if(props.params && props.params.length>0){
-            props.params.forEach( 
-                (param:IParamType)=>{
-                    publicParams.push(`${param.value}`);
-                    console.log(`Pub ${param.name}=${param.value}`);
-                });
-        }
-        return publicParams;
-    }
-
-    const getTransientParams = ()=>{ // Prepare Trans-Params
-        let allTrans: {[key:string]:string|number}={};
-        let transParams: {[key:string]:string|number} = {};
-        if(props.trans && props.trans.length>0){
-            props.trans.forEach(
-                (param:IParamType)=>{
-                    if(param.type && param.type==='number'){
-                        transParams[`${param.name}`]=Number(`${param.value}`);
-                    }else{
-                        transParams[`${param.name}`]=`${param.value}`;
-                    }
-                    console.log(`Tran ${param.name}=${param.value}`);
-                });
-        }
-        // Extra step of wrapping the object !
-        if(props.call_info.transWrapper){
-            allTrans[`${props.call_info.transWrapper}`]=JSON.stringify(transParams);
-        }
-        return allTrans;
-    }
-
-
 
     const renderTitle= ()=>{
         if(!isReady){
             return (`${props.responseWaitingTitle}`);
         }else{
-
-        }
-    }
-
-    const renderResult = ()=>{
-        if(isReady){
-            return(<div>
-                Work in Progress
-            </div>
-            );
-        }else{
-            return (
-                    <div style={{color:textColor(), }}>
-                        {
-                            `${result?result:"No Result Yet. Loading..."}`
-                            //(isError)?errorStatus:renderResult()
-                        }
-                    </div>
-                );
+            return '';
         }
     }
 

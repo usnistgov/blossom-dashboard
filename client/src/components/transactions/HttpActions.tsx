@@ -35,7 +35,7 @@ export default class RequestHandler{
         endpointUrl: string,
         request: ITransactionRequestBody
     ){
-        const urlTail = 'transaction/query'
+        const urlTail = 'transaction/invoke'; //'transaction/query'
         const url=`${endpointUrl}/${urlTail}`;
         return await axios.post(url, request)
         

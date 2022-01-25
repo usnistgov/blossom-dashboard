@@ -109,7 +109,7 @@ const OrganizationSelect =(props:IOrgIdParams) =>{
                     >
                     {orgsIds?.map((org: IBlossomIdentity, index: number) => {
                         return (
-                            <MenuItem value={index} key={org.name} name={org.mspId}>
+                            <MenuItem value={index} key={`${org.name}-${index}`} name={org.mspId}>
                                 { index===0?`${org.name}`:`${index}. Org:[${org.name}] Id:[${org.mspId}]`}
                             </MenuItem>
                         );

@@ -16,7 +16,7 @@ import RequestHandler,{ITransactionRequestBody, IBlossomIdentity } from "./HttpA
 import axios, {AxiosResponse} from "axios";
 import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 import ResponseResult, { IPostResponse } from './ResponseResult';
-import {IParamType, IMethodInfo, serviceApiMethods} from "../../pages/transactions/DataTypes";
+import {IParamType, IMethodInfo, serviceApiMethods, getPreparedServiceRequest, IRquestPrepInfo} from "../../pages/transactions/DataTypes";
 import ButtonGroup from '@material-ui/core/ButtonGroup/ButtonGroup';
 
 
@@ -65,7 +65,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     const updateDescription = (index: number) => {        
         // setLocalValue(index)
         if (index >=0 && props.options && props.options[index] && props.options[index].info){
-            console.log(`index:${index}`);
+            // console.log(`Description index:${index}`);
             return  props.options[index].info;
         }else{
             return 'No method selected yet';
@@ -121,7 +121,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     };
 
     const handleParamsChanged=(param:IParamValue)=>{
-        let  newCopy = {...pubParams};
+        let  newCopy = {...pubParams as {}};
         if(param.paramName in Object.keys(pubParams) ){
             newCopy[param.paramName] = param.newValue;
         }else{
@@ -186,13 +186,33 @@ export const MethodSelect = (props: IMethodSelect) => {
     }
 
 
+    const onClickInitRequest = ()=>{
+        if(!isWaiting){
+            const prepInfo: IRquestPrepInfo={
+                endPointUrl:endpointUrl,
+                call_name:methodName,
+                id_for_call:orgName,
+                trans:getSetParams(props.options[methodIndex].trans, tranParams),
+                params:getSetParams(props.options[methodIndex].public, pubParams),
+                call_info:props.options[methodIndex], 
+            }
+            const outRequest = getPreparedServiceRequest(prepInfo)
+            setRequest(outRequest);
+        }
+        setIsWaiting(true);
+        setResultReady(false);
+        // :ITransactionRequestBody | undefined
+        // return  request;
+    }
+
     const renderRequestingTab=(isReady:boolean)=>{
-        if(isReady){
+        if(isReady && isWaiting){
             return(
                 <ResponseResult
                     responseWaitingTitle={`Posting ${methodName} call may take some time... Please, wait.`}
                     resultWaitingText={`Result is not ready yet. Loading...`}
                     onResultFinished={callWasFinished}
+                    request={request}
                     endPointUrl={endpointUrl}
                     call_name={methodName}
                     id_for_call={orgName}
@@ -248,7 +268,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     }
 
     return (
-        <div style={{ minWidth: "680px", width: formWidth, marginTop: 18, marginBottom: 9,}}>
+        <div style={{ minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}}>
             <FormControl    style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}} >
                 { /* BEGIN-METHOD-SELECT MENU */ }
                 <InputLabel 
@@ -270,7 +290,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                 >
                     {props.options?.map((option, index: number) => {
                         return (
-                            <MenuItem key={option.name} value={index}>
+                            <MenuItem key={`${option.name}-${index}`} value={index}>
                                 {`${index>0?index+'. ':''} ${option.name}` ?? index}
                                 {(option.isOptional)?` - (Optional for Demo)`:``}
                             </MenuItem>
@@ -298,17 +318,17 @@ export const MethodSelect = (props: IMethodSelect) => {
                             useHistoryValues={false}
                         />
                 { /* END--PARAMETERS-SELECT-INPUT FUNCTIONALITY */ }
-
-                <TextField  
-                            style={{marginBottom:9}}
-                            label="Service URL"  
-                            helperText="Please enter endpoint URL if different from default" 
-                            value={endpointUrl}
-                            onChange={(e)=> setEndpointUrl(e.target.value)}/>
                 
                 {/* BEGIN-ORGANIZATION-ID MENU */}
                 <OrganizationSelect onOrgSelectChanges={handleOrgChanges}></OrganizationSelect>
                 {/* END-ORGANIZATION-ID MENU */}
+
+                <TextField  
+                            style={{marginBottom:9}}
+                            label="Service URL (Optional)"  
+                            helperText="Please enter endpoint URL if different from default" 
+                            value={endpointUrl}
+                            onChange={(e)=> setEndpointUrl(e.target.value)}/>
 
                 <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:colorStatus}}
                     disabled = {(isWaiting)}
@@ -327,8 +347,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                                         ``+
                                         ``
                                         );
-                            setIsWaiting(true);
-                            setResultReady(false);
+                            onClickInitRequest();
                         }
                     }>Submit Request
                 </Button>

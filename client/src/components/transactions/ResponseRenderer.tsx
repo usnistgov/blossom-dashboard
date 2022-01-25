@@ -70,19 +70,7 @@ const ResponseRenderer = (props: IResponseRenderer)=>{
                 allResponses.map( (response: IPostResponse, index:number)=>{
                         return (
                             <div key={`Key-For-Div-${index}`}>
-                                <FormLabel style={styleResponseTimeInfo(response)}
-                                    value={`@${response.timeStamp} done in `+
-                                            `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
-                                    {`@${response.timeStamp} done in `+
-                                    `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
-                                </FormLabel>
-                                <FormLabel style={styleResponse(response)}
-                                    value={response.responseInfo?response.responseInfo.data:
-                                            (response.errorInfo)?'response.errorInfo.data': 'no info' }>
-                                    {`${index>0?index+'.':''} ${response.isError}` ?? index}
-                                    {response.responseInfo?response.responseInfo.data:
-                                            (response.errorInfo)?response.errorInfo.data: 'no info' }
-                                </FormLabel>
+
                             </div>
                         );
                     }
