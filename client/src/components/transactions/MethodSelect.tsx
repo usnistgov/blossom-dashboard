@@ -178,6 +178,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     const callWasFinished = (newData: IPostResponse)=>{
         console.log(`IsError:${newData.isError} URL:${newData.originalUrl}`)
         const newCopy = allResponses.slice();
+        newData.timeBack=Date.now();
         newCopy.unshift(newData);
         setAllResponses(newCopy);
         setResultReady(true);
@@ -219,10 +220,17 @@ export const MethodSelect = (props: IMethodSelect) => {
         
     }
 
-   const killOldest=(toKill:number)=>{
-
+    const killOldest=(toKill?:number)=>{
+        const killNumber = toKill ?? (allResponses.length>3)?Math.floor(allResponses.length/2):1;
+        if(allResponses && allResponses.length>killNumber){
+            const newCopy = allResponses.slice(0, -killNumber)
+            setAllResponses(newCopy)
+        }
     }
 
+    const killAll = ()=>{
+        setAllResponses(new Array<IPostResponse>());
+    }
     /*
             {
             "name": "UploadATO",
@@ -343,32 +351,25 @@ export const MethodSelect = (props: IMethodSelect) => {
                         <Button variant="contained" 
                                 style={{ marginTop: 4, marginBottom: 4,backgroundColor:`#330033`, color:'yellow'}} 
                                 disabled={true}>
-                            <h4>{`${allResponses.length} Resp.`}</h4>
+                            <h4>{`${allResponses.length} Responses`}</h4>
                         </Button>
                
 
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
-                            onClick={
-                            setAllResponses[new Array<IPostResponse>()]}>
+                            onClick={killAll}>
                             Remove All 
                         </Button>
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkorange`}/*backgroundColor*/ }
-                            onClick={ 
-                                setAllResponses[new Array<IPostResponse>()]}>
-                            Remove Oldest {((allResponses.length>3)?Math.ceil(allResponses.length/2):'')}
+
+                        <Button variant="contained" style={{ marginTop:'4px', marginBottom:'4px', color:'darkorange', }} onClick={killOldest} >
+                            Remove Oldest {((allResponses.length>3)?Math.floor(allResponses.length/1.68):'')}
                         </Button>
 
 
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
-                            onClick={
-                                setAllResponses[new Array<IPostResponse>()]}>
-                            Keep Last 12
+                            onClick={ ()=> {return;}}>
+                            Keep Latest {(allResponses.length>=3)?Math.ceil(allResponses.length/1.68):''}
                         </Button>
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
-                            onClick={
-                                setAllResponses[new Array<IPostResponse>()]}>
-                            Keep Last 3
-                        </Button>
+ 
                     </ButtonGroup>
                 </div>
                 <div>

@@ -92,8 +92,8 @@ const ResponseResult = (props:IResponseResult)=>{
                                 fatResponse.responseInfo ={
                                     status: response.status.toString(),
                                     text: response.statusText,
-                                    data: response.data?JSON.stringify(response.data, null, 2): 'No-Data-Response',
-                                    essence:response.data?JSON.stringify(response.data, null, 2): 'No-Data-Response',
+                                    data: response.data?JSON.stringify(response.data, null, 2 ): 'No-Data-Response',
+                                    essence:response.data?JSON.stringify(response.data, null, 2 ): 'No-Data-Response',
                                 };
                             }
                         }                        
