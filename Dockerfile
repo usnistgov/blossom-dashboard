@@ -3,7 +3,7 @@ FROM node:16-alpine
 WORKDIR /client
 COPY client ./
 
-RUN yarn install && yarn build
+RUN yarn install && yarn build:production
 
 WORKDIR /server
 COPY server ./
