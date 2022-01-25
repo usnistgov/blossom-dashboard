@@ -58,7 +58,7 @@ export const MethodSelect = (props: IMethodSelect) => {
     useEffect( () => setMethodIndex(props.defaultValue ?? 0), [props.defaultValue] );     // we want to update local value on prop value change
     useEffect( () => setMethodName(props.defaultMethod ?? ''), [props.defaultMethod] );
 
-    const formWidth="740px";
+    const formWidth="800px";
     const isDataReady = (methodIndex>0 && endpointUrl);
     const colorStatus = isDataReady?'#006600':'grey';
 
@@ -216,6 +216,10 @@ export const MethodSelect = (props: IMethodSelect) => {
     }
 
     const keepLast=(toKeep:number)=>{
+        
+    }
+
+   const killOldest=(toKill:number)=>{
 
     }
 
@@ -335,19 +339,25 @@ export const MethodSelect = (props: IMethodSelect) => {
 
             <FormControl style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} >
                 <div>
-                    <ButtonGroup style={{width:`100%`, itemAlign:`center`, textAlign:`center`, }}>                    
+                    <ButtonGroup style={{width:`100%`, itemAlign:`center`, textAlign:`center`, justifyContent: 'center'}}>       
+                        <Button variant="contained" 
+                                style={{ marginTop: 4, marginBottom: 4,backgroundColor:`#330033`, color:'yellow'}} 
+                                disabled={true}>
+                            <h4>{`${allResponses.length} Resp.`}</h4>
+                        </Button>
+               
+
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkred`, border:`1px color:purple`}}
                             onClick={
                             setAllResponses[new Array<IPostResponse>()]}>
-                            Delete All Responses
+                            Remove All 
                         </Button>
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkorange`}/*backgroundColor*/ }
-                            onClick={
+                            onClick={ 
                                 setAllResponses[new Array<IPostResponse>()]}>
-                            Remove Oldest {}
+                            Remove Oldest {((allResponses.length>3)?Math.ceil(allResponses.length/2):'')}
                         </Button>
-                        <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,backgroundColor:`lightgrey`}} disabled={true}>
-                        </Button>
+
 
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
                             onClick={
@@ -362,23 +372,20 @@ export const MethodSelect = (props: IMethodSelect) => {
                     </ButtonGroup>
                 </div>
                 <div>
-                {`LenResp:${allResponses.length}`}
-                {
-                    allResponses.map( (response: IPostResponse, index:number)=>{
+                {allResponses.map( (response: IPostResponse, index:number)=>{
                             return (
                                 <div key={`Key-For-Div-${index}`}>
+                                    
                                     <FormLabel style={styleResponseTimeInfo(response)}
                                         value={`@${response.timeStamp} done in `+
                                                 `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`} >
                                         {`@${response.timeStamp} done in `+
                                         `${(Number(response.timeBack)-response.timeSent)/1000.0} seconds`}
                                     </FormLabel>
-                                    <FormLabel style={styleResponse(response)}
-                                        value={response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?'response.errorInfo.data': 'no info' }>
-                                        {`${index>0?index+'.':''} ${response.isError}` ?? index}
+                                    <FormLabel style={styleResponse(response)}>
+                                        {`${index>0?`${index+1}`+'.':''} ${response.isError}` ?? index}
                                         {response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?response.errorInfo.data: 'no info' }
+                                                (response.errorInfo)?response.errorInfo.data:'no info'}
                                     </FormLabel>
                                 </div>
                             );

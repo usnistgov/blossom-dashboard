@@ -22,6 +22,7 @@ export interface IResponseData{
     status?: string;
     data?:string;
     text?:string;
+    essence?:string
 }
 export interface IPostResponse{
     timeSent:number;
@@ -84,13 +85,15 @@ const ResponseResult = (props:IResponseResult)=>{
                                 fatResponse.responseInfo ={
                                     status: response.status.toString(),
                                     text: response.statusText,
-                                    data: JSON.stringify(response.data, null, 2),
+                                    data: response.data ?? 'Empty-Response',
+                                    essence: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
                                 };
                             }else{ // Case of no Response.Data
                                 fatResponse.responseInfo ={
                                     status: response.status.toString(),
                                     text: response.statusText,
-                                    data: `No Data Returned`,
+                                    data: response.data ?? 'No-Data-Response',
+                                    essence:response.data?JSON.stringify(response.data, null, 2): 'No-Data-Response',
                                 };
                             }
                         }                        
