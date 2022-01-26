@@ -192,7 +192,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                         setResultReady(true);
                         setIsWaiting(false);
                     },
-                2700
+                700
             );
     }
 

@@ -64,7 +64,8 @@ const ResponseResult = (props:IResponseResult)=>{
                 RequestHandler.PostRequest(props.endPointUrl, requestToPost)
                     .then(
                     (response)=>{
-                        RequestHandler.parseResponseInDepth(response); // <== Debugging]\
+                        console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(). Before ParseResponse DEBUG`);
+                        RequestHandler.parseResponseInDepth(response, '.THEN() 1st Line'); // <== Debugging
                         console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(). Before Status ?in? 200s`);
                         if(response && response.status<200 && response.status>=300){
                             console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status not in 200s`);
