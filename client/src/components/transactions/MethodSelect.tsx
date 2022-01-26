@@ -18,6 +18,7 @@ import OrganizationSelect, {IOrgIdSelectParams} from './OrganizationSelect';
 import ResponseResult, { IPostResponse } from './ResponseResult';
 import {IParamType, IMethodInfo, serviceApiMethods, getPreparedServiceRequest, IRquestPrepInfo} from "../../pages/transactions/DataTypes";
 import ButtonGroup from '@material-ui/core/ButtonGroup/ButtonGroup';
+import { resolveMotionValue } from 'framer-motion';
 
 
 export interface IMethodSelect{
@@ -176,13 +177,23 @@ export const MethodSelect = (props: IMethodSelect) => {
     }
 
     const callWasFinished = (newData: IPostResponse)=>{
-        console.log(`IsError:${newData.isError} URL:${newData.originalUrl}`)
+        console.log(`Callback MethodSelect::callWasFinished()`+
+                    `\n\tIsError:${newData.isError}`+
+                    `\n\tMethod:${newData.originalRequest.name}`+
+                    `\n\tURL:${newData.originalUrl}`
+                    );
         const newCopy = allResponses.slice();
         newData.timeBack=Date.now();
         newCopy.unshift(newData);
         setAllResponses(newCopy);
-        setResultReady(true);
-        setIsWaiting(false);
+        setTimeout(
+                () =>
+                    {
+                        setResultReady(true);
+                        setIsWaiting(false);
+                    },
+                2700
+            );
     }
 
 
@@ -252,6 +263,14 @@ export const MethodSelect = (props: IMethodSelect) => {
         }
     }
 
+    const killTop=(toKill:number)=>{
+        const killNumber = toKill;
+        if(allResponses && allResponses.length>killNumber){
+            const newCopy = allResponses.slice(killNumber);
+            setAllResponses(newCopy)
+        }
+    }
+
     const killAll = ()=>{
         setAllResponses(new Array<IPostResponse>());
     }
@@ -265,6 +284,24 @@ export const MethodSelect = (props: IMethodSelect) => {
             }
         }
         return 'No Status'; 
+    }
+
+    const getFormattedResponseBody = (response: IPostResponse): string=>{
+        let returnLine='';
+        if(response){
+            if(response.isError){
+                if(response.errorInfo){
+                    returnLine += response.errorInfo.text ?? 'No Text Error-Info';
+                    returnLine += response.errorInfo.essence ?? 'No Essential Error-Info'
+                }
+            }else{
+                if(response.responseInfo){
+                    returnLine += response.responseInfo.essence ?? 'No Essential Resp-Info';
+                    returnLine += response.responseInfo.text ?? 'No Text Resp-Info';
+                }
+            }
+        }
+        return returnLine;
     }
 
     return (
@@ -391,8 +428,8 @@ export const MethodSelect = (props: IMethodSelect) => {
                             Keep Latest {(allResponses.length>=3)?Math.ceil(allResponses.length/1.68):''}
                         </Button>
                         <Button variant="contained" style={{ marginTop: 4, marginBottom: 4,color:`darkgreen`}/*backgroundColor*/ }
-                            onClick={ ()=> {killOldest(1);}}>
-                            Remove End One
+                            onClick={ ()=> {killTop(1);}}>
+                            Remove Top One
                         </Button>
  
                     </ButtonGroup>
@@ -416,8 +453,7 @@ export const MethodSelect = (props: IMethodSelect) => {
                                     </FormLabel>
                                     <br/>
                                     <div style={styleResponse(response)}>
-                                        {response.responseInfo?response.responseInfo.data:
-                                                (response.errorInfo)?response.errorInfo.essence:'No Info'}
+                                        {getFormattedResponseBody(response)}
                                     </div>
                                 </div>
                             );

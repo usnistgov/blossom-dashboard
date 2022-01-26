@@ -24,7 +24,7 @@ export interface IPostResponse{
     timeSent:number;
     timeBack?:number;
     timeStamp?:string;
-    originalUrl:string;
+    originalUrl?:string;
     originalRequest: ITransactionRequestBody;
     isError?:boolean;
     responseInfo?: IResponseData;
@@ -61,13 +61,13 @@ const ResponseResult = (props:IResponseResult)=>{
                 newFatResponse.originalRequest=outRequest;
                 console.log(`@${new Date().toLocaleTimeString()} BEFORE:RequestHandler.PostRequest(...) RqN:${newFatResponse.originalRequest.name}`);
 
-                RequestHandler.PostRequest(props.endPointUrl, outRequest)
+                RequestHandler.PostRequest(props.endPointUrl, requestToPost)
                     .then(
                     (response)=>{
                         RequestHandler.parseResponseInDepth(response); // <== Debugging]\
-                        console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(). Before Status??=??200`);
-                        if(response && response.status!==200){
-                            console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status!=200`);
+                        console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(). Before Status ?in? 200s`);
+                        if(response && response.status<200 && response.status>=300){
+                            console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status not in 200s`);
 
                             newFatResponse.isError = true;
                             setIsError(true);
@@ -125,6 +125,7 @@ const ResponseResult = (props:IResponseResult)=>{
                             console.log(`Status:${newFatResponse.errorInfo.status}!\n\tEssence:${newFatResponse.errorInfo.essence}`);
                         }else if(error && error.stack && error.message){
                             console.log(`@${new Date().toLocaleTimeString()} in CATCH(). Error:TypeError`);
+
                             console.log(`\t\t\tin CATCH(). Error:${error}`+
                                         `\n\t\t\tName:${error.name?error.name:'No-Error-Name'}`+
                                         `\n\t\t\tStack:${error.stack}`+
@@ -132,13 +133,23 @@ const ResponseResult = (props:IResponseResult)=>{
                                         `\n\t\t\tKeys:${Object.keys(error).length>0?Object.keys(error):'No-Keys'}`+
                                         `\n\t\t\tValues:${Object.values(error).length>0?Object.values(error):'No-Values'}`
                                         );
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). BEFORE:FatResponse Stuffing-Done`);
+                            newFatResponse.errorInfo = {
+                                data: error.message,
+                                essence: error.name?error.name:'No-Error-Name',
+                                status: '???',
+                                text: `${error.name?error.name:'No-Error-Name'}:${error.message}`,
+                            }
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). AFTER:FatResponse Stuffing-Done`);
                         }
                         else{
                             console.log(`@${new Date().toLocaleTimeString()} in CATCH(). !!!Response`);
                             console.log(`\t\t\t in CATCH(). Error:${error} Keys:${Object.keys(error)}`);
                         } 
-                        setErrorStatus(`IsError:${isError}! ${error.name}!\n\t${error.message}`);
+                        //setErrorStatus(`IsError:${isError}! ${error.name??'No-Error-Name'}!\n\t${error.message??'No-Error-Message'}`);
+                        console.log(`@${new Date().toLocaleTimeString()} in CATCH(). SettingState`);
                         setFatResponse(newFatResponse)
+                        console.log(`@${new Date().toLocaleTimeString()} in CATCH(). DispatchingUpdate`);
                         dispatchResponseBack(newFatResponse as IPostResponse);
                     })              
                 // Runs for all cases - Errors and otherwise!!!
@@ -150,7 +161,7 @@ const ResponseResult = (props:IResponseResult)=>{
                         setIsReady(true);
                         console.log(`IsError:${isError} - ${errorStatus}`);
                         // in either case - must reset submit button
-                        setFatResponse(newFatResponse)
+                        // setFatResponse(newFatResponse)
                         dispatchResponseBack(newFatResponse as IPostResponse);
                     }
                 );
