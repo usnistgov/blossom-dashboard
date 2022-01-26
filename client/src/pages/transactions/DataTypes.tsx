@@ -168,12 +168,6 @@ export const serviceApiMethods: Array<IMethodInfo> = [
             // public:[{name:'', type:'', info:''}],
             isOptional: true,
         },
-        // 17. 
-        {   name:'RequestAccount', 
-            info:'D1', 
-            // trans:[{name:'account', type:'', info:''}],
-            isOptional: true,
-        },
         // 18. 
         {   name:'ApproveAccount', 
             info:'Approve an account request.'+
