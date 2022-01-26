@@ -38,112 +38,76 @@ export default class RequestHandler{
         const urlTail = 'transaction/invoke'; //'transaction/query'
         const url=`${endpointUrl}/${urlTail}`;
         return await axios.post(url, request)
-        
-/*         .then(
-            (response) => {                
-                console.log(`PostRequest::response was: ${response.data} & status:${response.status}`);
-                try{
-                    formedJson = JSON.stringify(response.data, null, spaceSteps );
-                }catch(expect: Exception){
-                    formedJson = JSON.stringify(
-                            {
-                                jsonParseException: expect.Message,
-                                originalResponse: response.data,
-                            }, null, spaceSteps
-                        )
-                }
-            } );
-*/
-           
     }
-
-
 
     public static async GetOrgIdentity(endpointUrl:string = ''): Promise<AxiosResponse<any, any>>{
         // http://10.208.253.184:8888/identity
-        let jsonArray:any;
-        let response:any;
         const identityPath:string='/identity';
-        return await axios.get(endpointUrl+identityPath
-            /* ,
-            {headers:
-                {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Access-Control-Allow-Origin":  "http://10.208.253.184:8888",
-                    "Access-Control-Allow-Methods": "GET",
-                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                }
-            } */
-            )
-            /* 
-            .then((response)=>
-                    {
-                        RequestHandler.parseResponseInDepth(response, '@ Then')
-                        if(response.status<500){
-                            // formedJson = JSON.stringify(response.data, null, spaceSteps );
+        return await axios.get(endpointUrl+identityPath)
+    }
 
-                            // testArray = JSON.parse('[{"name":"samsclient3","mspId":"m-IOQVHF6NJZBOPG6TGXGPUZAQX4"},'+
-                            //                         '{"name":"nistclient2","mspId":"m-32D73UGIRRH4BCJMJ5OKEGAVF4"},'+
-                            //                         '{"name":"shdclient1","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"}]');
 
-                            console.log(`JSON Array Assigning`);
-                            jsonArray = response.data;
-                            if(jsonArray){
-                                    console.log(`jsonArray || formedJson`);
-                                }
+    public static parseResponseInDepth(response, context?:string='Undefined Context'){
+        if(response){
+            const respKeys = Object.keys(response);
+            let messageArray:Array<string> = new Array<string>();
+            messageArray.push(  `Context:${context}\n\t`+
+                                `Response:`+
+                                `\n\t\tHasKeys:{${respKeys}}`
+                            );
+            if(response.status){
+                messageArray.push(`\n\t\tResponse.Status: ${response.status}`);
+            }        
+            if(response.data){
+                messageArray.push(RequestHandler.listKeyValues(response.data, 'Response.Data:'));
+            } 
+            console.log(messageArray.join(' '));
+        }else{
+            console.log(`!!!No-Response!!!`);
+        }
+    }
+
+    public static listKeyValues(
+        src: Object, 
+        title: string = '', 
+        depth:number=3,
+        goDeeper:boolean = true):string
+    {
+        const toGoDeeper = (depth>5)?false: goDeeper;
+        const list:Array<string> = new Array<string>();
+        const titleTab='\n'+'\t'.repeat(depth-1);
+        const depthTab='\t'.repeat(depth);
+        const doTitle = title?`${titleTab}${title}\n${depthTab}` : '';
+        if(src){
+            const kvs = Object.entries(src);
+            if(kvs && kvs.length>0){
+                kvs.forEach(
+                    ([key, value], index)=>{
+                    let showValue = value;
+                    let showKey = key;
+                    if(toGoDeeper && typeof value === 'object'){
+                        showKey = `${key}:`
+                        if( !isNaN(Number(key)) ){ //This will be an Array<T> object
+                            showKey = `[${key}]:`;
                         }
+                        showValue = RequestHandler.listKeyValues(value, '', depth+1, toGoDeeper);
+                        list.push(`\n${depthTab}${showKey}${showValue},`);
+                    }else{
+                        list.push(`\n${depthTab}${showKey}:\t${showValue},`);
                     }
-                ).catch(
-                    (expected: Error)=>{
-                        console.log(`Catch-Exception:${expected.message}/${expected.stack}`)
-                        RequestHandler.logReaponseDetails(response);
-                    });
-                */
-/* 
-            if(jsonArray){
-                console.log(`jsonArray || formedJson`);
-                return jsonArray;
-            }else if(testArray){
-                console.log(`return testArray;`);
-                return testArray;
-            }else{
-                console.log(`!!!!!!=>Hard STOP-LOSS`);
-                return [{"name":"samsclient1","mspId":"m-IOQVHF6NJZBOPG6TGXGPUZAQX4"},
-                        // {"name":"samsclient2","mspId":"m-IOQVHF6NJZBOPG6TGXGPUZAQX4"},
-                        // {"name":"samsclient3","mspId":"m-IOQVHF6NJZBOPG6TGXGPUZAQX4"},
-                        // {"name":"nistclient1","mspId":"m-32D73UGIRRH4BCJMJ5OKEGAVF4"},
-                        {"name":"nistclient2","mspId":"m-32D73UGIRRH4BCJMJ5OKEGAVF4"},
-                        // {"name":"nistclient3","mspId":"m-32D73UGIRRH4BCJMJ5OKEGAVF4"},
-                        // {"name":"shdclient1","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"},
-                        // {"name":"shdclient2","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"},
-                        {"name":"shdclient3","mspId":"m-ZD2Y4KRDYZHZJBBFWPZSRCEMHQ"}]
+                });
             }
-*/
-    }
-
-    private static logReaponseDetails(response) {
-        if(response){
-            const keys = Object.keys(response.data);            
-            console.log(`logReaponseDetails::response data was:\n\t` +
-                `${response.data}\n\t` +
-                `status:${response.status}/${response.statusText}` +
-                `keys:${keys}`
-            );
         }
-    }
-
-    public static parseResponseInDepth(response, context?:string='No Context'){
-        if(response){
-            console.log(`${context}\n\t`+
-                        `Response:\n\tWhole-Obj:${response}`+
-                        `\n\tListKeys:{${Object.keys(response)}}`+
-                        `\n\tData:${response.data}`+
-                        `\n\tData[0]:Keys:${Object.keys(response.data[0])}`+
-                        `\n\t`+
-                        ``
-                        );
+        const valKeys = Object.keys(src);
+        if(valKeys && valKeys.length>0)
+        { 
+            if(isNaN(Number(valKeys[0]))){
+                return `${doTitle}{${list.join(' ')}\n${depthTab}}`;
+            }else{
+                return `${doTitle}[${list.join(' ')}\n${depthTab}]`;
+            }
         }
+        return list.join(' ');
     }
 
 }
