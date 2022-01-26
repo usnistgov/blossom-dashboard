@@ -220,15 +220,11 @@ export const MethodSelect = (props: IMethodSelect) => {
         if(isReady && isWaiting){
             return(
                 <ResponseResult
-                    responseWaitingTitle={`Posting ${methodName} call may take some time... Please, wait.`}
-                    resultWaitingText={`Result is not ready yet. Loading...`}
+                    responseWaitingTitle={`Posting ${methodName}... Call may take some time. Please, wait.`}
+                    resultProcessingTitle={`Processing ${methodName} response. Loading data...`}
                     onResultFinished={callWasFinished}
                     request={request}
                     endPointUrl={endpointUrl}
-                    call_name={methodName}
-                    id_for_call={orgName}
-                    trans={getSetParams(props.options[methodIndex].trans, tranParams)}
-                    params={getSetParams(props.options[methodIndex].public, pubParams)}
                     call_info={props.options[methodIndex]}
                 />
             );

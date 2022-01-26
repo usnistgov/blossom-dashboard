@@ -7,7 +7,7 @@ import { IParamType, IMethodInfo } from '../../pages/transactions/DataTypes';
 
 export interface IResponseResult{
     responseWaitingTitle: string;
-    resultWaitingText?: string;
+    resultProcessingTitle?: string;
     onResultFinished: (data: IPostResponse)=>void;
     call_info: IMethodInfo;
     endPointUrl: string;
@@ -59,7 +59,7 @@ const ResponseResult = (props:IResponseResult)=>{
                 setFatResponse(initFatResponse);
                 const newFatResponse = {...initFatResponse as IPostResponse};
                 newFatResponse.originalRequest=outRequest;
-                console.log(`@${new Date().toLocaleTimeString()} BEFORE:RequestHandler.PostRequest(...) RqN:${newFatResponse.originalRequest.name}`);
+                console.log(`@${new Date().toLocaleTimeString()} BEFORE:RequestHandler.PostRequest(...) Method:${newFatResponse.originalRequest.name}`);
 
                 RequestHandler.PostRequest(props.endPointUrl, requestToPost)
                     .then(
@@ -70,9 +70,15 @@ const ResponseResult = (props:IResponseResult)=>{
                             console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status not in 200s`);
 
                             newFatResponse.isError = true;
+                            newFatResponse.responseInfo ={
+                                    status: response.status.toString(),
+                                    text: response.statusText.toString(),
+                                    data: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
+                                    essence: (response.data)?JSON.stringify(response.data, null, 2):'Empty-Response',
+                                };
                             setIsError(true);
                             resetResponseModel();
-                            setErrorStatus(response);
+                            setErrorStatus(response.statusText);
                         }else{ // Response Status===200!!!
                             console.log(`@${new Date().toLocaleTimeString()} in 1st THEN(): Status==200 && ??Data`);
 
@@ -123,6 +129,8 @@ const ResponseResult = (props:IResponseResult)=>{
                                 text: '',
                             }
                             console.log(`Status:${newFatResponse.errorInfo.status}!\n\tEssence:${newFatResponse.errorInfo.essence}`);
+                        }else if(error.request){
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). REQUEST-ERROR`);
                         }else if(error && error.stack && error.message){
                             console.log(`@${new Date().toLocaleTimeString()} in CATCH(). Error:TypeError`);
 
@@ -141,9 +149,8 @@ const ResponseResult = (props:IResponseResult)=>{
                                 text: `${error.name?error.name:'No-Error-Name'}:${error.message}`,
                             }
                             console.log(`@${new Date().toLocaleTimeString()} in CATCH(). AFTER:FatResponse Stuffing-Done`);
-                        }
-                        else{
-                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). !!!Response`);
+                        }else{
+                            console.log(`@${new Date().toLocaleTimeString()} in CATCH(). !!!Response-Error && !!!REQUEST-ERROR`);
                             console.log(`\t\t\t in CATCH(). Error:${error} Keys:${Object.keys(error)}`);
                         } 
                         //setErrorStatus(`IsError:${isError}! ${error.name??'No-Error-Name'}!\n\t${error.message??'No-Error-Message'}`);
@@ -162,7 +169,7 @@ const ResponseResult = (props:IResponseResult)=>{
                         console.log(`IsError:${isError} - ${errorStatus}`);
                         // in either case - must reset submit button
                         // setFatResponse(newFatResponse)
-                        dispatchResponseBack(newFatResponse as IPostResponse);
+                        // dispatchResponseBack(newFatResponse as IPostResponse);
                     }
                 );
             }, []);
@@ -182,7 +189,7 @@ const ResponseResult = (props:IResponseResult)=>{
         if(!isReady){
             return (`${props.responseWaitingTitle}`);
         }else{
-            return '';
+            return (`${props.resultProcessingTitle}`);
         }
     }
 
