@@ -295,9 +295,11 @@ export const MethodSelect = (props: IMethodSelect) => {
                 }
             }else{
                 if(response.responseInfo){
-                    // returnLine += response.responseInfo.essence ?? 'No Essential Resp-Info';
-                    returnLine += response.responseInfo.essence ? HttpActions.listKeyValues(JSON.parse(response.responseInfo.essence), undefined, 1, true, '\n', '  ') : 'No Essential Resp-Info'
-                    // returnLine += response.responseInfo.essence ? JSON.stringify(JSON.parse(response.responseInfo.essence), undefined, 4) : 'No Essential Resp-Info';
+                    try {
+                        returnLine += response.responseInfo.essence ? HttpActions.listKeyValues(JSON.parse(response.responseInfo.essence), undefined, 1, true, '\n', '  ') : 'No Essential Resp-Info'
+                    } catch {
+                        returnLine += `${response.responseInfo.essence}`;
+                    }
                     returnLine += ' ' + response.responseInfo.text ?? 'No Text Resp-Info';
                 }
             }
