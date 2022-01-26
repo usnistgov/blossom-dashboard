@@ -21,6 +21,8 @@ import ButtonGroup from '@material-ui/core/ButtonGroup/ButtonGroup';
 import { resolveMotionValue } from 'framer-motion';
 
 
+import styles from './MethodSelect.module.css';
+
 export interface IMethodSelect{
     defaultMethod: string;
     defaultValue: number;
@@ -301,8 +303,10 @@ export const MethodSelect = (props: IMethodSelect) => {
     }
 
     return (
-        <div style={{ minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}}>
-            <FormControl    style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}} >
+        // style={{ minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}}
+        <div className={styles.row}>
+            {/* style={{ minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9,}} */}
+            <FormControl className={styles.column}>
                 { /* BEGIN-METHOD-SELECT MENU */ }
                 <InputLabel 
                             id="demo-method-select-label" 
@@ -401,9 +405,10 @@ export const MethodSelect = (props: IMethodSelect) => {
                 <hr/>            
             </FormControl>
 
-            <FormControl style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} >
+            {/* style={{ m: 1, minWidth: formWidth, width: formWidth, marginTop: 18, marginBottom: 9, border:`2px solid #222222`}} */}
+            <FormControl className={`${styles.column} ${styles.output}`}>
                 <div>
-                    <ButtonGroup style={{width:`100%`, itemAlign:`center`, textAlign:`center`, justifyContent: 'center'}}>       
+                    <ButtonGroup style={{width:`100%`, textAlign:`center`, justifyContent: 'center'}}>       
                         <Button variant="contained" 
                                 style={{ marginTop: 4, marginBottom: 4,backgroundColor:`#330033`, color:'yellow'}} 
                                 disabled={true}>
