@@ -71,13 +71,16 @@ export default class RequestHandler{
         src: Object, 
         title: string = '', 
         depth:number=3,
-        goDeeper:boolean = true):string
+        goDeeper:boolean = true,
+        forBreak:string = '\n', // ${forBreak}
+        forTab:string = '\t', // ${forTab}
+        ):string
     {
         const toGoDeeper = (depth>5)?false: goDeeper;
         const list:Array<string> = new Array<string>();
-        const titleTab='\n'+'\t'.repeat(depth-1);
-        const depthTab='\t'.repeat(depth);
-        const doTitle = title?`${titleTab}${title}\n${depthTab}` : '';
+        const titleTab=forBreak+forTab.repeat(depth-1);
+        const depthTab=forTab.repeat(depth);
+        const doTitle = title?`${titleTab}${title}${forBreak}${depthTab}` : '';
         if(src){
             const kvs = Object.entries(src);
             if(kvs && kvs.length>0){
@@ -91,9 +94,9 @@ export default class RequestHandler{
                             showKey = `[${key}]:`;
                         }
                         showValue = RequestHandler.listKeyValues(value, '', depth+1, toGoDeeper);
-                        list.push(`\n${depthTab}${showKey}${showValue},`);
+                        list.push(`${forBreak}${depthTab}${showKey}${showValue},`);
                     }else{
-                        list.push(`\n${depthTab}${showKey}:\t${showValue},`);
+                        list.push(`${forBreak}${depthTab}${showKey}:${forTab}${showValue},`);
                     }
                 });
             }
@@ -102,9 +105,9 @@ export default class RequestHandler{
         if(valKeys && valKeys.length>0)
         { 
             if(isNaN(Number(valKeys[0]))){
-                return `${doTitle}{${list.join(' ')}\n${depthTab}}`;
+                return `${doTitle}{${list.join(' ')}${forBreak}${depthTab}}`;
             }else{
-                return `${doTitle}[${list.join(' ')}\n${depthTab}]`;
+                return `${doTitle}[${list.join(' ')}${forBreak}${depthTab}]`;
             }
         }
         return list.join(' ');
