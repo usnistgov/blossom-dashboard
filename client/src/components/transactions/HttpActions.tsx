@@ -100,6 +100,8 @@ export default class RequestHandler{
                     }
                 });
             }
+        } else {
+            return 'null';
         }
         const valKeys = Object.keys(src);
         if(valKeys && valKeys.length>0)
