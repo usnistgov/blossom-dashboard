@@ -22,6 +22,7 @@ import { resolveMotionValue } from 'framer-motion';
 
 
 import styles from './MethodSelect.module.css';
+import HttpActions from './HttpActions';
 
 export interface IMethodSelect{
     defaultMethod: string;
@@ -294,8 +295,10 @@ export const MethodSelect = (props: IMethodSelect) => {
                 }
             }else{
                 if(response.responseInfo){
-                    returnLine += response.responseInfo.essence ?? 'No Essential Resp-Info';
-                    returnLine += response.responseInfo.text ?? 'No Text Resp-Info';
+                    // returnLine += response.responseInfo.essence ?? 'No Essential Resp-Info';
+                    returnLine += response.responseInfo.essence ? HttpActions.listKeyValues(JSON.parse(response.responseInfo.essence), undefined, 1, true, '\n', '  ') : 'No Essential Resp-Info'
+                    // returnLine += response.responseInfo.essence ? JSON.stringify(JSON.parse(response.responseInfo.essence), undefined, 4) : 'No Essential Resp-Info';
+                    returnLine += ' ' + response.responseInfo.text ?? 'No Text Resp-Info';
                 }
             }
         }
@@ -454,7 +457,13 @@ export const MethodSelect = (props: IMethodSelect) => {
                                     </FormLabel>
                                     <br/>
                                     <div style={styleResponse(response)}>
-                                        {getFormattedResponseBody(response)}
+                                        {response.isError ? <>
+                                            {getFormattedResponseBody(response)}
+                                        </> :
+                                        <pre style={{textAlign: 'left'}}>
+                                            {getFormattedResponseBody(response)}
+                                        </pre>
+                                        }
                                     </div>
                                 </div>
                             );

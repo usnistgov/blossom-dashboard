@@ -93,7 +93,7 @@ export default class RequestHandler{
                         if( !isNaN(Number(key)) ){ //This will be an Array<T> object
                             showKey = `[${key}]:`;
                         }
-                        showValue = RequestHandler.listKeyValues(value, '', depth+1, toGoDeeper);
+                        showValue = RequestHandler.listKeyValues(value, '', depth+1, toGoDeeper, forBreak, forTab);
                         list.push(`${forBreak}${depthTab}${showKey}${showValue},`);
                     }else{
                         list.push(`${forBreak}${depthTab}${showKey}:${forTab}${showValue},`);

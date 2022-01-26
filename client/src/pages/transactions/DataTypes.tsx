@@ -158,6 +158,9 @@ export const serviceApiMethods: Array<IMethodInfo> = [
         {   name:'GetHistory',
             info:'Obtain history of transactions', 
             isOptional: true,
+            public: [{
+                name: 'account_id', type: 'string', info: 'ID of the account'
+            }]
         },
         // 16. 
         {   name:'InitNGAC',
