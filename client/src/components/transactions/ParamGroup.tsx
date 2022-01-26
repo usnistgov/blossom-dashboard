@@ -1,15 +1,7 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import InputLabel from '@material-ui/core/InputLabel/InputLabel'
-import { makeStyles } from "@material-ui/core/styles";
-import FormLabel from '@material-ui/core/FormLabel/FormLabel';
 import TextField from '@material-ui/core/TextField/TextField';
-import Button from '@material-ui/core/Button/Button';
 
-import {IParamType, IMethodInfo, serviceApiMethods, IParamValues} from "../../pages/transactions/DataTypes";
-import {generateClasses} from "../../pages/transactions/AllStyling";
-import { useHistory } from 'react-router-dom';
+import {IParamType, IParamValues} from "../../pages/transactions/DataTypes";
 
 // Used to update Parameters at the Main Level
 export interface IParamValue{
@@ -60,7 +52,7 @@ export const ParamGroup = (props: IParamGroup) => {
             return (
                 <TextField  id={`text-field-${param.name}-${index}`}
                             name={param.name}
-                            style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"640px",}}
+                            style={{ marginTop: 6, marginBottom: 24, color:titleColor, width:"90%",}}
                             helperText={`${param.info}. Type:[${(param.type)}]`} 
                             value={param.value} label={`${index+1}. ${param.name}`}
                             onChange={onLocalParamChange}

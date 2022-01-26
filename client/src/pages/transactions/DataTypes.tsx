@@ -108,7 +108,7 @@ export const serviceApiMethods: Array<IMethodInfo> = [
                     ' Prerequisites: RequestCheckout must have been called already. '+
                     'The SAMS admin is the only user who can approve a checkout.', 
             trans:[ {name:'asset_id', type:'string', info:'ID of the asset to checkout'},
-                    {name:'account_name', type:'string', info:'the account that requested the checkout'}],
+                    {name:'account', type:'string', info:'the account that requested the checkout'}],
             transWrapper: 'checkout',
         },
         // 9.
@@ -145,7 +145,7 @@ export const serviceApiMethods: Array<IMethodInfo> = [
             trans:[ {name:'asset_id', type:'string', info:'ID of asset'},
                      {name:'licenses', type:'Array<string>', info:'String array of the licenses to be returned'},],
             transWrapper: 'checkin',
-        },    
+        },
         // 14.    
         {   name:'ProcessCheckin',
             info:'Process an existing request to checkin licenses by an account.', 
@@ -261,14 +261,16 @@ export const getPreparedServiceRequest = (props: IRquestPrepInfo):ITransactionRe
 
     const getTransientParams = ():{[key: string]: string;}=>{ // Prepare Trans-Params
         let allTrans: {[key:string]:string}={};
-        let transParams: {[key:string]:string|number} = {};
+        let transParams: {[key:string]:any} = {};
         if(props.trans && props.trans.length>0){
             props.trans.forEach(
                 (param:IParamType|undefined)=>{
                     if(param){
                         if(param.type && param.type==='number'){
                             transParams[`${param.name}`]=Number(`${param.value}`);
-                        }else{ // This is for the types string, JSON, etc
+                        }else if(param.type && param.type === 'Array<string>') {
+                            transParams[param.name] = param.value?.split(',') ?? []
+                        } else{ // This is for the types string, JSON, etc
                             transParams[`${param.name}`]=`${param.value}`;
                         }
                         console.log(`getPreparedServiceRequest->getTransientParams() Tran:${param.name}=${param.value}`);
