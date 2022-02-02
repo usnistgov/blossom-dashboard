@@ -1,4 +1,4 @@
-import { Gateway, Wallets, Network, Contract } from 'fabric-network';
+import { Gateway, Wallets, Network, Contract, ContractListener } from 'fabric-network';
 import * as fs from 'fs';
 import YAML from 'yaml';
 import { Config, Identity as IdentityConfig } from './config';
@@ -40,10 +40,14 @@ type IdentityMap = {
 export default class Blossom {
     private contractName: string;
     private identities: IdentityMap;
+    private endorsingOrgs: string[] | undefined;
+    private listeningClient: string;
 
-    private constructor(contractName: string, identities: IdentityMap) {
+    private constructor(contractName: string, identities: IdentityMap, listeningClient: string, endorsingOrgs?: string[]) {
         this.contractName = contractName;
         this.identities = identities;
+        this.endorsingOrgs = endorsingOrgs;
+        this.listeningClient = listeningClient;
     }
 
     public getIdentities(): {name: string, mspId: string}[] {
@@ -53,16 +57,25 @@ export default class Blossom {
         }));
     }
 
-    public getContractForIdentity(identity: string): Contract {        
-        return this.identities[identity].network.getContract(this.contractName);
+    public getEndorsingOrgs(): string[] | undefined {
+        return this.endorsingOrgs;
+    }
 
+    public getContractForIdentity(identity: string): Contract {   
+        return this.identities[identity].network.getContract(this.contractName);
+    }
+
+    public getListeningIdentityInfo(): [Network, Contract] {
+        const network = this.identities[this.listeningClient].network;
+        const contract = network.getContract(this.contractName);
+        return [network, contract];
     }
 
     public static async build(config: Config): Promise<Blossom> {
         const profile = YAML.parse(fs.readFileSync(config.connectionProfilePath).toString());
 
         const identityMap: IdentityMap = {};
-        
+
         for (const identityConfig of config.identities) {
             if (identityMap[identityConfig.name]) {
                 throw new Error(`Identity name clash, ${identityConfig.name} defined twice`);
@@ -74,6 +87,6 @@ export default class Blossom {
             }
         }
 
-        return new Blossom(config.contract, identityMap);
+        return new Blossom(config.contract, identityMap, config.listeningClient, config.endorsingOrganizations);
     }
 }

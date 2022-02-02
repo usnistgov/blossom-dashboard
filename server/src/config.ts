@@ -2,6 +2,8 @@ export interface Config {
     connectionProfilePath: string;
     channel: string;
     contract: string;
+    endorsingOrganizations?: string[];
+    listeningClient: string;
     identities: Identity[];
 }
 
