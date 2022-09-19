@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Outlet, Route, Routes } from 'react-router-dom'
-import { AuthCallback, AuthProvider, RequireAuth } from './api/auth'
-import { Landing, NotFound } from './pages'
+import { AuthProvider, RequireAuth } from 'api/auth'
+import { AuthCallback, Landing, NotFound } from 'pages'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

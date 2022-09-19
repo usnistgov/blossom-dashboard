@@ -1,6 +1,6 @@
-import AuthCallback from "./AuthCallback";
 import AuthProvider from "./AuthProvider";
 import RequireAuth from "./RequireAuth";
 import useAuth from "./useAuth";
+export { buildLoginHref } from "./routes";
 export { axiosAuthInstance } from "./instance";
-export { AuthCallback, AuthProvider, RequireAuth, useAuth };
+export { AuthProvider, RequireAuth, useAuth };

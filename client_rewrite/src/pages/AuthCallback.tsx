@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useAuth from "./useAuth";
+import { useAuth } from "api/auth";
 
 const AuthCallback:React.FC = () => {
     const { code } = useParams();
