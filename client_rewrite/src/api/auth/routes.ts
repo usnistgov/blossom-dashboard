@@ -1,9 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 
 export const AUTH_URL = "https://blossomtest.auth.us-east-1.amazoncognito.com";
-export const CLIENT_ID = "";
-export const IDP_NAME = "blossomtest";
-export const REDIRECT_URI = `${window.location.origin}/callback`;
+export const CLIENT_ID = "29hofkqg01irnfp2n8sp298nd7";
+export const REDIRECT_URI = `${window.location.origin}/`;
 
 export type OAuthResponse = {
   id_token?: string;
@@ -47,5 +46,5 @@ export function oauthRefresh(
 }
 
 export function buildLoginHref(): string {
-  return `${AUTH_URL}/oauth2/authorize?identity_provider=${IDP_NAME}&redirect_uri=${REDIRECT_URI}&response_type=CODE&client_id=${CLIENT_ID}&scope=email openid`;
+  return `${AUTH_URL}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=email+openid&redirect_uri=${REDIRECT_URI}`;
 }
