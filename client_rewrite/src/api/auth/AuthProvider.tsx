@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, FC, useMemo, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   clearCookies,
   getAuthTokenCookie,
@@ -47,7 +47,6 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const [interceptorIds, setInterceptorIds] = useState<[number, number]>();
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   function setCookies({ access_token, refresh_token, expires_in }: OAuthResponse) {
@@ -80,7 +79,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   async function logout() {
     clearCookies();
     setAuthenticated(false);
-    navigate("/");
+    window.location.href = import.meta.env.BASE_URL;
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

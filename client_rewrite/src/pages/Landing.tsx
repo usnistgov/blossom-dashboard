@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { LoginButton } from 'components'
 import { useAuth } from "api/auth";
 import useParams from "util/useParams";
-import { Link } from "react-router-dom";
 
 const Landing: React.FC = () => {
     const { code, error: error_response, error_description } = useParams();
@@ -10,13 +9,12 @@ const Landing: React.FC = () => {
     useEffect(() => {
         if (code) {
             authorize(code);
+            window.location.href = import.meta.env.BASE_URL;
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log(useParams())
-
-    const homeLink = <Link to="/">Go Home</Link>
+    const homeLink = <a href={import.meta.env.BASE_URL}>Go Home</a>
 
     if (error_response) {
         return <>

@@ -1,7 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 
-export const AUTH_URL = "https://blossomtest.auth.us-east-1.amazoncognito.com";
-export const CLIENT_ID = "29hofkqg01irnfp2n8sp298nd7";
+// Defined via environment variables, see .env.sample
+export const AUTH_URL = (import.meta.env.VITE_AUTH_URL ?? "") as string;
+export const CLIENT_ID = (import.meta.env.VITE_CLIENT_ID ?? "") as string;
+export const CLIENT_SECRET = (import.meta.env.VITE_CLIENT_SECRET ??
+  "") as string;
+
 export const REDIRECT_URI = `${window.location.origin}`;
 
 export type OAuthResponse = {
@@ -18,6 +22,7 @@ export function oauthAuthorize(
   const data = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
     redirect_uri: REDIRECT_URI,
     code,
   });
@@ -36,6 +41,7 @@ export function oauthRefresh(
     grant_type: "refresh_token",
     refresh_token,
     client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
   });
 
   return axios.post<OAuthResponse>(`${AUTH_URL}/oauth2/token`, data, {
