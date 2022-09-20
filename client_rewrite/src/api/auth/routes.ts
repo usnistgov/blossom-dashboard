@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 export const AUTH_URL = "https://blossomtest.auth.us-east-1.amazoncognito.com";
 export const CLIENT_ID = "29hofkqg01irnfp2n8sp298nd7";
-export const REDIRECT_URI = `${window.location.origin}/`;
+export const REDIRECT_URI = `${window.location.origin}`;
 
 export type OAuthResponse = {
   id_token?: string;
