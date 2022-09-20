@@ -6,7 +6,7 @@ export const CLIENT_ID = (import.meta.env.VITE_CLIENT_ID ?? "") as string;
 export const CLIENT_SECRET = (import.meta.env.VITE_CLIENT_SECRET ??
   "") as string;
 
-export const REDIRECT_URI = `${window.location.origin}`;
+export const REDIRECT_URI = `${window.location.origin}${import.meta.env.BASE_URL}`;
 
 export type OAuthResponse = {
   id_token?: string;

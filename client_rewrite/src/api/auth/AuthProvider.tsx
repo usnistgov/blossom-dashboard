@@ -79,7 +79,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   async function logout() {
     clearCookies();
     setAuthenticated(false);
-    window.location.href = import.meta.env.BASE_URL;
+    // window.location.href = import.meta.env.BASE_URL;
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
