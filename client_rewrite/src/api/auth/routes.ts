@@ -54,3 +54,7 @@ export function oauthRefresh(
 export function buildLoginHref(): string {
   return `${AUTH_URL}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=email+openid&redirect_uri=${REDIRECT_URI}`;
 }
+
+export function buildLogoutHref(): string {
+  return `${AUTH_URL}/logout?client_id=${CLIENT_ID}&logout_uri=${REDIRECT_URI}`;
+}

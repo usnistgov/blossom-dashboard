@@ -5,11 +5,10 @@ import useParams from "util/useParams";
 
 const Landing: React.FC = () => {
     const { code, error: error_response, error_description } = useParams();
-    const { authorize, loading, error } = useAuth();
+    const { authorize, loading, error, authenticated, logout } = useAuth();
     useEffect(() => {
         if (code) {
-            authorize(code);
-            window.location.href = import.meta.env.BASE_URL;
+            authorize(code).then(_ => window.location.href = import.meta.env.BASE_URL);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -38,7 +37,7 @@ const Landing: React.FC = () => {
     
     return <>
         <h1>Homepage</h1>
-        <LoginButton/>
+        {authenticated ? <button onClick={logout}>Logout</button>: <LoginButton/>}
     </>;
 }
 

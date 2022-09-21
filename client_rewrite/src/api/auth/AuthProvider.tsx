@@ -8,7 +8,7 @@ import {
   setRefreshTokenCookie,
 } from './cookies';
 import { createInterceptors, removeInterceptors } from './instance';
-import { oauthAuthorize, oauthRefresh, OAuthResponse } from './routes';
+import { buildLogoutHref, oauthAuthorize, oauthRefresh, OAuthResponse } from './routes';
 
 interface AuthContext {
   /**
@@ -81,7 +81,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     console.log('Logout called')
     clearCookies();
     setAuthenticated(false);
-    // window.location.href = import.meta.env.BASE_URL;
+    window.location.href = buildLogoutHref();
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,7 +89,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // If the page changes, reset the error state
   useEffect(() => {
-    if (value.error && location.pathname !== '/callback') setError(undefined);
+    // if (value.error && location.pathname !== '/callback') setError(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
@@ -114,12 +114,14 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   // When initially loads, try get access token
   useEffect(() => {
+    console.log('initial page load')
     if (getAuthTokenCookie()) {
       setAuthenticated(true);
       return;
     }
 
     if (getRefreshTokenCookie()) {
+      console.log('page load refresh')
       refresh();
       return;
     }
