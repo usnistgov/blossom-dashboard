@@ -65,6 +65,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function authorize(code: string) {
+    console.log('Authorize called')
     setLoading(true);
     await oauthAuthorize(code).then(
       response => {
@@ -77,6 +78,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function logout() {
+    console.log('Logout called')
     clearCookies();
     setAuthenticated(false);
     // window.location.href = import.meta.env.BASE_URL;
@@ -114,12 +116,15 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     if (getAuthTokenCookie()) {
       setAuthenticated(true);
-    } else {
-      refresh().then(undefined, error => {
-        setError(error);
-        logout();
-      });
+      return;
     }
+
+    if (getRefreshTokenCookie()) {
+      refresh();
+      return;
+    }
+
+    setAuthenticated(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
