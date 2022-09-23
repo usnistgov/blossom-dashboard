@@ -67,14 +67,16 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   async function authorize(code: string) {
     console.log('Authorize called')
     setLoading(true);
-    await oauthAuthorize(code).then(
-      response => {
-        setCookies(response.data);
-        setAuthenticated(true);
-      },
-      error => setError(error),
-    );
-    setLoading(false);
+    try {
+      const response = await oauthAuthorize(code);
+      setCookies(response.data);
+      setAuthenticated(true);
+    } catch (error) {
+      setError(error as Error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function logout() {

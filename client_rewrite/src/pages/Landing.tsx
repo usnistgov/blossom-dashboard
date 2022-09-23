@@ -7,8 +7,11 @@ const Landing: React.FC = () => {
     const { code, error: error_response, error_description } = useParams();
     const { authorize, loading, error, authenticated, logout } = useAuth();
     useEffect(() => {
-        if (code) {
-            authorize(code).then(_ => window.location.href = import.meta.env.BASE_URL);
+        if (code && loading !== true) {
+            authorize(code).then(_ => {
+                console.log("success");
+                window.location.href = import.meta.env.BASE_URL;
+            });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
