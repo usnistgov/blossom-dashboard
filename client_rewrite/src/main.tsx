@@ -2,7 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Outlet, Route, Routes } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from 'api/auth'
-import { Landing, NotFound, UserInfo } from 'pages'
+import { Dashboard, Landing, NotFound, UserInfo } from 'pages'
+import { FooterSimple } from 'components'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -17,9 +18,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           }>
             {/* Put auth routes here */}
             <Route path="userinfo" element={<UserInfo />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
+        <FooterSimple links={[{ link: "", label: "" }]} />
       </AuthProvider>
     </HashRouter>
   </React.StrictMode>
