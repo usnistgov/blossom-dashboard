@@ -7,7 +7,7 @@ const Landing: React.FC = () => {
     const { code, error: error_response, error_description } = useParams();
     const { authorize, loading, error, authenticated, logout } = useAuth();
     useEffect(() => {
-        if (code && loading !== true) {
+        if (code) {
             authorize(code).then(_ => {
                 console.log("success");
                 window.location.href = import.meta.env.BASE_URL;
