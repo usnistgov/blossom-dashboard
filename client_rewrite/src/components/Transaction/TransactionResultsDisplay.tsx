@@ -24,7 +24,7 @@ const CodeDisplay: React.FC<{text: string, label?: string}> = ({ label, text }) 
 
 export type TransactionResults = {
   request: TransactionRequest,
-  response: TransactionResponse,
+  response: TransactionResponse | string,
   date: Date,
 };
 
@@ -36,7 +36,7 @@ const TransactionResultsDisplay: React.FC<Params> = ({ results }) => {
   return <Box mt='md'>
     {results.map(({request, response, date}, i) =>
     <Paper mt='sm' p='md' shadow='xs' key={i}>
-      <Title order={5}>Transaction Name: {request.name}</Title>
+      <Title order={5}>Transaction: {request.name}</Title>
       <Text mb='xs' size='sm'>Sent {date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</Text>
       
       <CodeDisplay

@@ -1,27 +1,31 @@
 import { useState } from "react";
 import { Title, Grid, Button } from "@mantine/core";
-import { TransactionRequest } from "api";
+import { postTransaction, TransactionRequest } from "api";
 import { builders, TransactionResults, TransactionResultsDisplay, TransactionSelect } from "components";
 import { IconClearAll } from "@tabler/icons";
 
 export default function Transaction() {
   const [responses, setResponses] = useState<TransactionResults[]>([])
   const onSubmit = async (request: TransactionRequest) => {
-    console.log('transaction request: ', request);
+    try {
+      const response = await postTransaction(request);
 
-    // const response = await postTransaction(request);
-    
-    // fake sleeping for now
-    await new Promise(r => setTimeout(r, 1000));
-    const response = {'test': 'response'};
-
-    console.log('transaction response: ', response);
-
-    setResponses([{
-      request,
-      response,
-      date: new Date()
-    }, ...responses]);
+      // fake sleeping for now
+      // await new Promise(r => setTimeout(r, 1000));
+      // const response = {'test': 'response'};
+  
+      setResponses([{
+        request,
+        response: response.data,
+        date: new Date()
+      }, ...responses]);
+    } catch (e) {
+      setResponses([{
+        request,
+        response: `Client Error: ${e}`,
+        date: new Date()
+      }, ...responses])
+    }
   }
 
   return <>

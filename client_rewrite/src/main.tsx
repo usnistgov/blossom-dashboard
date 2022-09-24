@@ -11,7 +11,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/transaction" element={<Transaction />} />
           <Route path="/" element={
             <RequireAuth>
               <Outlet />
@@ -20,6 +19,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             {/* Put auth routes here */}
             <Route path="userinfo" element={<UserInfo />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="/transaction" element={<Transaction />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
