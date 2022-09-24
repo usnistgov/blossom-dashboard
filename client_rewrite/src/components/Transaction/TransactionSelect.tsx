@@ -25,6 +25,8 @@ const TransactionSelect: React.FC<Params> = ({ transactionBuilders, onSubmit }) 
   
   return <>
     <Select
+      label="Transaction Method"
+      description="Select which Bloss@M blockchain method to invoke"
       data={Object.keys(transactionBuilders).map((key) => ({label: key, value: key}))}
       value={selectedKey}
       onChange={(key) => {
