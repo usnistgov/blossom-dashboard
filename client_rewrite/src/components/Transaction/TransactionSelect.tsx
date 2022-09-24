@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Select, Text } from "@mantine/core";
-import { IconDatabase } from '@tabler/icons';
+import { Alert, Button, Select } from "@mantine/core";
+import { IconAlertCircle, IconDatabase } from '@tabler/icons';
 import { TransactionRequest } from "api";
 import { TransactionBuilder } from "./builder";
 
@@ -27,13 +27,25 @@ const TransactionSelect: React.FC<Params> = ({ transactionBuilders, onSubmit }) 
     <Select
       data={Object.keys(transactionBuilders).map((key) => ({label: key, value: key}))}
       value={selectedKey}
-      onChange={setSelectedKey}
+      onChange={(key) => {
+        // Reset transaction request (just in case)
+        setTransactionRequest(undefined);
+        setSelectedKey(key);
+      }}
+      mb='sm'
     />
 
     {SelectedTransactionBuilder ?
       // If a transaction builder was selected, display it
-      <SelectedTransactionBuilder {...{setTransactionRequest}} />
-      : <Text color="red">Please select a transaction type first.</Text>}
+      <SelectedTransactionBuilder {...{setTransactionRequest}} /> :
+      <Alert
+        icon={<IconAlertCircle size={16} />}
+        title="Invalid Transaction Request"
+        color="yellow"
+        mx='xl'
+      >
+        Please select a transaction type first.
+      </Alert>}
 
     <Button
       disabled={transactionRequest === undefined}
@@ -46,6 +58,7 @@ const TransactionSelect: React.FC<Params> = ({ transactionBuilders, onSubmit }) 
           onSubmit(transactionRequest).finally(() => setLoading(false));
         }
       }}
+      mt='sm'
     >
       Submit
     </Button>
