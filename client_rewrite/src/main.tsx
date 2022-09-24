@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter, Outlet, Route, Routes } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from 'api/auth'
-import { Dashboard, Landing, NotFound, UserInfo } from 'pages'
+import { Dashboard, Landing, NotFound, Transaction, UserInfo } from 'pages'
 import { FooterSimple } from 'components'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -11,6 +11,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/transaction" element={<Transaction />} />
           <Route path="/" element={
             <RequireAuth>
               <Outlet />
