@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Text, Title, Grid, Button } from "@mantine/core";
-import { TransactionRequest, TransactionResponse } from "api";
-import { builders, TransactionSelect } from "components";
+import { Title, Grid, Button } from "@mantine/core";
+import { TransactionRequest } from "api";
+import { builders, TransactionResults, TransactionResultsDisplay, TransactionSelect } from "components";
 
 export default function Transaction() {
-  const [responses, setResponses] = useState<TransactionResponse[]>([])
+  const [responses, setResponses] = useState<TransactionResults[]>([])
   const onSubmit = async (request: TransactionRequest) => {
     console.log('transaction request: ', request);
 
@@ -16,7 +16,11 @@ export default function Transaction() {
 
     console.log('transaction response: ', response);
 
-    setResponses([...responses, response]);
+    setResponses([...responses, {
+      request,
+      response,
+      date: new Date()
+    }]);
   }
 
   return <>
@@ -30,14 +34,8 @@ export default function Transaction() {
       </Grid.Col>
       <Grid.Col md={6}>
         <Button onClick={() => setResponses([])}>Clear Transactions</Button>
-        <br />
-        <Text>
-          <p>
-            {JSON.stringify(responses, null, 2)}
-          </p>
-        </Text>
+        <TransactionResultsDisplay results={responses} />
       </Grid.Col>
     </Grid>
-
   </>;
 }
