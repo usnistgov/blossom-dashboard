@@ -28,12 +28,14 @@ const RequestCheckout: TransactionBuilder = ({ setTransactionRequest }) => {
 
     if (valid) {
       setTransactionRequest({
-        functionType: 'invoke',
+        functionType: 'query',
         name: 'GetAsset',
         args: [],
         transient: {
-          'asset_id': assetId as string,
-          'amount': (amount as number).toString()
+          'checkout': {
+            'asset_id': assetId as string,
+            'amount': amount as number
+          }
         }
       });
     } else {
@@ -53,12 +55,14 @@ const RequestCheckout: TransactionBuilder = ({ setTransactionRequest }) => {
       description="ID of the asset to checkout"
       onChange={(e) => setAssetId(e.target.value)}
       error={assetIdError}
+      withAsterisk
     />
     <NumberInput
       label="Amount"
       description="Quantity of licenses to checkout"
       onChange={(e) => setAmount(e)}
       error={amountError}
+      withAsterisk
     />
   </>;
 }

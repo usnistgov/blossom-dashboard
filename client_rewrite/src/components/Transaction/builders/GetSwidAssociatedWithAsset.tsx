@@ -3,7 +3,7 @@ import { TextInput} from '@mantine/core';
 import { useEffect, useState } from "react";
 import BuilderInfo from "./BuilderInfo";
 
-const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
+const GetSwidAssociatedWithAsset: TransactionBuilder = ({ setTransactionRequest }) => {
   const [assetId, setAssetId] = useState<string>();
   const [account, setAccount] = useState<string>();
 
@@ -22,14 +22,14 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
     }
 
     if (account === undefined || account.length < 1) {
-      setAccountError('Asset id must have a length > 1');
+      setAccountError('Account id must have a length > 1');
       valid = false;
     }
 
     if (valid) {
       setTransactionRequest({
         functionType: 'invoke',
-        name: 'GetAsset',
+        name: 'GetSwIDsAssociatedWithAsset',
         args: [account as string, assetId as string],
       });
     } else {
@@ -40,9 +40,7 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
 
   return <>
     <BuilderInfo
-      description="List the licenses an account has for an asset"
-      info="The requesting member must have a status of 'Authorized' or else an error will occur.
-        A member can obtain a status of Authorized if the SAMS admin calls UpdateAccountStatus on the member's account."
+      description="Get the SwID Tags that have been reported and are associated with the given asset"
     />
     <TextInput
       label="Asset ID"
@@ -59,4 +57,4 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
   </>;
 }
 
-export default GetLicenses;
+export default GetSwidAssociatedWithAsset;

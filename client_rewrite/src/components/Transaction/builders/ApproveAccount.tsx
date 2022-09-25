@@ -3,14 +3,14 @@ import { TextInput} from '@mantine/core';
 import { useEffect, useState } from "react";
 import BuilderInfo from "./BuilderInfo";
 
-const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
+const ApproveAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   const [account, setAccount] = useState<string>();
   const [accountError, setAccountError] = useState<string>();
   useEffect(() => {
     if (account) {
       setTransactionRequest({
-        functionType: 'invoke',
-        name: 'GetAccount',
+        functionType: 'query',
+        name: 'ApproveAccount',
         args: [account]
       });
       setAccountError(undefined);
@@ -22,7 +22,12 @@ const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   }, [account]);
 
   return <>
-    <BuilderInfo description="Get public (name, mspid, status) and private (ato, assets) info for an account"/>
+    <BuilderInfo
+      description="Approve an account request."
+      info="This function will set the status of this account to “Pending: waiting for ATO”.
+        From here, the System Owner of the account can upload an ATO using UploadATO using UploadATO and the SAMS admin can update the status to AUTHORIZED using UpdateAccountStatus"
+      warn="Prerequisites: There must be an active request for an account using RequestAccount."
+    />
     <TextInput
       label="Account Name"
       onChange={(e) => setAccount(e.target.value)}
@@ -32,4 +37,4 @@ const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   </>;
 }
 
-export default GetAccount;
+export default ApproveAccount;

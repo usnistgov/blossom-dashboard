@@ -3,7 +3,7 @@ import { TextInput} from '@mantine/core';
 import { useEffect, useState } from "react";
 import BuilderInfo from "./BuilderInfo";
 
-const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
+const DeleteSwid: TransactionBuilder = ({ setTransactionRequest }) => {
   const [assetId, setAssetId] = useState<string>();
   const [account, setAccount] = useState<string>();
 
@@ -22,15 +22,21 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
     }
 
     if (account === undefined || account.length < 1) {
-      setAccountError('Asset id must have a length > 1');
+      setAccountError('Account id must have a length > 1');
       valid = false;
     }
 
     if (valid) {
       setTransactionRequest({
-        functionType: 'invoke',
+        functionType: 'query',
         name: 'GetAsset',
-        args: [account as string, assetId as string],
+        args: [],
+        transient: {
+          'checkout': {
+            'asset_id': assetId as string,
+            'account': account as string,
+          }
+        }
       });
     } else {
       setTransactionRequest(undefined);
@@ -40,23 +46,22 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
 
   return <>
     <BuilderInfo
-      description="List the licenses an account has for an asset"
-      info="The requesting member must have a status of 'Authorized' or else an error will occur.
-        A member can obtain a status of Authorized if the SAMS admin calls UpdateAccountStatus on the member's account."
+      description="Request checkout of an asset"
+      warn="Only the SAMS admin can approve checkout requests"
     />
     <TextInput
       label="Asset ID"
+      description="ID of the asset to checkout"
       onChange={(e) => setAssetId(e.target.value)}
       error={assetIdError}
-      withAsterisk
     />
     <TextInput
       label="Account"
+      description="The account that requested the checkout"
       onChange={(e) => setAccount(e.target.value)}
       error={accountError}
-      withAsterisk
     />
   </>;
 }
 
-export default GetLicenses;
+export default DeleteSwid;

@@ -22,18 +22,20 @@ const ApproveCheckout: TransactionBuilder = ({ setTransactionRequest }) => {
     }
 
     if (account === undefined || account.length < 1) {
-      setAccountError('Asset id must have a length > 1');
+      setAccountError('Account id must have a length > 1');
       valid = false;
     }
 
     if (valid) {
       setTransactionRequest({
-        functionType: 'invoke',
+        functionType: 'query',
         name: 'GetAsset',
         args: [],
         transient: {
-          'asset_id': assetId as string,
-          'account': account as string,
+          'checkout': {
+            'asset_id': assetId as string,
+            'account': account as string,
+          }
         }
       });
     } else {

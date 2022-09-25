@@ -5,7 +5,7 @@ export type TransactionRequest = {
   functionType: "query" | "invoke";
   name: string;
   args: string[];
-  transient?: Record<string, string>;
+  transient?: Record<string, unknown>;
 };
 
 // TODO
