@@ -45,7 +45,7 @@ const Landing: React.FC = () => {
 
   return (
     <>
-      <Center sx={{ height: "auto", flexGrow: "1" }}>
+      <Center sx={{ height: "auto", flexGrow: 1 }}>
         <Container
           sx={{
             display: "flex",
@@ -56,7 +56,7 @@ const Landing: React.FC = () => {
           <Title>BL🌸SSOM</Title>
 
           <Text size="lg" color="dimmed">
-            Blossom tagline
+            Service Dashboard
           </Text>
 
           {authenticated ? (

@@ -1,44 +1,18 @@
 import {
   createStyles,
   Header,
-  HoverCard,
   Group,
-  Button,
   UnstyledButton,
   Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
-  Divider,
-  Center,
   Box,
-  Burger,
-  Drawer,
-  Collapse,
-  ScrollArea,
   Title,
-  Avatar,
   Container,
   Menu,
 } from "@mantine/core";
-
-import { useDisclosure } from "@mantine/hooks";
 import {
-  IconNotification,
-  IconCode,
-  IconBook,
-  IconChartPie3,
-  IconFingerprint,
-  IconCoin,
   IconChevronDown,
-  IconHeart,
   IconLogout,
-  IconMessage,
-  IconPlayerPause,
   IconSettings,
-  IconStar,
-  IconSwitchHorizontal,
-  IconTrash,
 } from "@tabler/icons";
 import { useAuth } from "api/auth";
 import React from "react";
@@ -105,12 +79,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function HeaderMegaMenu() {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const { classes, theme } = useStyles();
+  // const [drawerOpened] = useDisclosure(false);
+  // const [linksOpened] = useDisclosure(false);
+  const { classes } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const { authorize, loading, error, authenticated, logout } = useAuth();
+  const { authenticated, logout } = useAuth();
 
   const [userName, setUserName] = useState("");
 
@@ -132,7 +105,7 @@ export default function HeaderMegaMenu() {
               window.location.replace("#");
             }}
           >
-            BL🌸SSOM
+            Bl🌸SS@M
           </Title>
           <Group sx={{ height: "100%" }} spacing={0}>
             <a href="#/" className={classes.link}>
@@ -140,6 +113,9 @@ export default function HeaderMegaMenu() {
             </a>
             <a href="#/dashboard" className={classes.link}>
               Dashboard
+            </a>
+            <a href="#/transaction" className={classes.link}>
+              Transaction Editor
             </a>
           </Group>
 
@@ -151,6 +127,7 @@ export default function HeaderMegaMenu() {
                     width={260}
                     position="bottom-end"
                     transition="pop-top-right"
+                    opened={userMenuOpened}
                     onClose={() => setUserMenuOpened(false)}
                     onOpen={() => setUserMenuOpened(true)}
                   >

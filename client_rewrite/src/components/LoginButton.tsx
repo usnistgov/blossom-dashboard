@@ -7,7 +7,7 @@ const LoginButton: React.FC = () => {
     <Button
       variant="default"
       onClick={() => {
-        window.open(buildLoginHref());
+        window.location.href = buildLoginHref();
       }}
     >
       Login
