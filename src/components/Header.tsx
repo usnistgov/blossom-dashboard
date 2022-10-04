@@ -96,7 +96,7 @@ export default function HeaderMegaMenu() {
   }, [authenticated]);
 
   return (
-    <Box pb={120}>
+    <Box pb='sm'>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Title
