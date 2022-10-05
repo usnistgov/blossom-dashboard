@@ -1,0 +1,48 @@
+{
+  "name": "blossom-unified-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@mantine/carousel": "^5.4.0",
+    "@mantine/core": "^5.4.0",
+    "@mantine/dates": "^5.4.0",
+    "@mantine/form": "^5.4.0",
+    "@mantine/hooks": "^5.4.0",
+    "@mantine/modals": "^5.4.0",
+    "@mantine/notifications": "^5.4.0",
+    "@mantine/nprogress": "^5.4.0",
+    "@tabler/icons": "^1.97.0",
+    "dayjs": "^1.11.5",
+    "embla-carousel-react": "^7.0.3",
+    "axios": "^0.27.2",
+    "buffer": "^6.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.18",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "^8.23.1",
+    "eslint-config-react-app": "^7.0.1",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-tsconfig-paths": "^3.5.0"
+  }
+}
