@@ -48,7 +48,7 @@ export function FooterSimple({ links }: FooterSimpleProps) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <Image src="./nist.png" height={105} fit="contain" />
+        <Image src={`${import.meta.env.BASE_URL}/nist.png`} height={105} fit="contain" />
         <Group className={classes.links}>{items}</Group>
       </Container>
     </div>

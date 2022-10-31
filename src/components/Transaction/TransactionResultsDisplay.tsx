@@ -10,11 +10,11 @@ const CodeDisplay: React.FC<{text: string, label?: string}> = ({ label, text }) 
       sx={{
         borderRadius: '5px',
         background: '#002b36',
-        color: '#839496'
+        color: '#839496',
       }}
     >
       <pre>
-        <code>
+        <code style={{whiteSpace: 'pre-line'}}>
           {text}
         </code>
       </pre>

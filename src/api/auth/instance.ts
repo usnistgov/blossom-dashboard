@@ -50,6 +50,8 @@ export function createInterceptors(
       (error) => {
         if (error.response.status === 401) {
           refreshRetry(error.config, error);
+        } else {
+          return Promise.reject(error);
         }
       }
     ),
