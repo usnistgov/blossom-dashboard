@@ -14,8 +14,5 @@ export type TransactionResponse = Record<string, string>;
 export async function postTransaction(
   request: TransactionRequest
 ): Promise<AxiosResponse<TransactionResponse>> {
-  return axiosAuthInstance.post("/transaction", request).then((resp) => {
-    resp.data = resp.data as TransactionResponse;
-    return resp;
-  });
+  return axiosAuthInstance.post<TransactionResponse>("/transaction", request);
 }

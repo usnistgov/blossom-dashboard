@@ -3,16 +3,13 @@ import { Title, Grid, Button } from "@mantine/core";
 import { postTransaction, TransactionRequest } from "api";
 import { builders, TransactionResults, TransactionResultsDisplay, TransactionSelect } from "components";
 import { IconClearAll } from "@tabler/icons";
+import { AxiosError } from "axios";
 
 export default function Transaction() {
   const [responses, setResponses] = useState<TransactionResults[]>([])
   const onSubmit = async (request: TransactionRequest) => {
     try {
       const response = await postTransaction(request);
-
-      // fake sleeping for now
-      // await new Promise(r => setTimeout(r, 1000));
-      // const response = {'test': 'response'};
   
       setResponses([{
         request,
@@ -20,9 +17,13 @@ export default function Transaction() {
         date: new Date()
       }, ...responses]);
     } catch (e) {
+      let message = `Client Error: ${e}`;
+      if (e instanceof AxiosError) {
+        message = `Server Error (${e.code}): ${e.response?.data}`;
+      } else {}
       setResponses([{
         request,
-        response: `Client Error: ${e}`,
+        response: message,
         date: new Date()
       }, ...responses])
     }

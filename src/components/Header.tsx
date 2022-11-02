@@ -14,12 +14,11 @@ import {
   IconLogout,
   IconSettings,
 } from "@tabler/icons";
-import { useAuth } from "api/auth";
 import React from "react";
 import { useState } from "react";
 import LoginButton from "./LoginButton";
 
-import { getUserInfo } from "api";
+import { getUserInfo, useAuth } from "api";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -88,11 +87,13 @@ export default function HeaderMegaMenu() {
   const [userName, setUserName] = useState("");
 
   React.useEffect(() => {
-    const getData = async () => {
-      const { preferred_username } = (await getUserInfo()).data;
-      setUserName(preferred_username);
-    };
-    getData();
+    if (authenticated && userName === "") {
+      // horribly hacky, waits until the auth interceptor has been set after being authenticated
+      new Promise(resolve => setTimeout(resolve, 500)).then(_ => {
+        getUserInfo().then(info => setUserName(info.data.username));
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated]);
 
   return (

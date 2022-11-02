@@ -64,12 +64,20 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setCookies(response.data);
   }
 
+  async function logout() {
+    console.log('Logout called')
+    clearCookies();
+    setAuthenticated(false);
+    window.location.href = buildLogoutHref();
+  }
+
   async function authorize(code: string) {
     console.log('Authorize called')
     setLoading(true);
     try {
       const response = await oauthAuthorize(code);
       setCookies(response.data);
+      setInterceptorIds(createInterceptors(refresh, setError, logout));
       setAuthenticated(true);
     } catch (error) {
       setError(error as Error);
@@ -77,13 +85,6 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }
-
-  async function logout() {
-    console.log('Logout called')
-    clearCookies();
-    setAuthenticated(false);
-    window.location.href = buildLogoutHref();
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

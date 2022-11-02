@@ -1,7 +1,8 @@
 import LoginButton from "./LoginButton";
+import FooterSimple from "./Footer";
+import HeaderMegaMenu from "./Header";
 
-export { LoginButton };
-export { FooterSimple } from "./Footer";
+export { LoginButton, FooterSimple as Footer, HeaderMegaMenu as Header };
 
 export {
   TransactionSelect,
