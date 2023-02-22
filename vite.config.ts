@@ -18,6 +18,7 @@ export default ({ mode }) => {
     plugins: [react(), eslint(), tsconfigPaths()],
     base: process.env.BASE_URL ?? DEFAULT_BASE_URL,
     server: {
+      port: 5173,
       proxy: {
         "/transaction": {
           target: process.env.PROXY_URL,
