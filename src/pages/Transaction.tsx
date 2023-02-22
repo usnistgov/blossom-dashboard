@@ -30,7 +30,7 @@ export default function Transaction() {
   }
 
   return <>
-    <Title>Bloss@M Raw Transaction Editor</Title>
+    <Title>BL🌸SSOM: Raw Transaction Editor</Title>
     <Grid>
       <Grid.Col md={6}>
         <TransactionSelect

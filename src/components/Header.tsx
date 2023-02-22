@@ -106,7 +106,7 @@ export default function HeaderMegaMenu() {
               window.location.replace("#");
             }}
           >
-            Bl🌸SS@M
+            BL🌸SSOM
           </Title>
           <Group sx={{ height: "100%" }} spacing={0}>
             <a href="#/" className={classes.link}>
@@ -117,6 +117,9 @@ export default function HeaderMegaMenu() {
             </a>
             <a href="#/transaction" className={classes.link}>
               Transaction Editor
+            </a>
+            <a href="#/admin-board" className={classes.link}>
+              Admin Board
             </a>
           </Group>
 

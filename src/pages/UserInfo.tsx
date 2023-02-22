@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getUserInfo, UserInfoResponse } from "api";
+import { Title } from "@mantine/core";
 
 const UserInfo: React.FC = () => {
   const [info, setInfo] = useState<UserInfoResponse>();
@@ -9,6 +10,7 @@ const UserInfo: React.FC = () => {
   }, []);
   
   return <>
+  <Title>BL🌸SSOM: User Information</Title>
   <h1>User Info</h1>
   <p>{error ?? (info ? JSON.stringify(info, undefined, 2) : 'Loading...')}</p>
   </>;

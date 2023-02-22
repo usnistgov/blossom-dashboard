@@ -68,7 +68,7 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
       : IconChevronDown
     : IconSelector;
   return (
-    <th className={classes.th}>
+    <th className={class2es.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
         <Group position="apart">
           <Text weight={500} size="sm">

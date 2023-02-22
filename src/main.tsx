@@ -4,6 +4,7 @@ import { HashRouter, Outlet, Route, Routes } from "react-router-dom";
 import { AuthProvider, RequireAuth } from "api/auth";
 import { Dashboard, Landing, NotFound, Transaction, UserInfo } from "pages";
 import { Footer, Header } from "components";
+import AdminBoard from "pages/AdminBoard";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             >
               {/* Put auth routes here */}
               <Route path="userinfo" element={<UserInfo />} />
+              <Route path="admin-board" element={<AdminBoard />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="/transaction" element={<Transaction />} />
               <Route path="*" element={<NotFound />} />
