@@ -9,11 +9,11 @@ output_cmd := $(ter_cmd) output -raw
 
 dev_environment := .env.development
 
-.PHONY: serve
-serve: node_modules configure
+.PHONY: build serve configure clean refresh
+
+serve: refresh node_modules configure
 	npx vite
 
-.PHONY: build
 build: node_modules
 	npx tsc
 	VITE_CLIENT_ID=`$(output_cmd) client_id` \
@@ -22,7 +22,6 @@ build: node_modules
 	BASE_URL=`$(output_cmd) base_url` \
 		npx vite build
 
-.PHONY: configure
 configure: $(dev_environment)
 
 $(dev_environment):
@@ -36,6 +35,6 @@ node_modules: package.json package-lock.json
 clean:
 	rm -fr .env.development dist node_modules
 
-.PHONY: refresh
 refresh:
+	@echo Refreshing terraform outputs...
 	$(ter_cmd) refresh
