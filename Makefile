@@ -1,40 +1,36 @@
-SHELL := /bin/bash
-.DEFAULT_GOAL := build
+SHELL:=/bin/bash
 
-# Most targets require the dashboard to be run from within a submodule of the
-# member repository in order to work properly
-iac_dir := ../iac/
-ter_cmd := ./$(iac_dir)/ter.sh
-output_cmd := $(ter_cmd) output -raw
+.PHONY: help
+# Run "make" or "make help" to get a list of user targets
+# Adapted from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+help: ## Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?##.*$$' $(MAKEFILE_LIST) | awk 'BEGIN { \
+	 FS = ":.*?## "; \
+	 printf "\033[1m%-30s\033[0m %s\n", "TARGET", "DESCRIPTION" \
+	} \
+	{ printf "\033[32m%-30s\033[0m %s\n", $$1, $$2 }'
 
-dev_environment := .env.development
-
-.PHONY: build serve configure clean refresh
-
-serve: refresh node_modules configure
+.PHONY: serve
+serve: node_modules .env.development ## Serve the development dashboard
 	npx vite
 
-build: node_modules
-	npx tsc
-	VITE_CLIENT_ID=`$(output_cmd) client_id` \
-	VITE_CLIENT_SECRET=`$(output_cmd) client_secret` \
-	VITE_AUTH_URL=`$(output_cmd) auth_url` \
-	BASE_URL=`$(output_cmd) base_url` \
-		npx vite build
+.PHONY: build
+build: node_modules .env.prod ## Build the production dashboard
+	npx vite build --mode prod
 
-configure: $(dev_environment)
-
-$(dev_environment):
-	set -Eeuo pipefail; ($(output_cmd) vite_dev_env) > $(dev_environment)
+.PHONY: dependencies
+dependencies: node_modules ## Download project dependencies
 
 node_modules: package.json package-lock.json
 	@echo Downloading dependencies...
 	npm ci
 
 .PHONY: clean
-clean:
-	rm -fr .env.development dist node_modules
+clean: ## Clean the project of build and dependency artifacts
+	rm -fr dist node_modules
 
-refresh:
-	@echo Refreshing terraform outputs...
-	$(ter_cmd) refresh
+# Special error target for missing files
+
+.env.development .env.prod:
+	@echo .env.development and .env.prod are required to serve/build this project. See .env.development.sample and .env.prod.sample for more details
+	@exit 1
