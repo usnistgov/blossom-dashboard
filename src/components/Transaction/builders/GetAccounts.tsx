@@ -5,7 +5,7 @@ import BuilderInfo from "./BuilderInfo";
 const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   useEffect(() => setTransactionRequest({
     functionType: 'invoke',
-    name: 'GetAccounts',
+    name: 'account:GetAccounts',
     args: [],
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);
