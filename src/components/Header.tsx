@@ -112,9 +112,6 @@ export default function HeaderMegaMenu() {
             <a href="#/" className={classes.link}>
               Home
             </a>
-            <a href="#/dashboard" className={classes.link}>
-              Dashboard
-            </a>
             <a href="#/transaction" className={classes.link}>
               Transaction Editor
             </a>

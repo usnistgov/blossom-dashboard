@@ -15,7 +15,7 @@ const AdminBoard: React.FC = () => {
     getUserInfo().then(info => setInfo(info.data), err => setError(err))
   }, []);
   return    <>
-                <Title>BL🌸SS🌸M: Admin Board</Title>
+                <Title>BLOSS🌸M: Admin Board</Title>
                 <h1>Initial Info</h1>
                 <p>For User:{error ?? (info ? JSON.stringify(info, undefined, 2) : 'Loading...')}</p>
             </>;

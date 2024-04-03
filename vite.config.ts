@@ -10,13 +10,10 @@ export default ({ mode }) => {
   // see https://stackoverflow.com/a/66389044
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), "") };
 
-  // for deployments that are deployed to a sub-folder like /dev, specify below or use the `BASE_URL` env var
-  const DEFAULT_BASE_URL = "/";
-
   // https://vitejs.dev/config/
   return defineConfig({
     plugins: [react(), eslint(), tsconfigPaths()],
-    base: process.env.BASE_URL ?? DEFAULT_BASE_URL,
+    base: process.env.BASE_URL ?? "/",
     server: {
       port: 5173,
       proxy: {
