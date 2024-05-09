@@ -10,7 +10,7 @@ const GetAsset: TransactionBuilder = ({ setTransactionRequest }) => {
     if (assetId) {
       setTransactionRequest({
         functionType: 'invoke',
-        name: 'GetAsset',
+        function: 'GetAsset',
         args: [assetId]
       });
       setAssetIdError(undefined);

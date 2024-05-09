@@ -10,7 +10,7 @@ const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
     if (account) {
       setTransactionRequest({
         functionType: 'invoke',
-        name: 'account:GetAccount',
+        function: 'account:GetAccount',
         args: [account]
       });
       setAccountError(undefined);

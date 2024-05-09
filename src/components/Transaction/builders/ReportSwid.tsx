@@ -45,7 +45,7 @@ const ReportSwid: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'ReportSwID',
+        function: 'ReportSwID',
         args: [],
         transient: {
           'swid': {

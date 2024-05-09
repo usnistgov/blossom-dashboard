@@ -29,7 +29,7 @@ const ProcessCheckin: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'ProcessCheckin',
+        function: 'ProcessCheckin',
         args: [],
         transient: {
           'checkin': {

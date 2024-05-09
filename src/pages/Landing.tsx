@@ -53,8 +53,7 @@ const Landing: React.FC = () => {
             flexDirection: "column",
           }}
         >
-          <Title>BL🌸SSOM</Title>
-
+          <Title>{import.meta.env.VITE_APP_NAME}</Title>
           <Text size="lg" color="dimmed">
             Service Dashboard
           </Text>

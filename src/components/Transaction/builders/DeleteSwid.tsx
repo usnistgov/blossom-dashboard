@@ -29,7 +29,7 @@ const DeleteSwid: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'GetAsset',
+        function: 'GetAsset',
         args: [],
         transient: {
           'checkout': {

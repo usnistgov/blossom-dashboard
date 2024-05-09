@@ -3,7 +3,7 @@ import { axiosAuthInstance } from "./auth";
 
 export type TransactionRequest = {
   functionType: "query" | "invoke";
-  name: string;
+  function: string;
   args: string[];
   transient?: Record<string, unknown>;
 };

@@ -10,7 +10,7 @@ const OffboardAsset: TransactionBuilder = ({ setTransactionRequest }) => {
     if (assetId) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'OffboardAsset',
+        function: 'OffboardAsset',
         args: [assetId]
       });
       setAssetIdError(undefined);

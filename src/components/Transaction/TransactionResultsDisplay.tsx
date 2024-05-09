@@ -3,7 +3,8 @@ import { TransactionRequest, TransactionResponse } from "api"
 import { Box, Paper, Text, Title } from "@mantine/core";
 
 const CodeDisplay: React.FC<{text: string, label?: string}> = ({ label, text }) => {
-  return <>
+  return (
+  <>
     {label ? <Text size='xs'>{label}</Text> : undefined}
     <Box
       p='xs'
@@ -19,7 +20,7 @@ const CodeDisplay: React.FC<{text: string, label?: string}> = ({ label, text }) 
         </code>
       </pre>
     </Box>
-  </>
+  </>)
 }
 
 export type TransactionResults = {
@@ -36,7 +37,7 @@ const TransactionResultsDisplay: React.FC<Params> = ({ results }) => {
   return <Box mt='md'>
     {results.map(({request, response, date}, i) =>
     <Paper mt='sm' p='md' shadow='xs' key={i}>
-      <Title order={5}>Transaction: {request.name}</Title>
+      <Title order={5}>Transaction: {request.function}</Title>
       <Text mb='xs' size='sm'>Sent {date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</Text>
       
       <CodeDisplay

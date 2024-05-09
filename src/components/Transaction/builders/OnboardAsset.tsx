@@ -62,7 +62,7 @@ const OnboardAsset: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'GetSwIDsAssociatedWithAsset',
+        function: 'GetSwIDsAssociatedWithAsset',
         args: [assetId as string, assetName as string, (onboardDate as Date).toISOString(), (expirationDate as Date).toISOString()],
         transient: {
           'asset': {
