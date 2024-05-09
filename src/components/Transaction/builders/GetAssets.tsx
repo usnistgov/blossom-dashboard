@@ -5,7 +5,7 @@ import BuilderInfo from "./BuilderInfo";
 const GetAssets: TransactionBuilder = ({ setTransactionRequest }) => {
   useEffect(() => setTransactionRequest({
     functionType: 'invoke',
-    name: 'GetAssets',
+    function: 'GetAssets',
     args: [],
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);

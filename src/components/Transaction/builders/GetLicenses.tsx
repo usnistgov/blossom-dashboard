@@ -29,7 +29,7 @@ const GetLicenses: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'invoke',
-        name: 'GetAsset',
+        function: 'GetAsset',
         args: [account as string, assetId as string],
       });
     } else {

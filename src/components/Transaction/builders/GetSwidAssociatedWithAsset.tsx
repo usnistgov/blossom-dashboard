@@ -29,7 +29,7 @@ const GetSwidAssociatedWithAsset: TransactionBuilder = ({ setTransactionRequest 
     if (valid) {
       setTransactionRequest({
         functionType: 'invoke',
-        name: 'GetSwIDsAssociatedWithAsset',
+        function: 'GetSwIDsAssociatedWithAsset',
         args: [account as string, assetId as string],
       });
     } else {

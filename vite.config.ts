@@ -12,6 +12,10 @@ export default ({ mode }) => {
 
   // https://vitejs.dev/config/
   return defineConfig({
+    define: {
+      __APP_BUILD_DATE_TIME__: JSON.stringify(new Date().toISOString()),
+      __APP_VERSION__: JSON.stringify('v1.0.0'),
+    },
     plugins: [react(), eslint(), tsconfigPaths()],
     base: process.env.BASE_URL ?? "/",
     server: {

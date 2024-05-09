@@ -31,7 +31,7 @@ const InitiateCheckin: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'GetSwIDsAssociatedWithAsset',
+        function: 'GetSwIDsAssociatedWithAsset',
         args: [],
         transient: {
           'checkin': {

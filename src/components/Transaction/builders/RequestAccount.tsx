@@ -37,7 +37,7 @@ const RequestAccount: TransactionBuilder = ({ setTransactionRequest }) => {
     if (valid) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'RequestAccount',
+        function: 'RequestAccount',
         args: [],
         transient: {
           'account': {

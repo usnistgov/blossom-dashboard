@@ -10,7 +10,7 @@ const ApproveAccount: TransactionBuilder = ({ setTransactionRequest }) => {
     if (account) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'ApproveAccount',
+        function: 'ApproveAccount',
         args: [account]
       });
       setAccountError(undefined);

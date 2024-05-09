@@ -12,7 +12,7 @@ const UploadAto: TransactionBuilder = ({ setTransactionRequest }) => {
     if (ato) {
       setTransactionRequest({
         functionType: 'query',
-        name: 'UploadATO',
+        function: 'UploadATO',
         args: [],
         transient: {
           'ato': {
