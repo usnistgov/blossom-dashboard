@@ -24,8 +24,8 @@ const useStyles = createStyles((theme) => ({
     },
   },
   rotated: {
-    marginLeft: 27,
-    paddingLeft: 27,
+    marginLeft: 18,
+    paddingLeft: 18,
     alignItems: "right",
     fontSize:"0.88em",
     "filter": "brightness(40%)",
