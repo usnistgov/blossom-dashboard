@@ -24,15 +24,16 @@ const useStyles = createStyles((theme) => ({
     },
   },
   rotated: {
-    marginLeft: 6,
-    paddingLeft: 11,
-    alignItems: "right", 
-    fontSize:"0.88em",
-    "filter": "brightness(40%)",
-    "-webkit-transform": "rotate(90deg)",
-    "-moz-transform": "rotate(90deg)",
-    "-o-transform": "rotate(90deg)",
-    "-ms-transform": "rotate(90deg)",
+    display: "grid",
+    marginLeft: theme.spacing.xs,
+    paddingLeft: theme.spacing.xs,
+    alignItems: "center", 
+    fontSize:"0.73em",
+    // "filter": "brightness(30%)",
+    // "-webkit-transform": "rotate(90deg)",
+    // "-moz-transform": "rotate(90deg)",
+    // "-o-transform": "rotate(90deg)",
+    // "-ms-transform": "rotate(90deg)",
     "transform": "rotate(90deg)",
   },
 }));
@@ -60,16 +61,17 @@ export function FooterSimple({ links }: FooterSimpleProps) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
+
         {/* <Image src={`${import.meta.env.BASE_URL}nist.png`} height={105} fit="contain" /> */}
         <Image src='https://www.nist.gov/sites/default/files/styles/960_x_960_limit/public/images/2022/06/07/f_nist-logo-brand-black.png?itok=gDfvkqHO' 
         height={105} fit="contain" />
         <Group className={classes.links}>{items}</Group>
 
         <div  className={classes.rotated}>
-          <div>{__APP_APPLICATION_NAME__}</div>
-          <div>{__APP_VERSION__} Built</div>
-          <div>on:{__APP_BUILD_DATE__}</div>
-          <div>{__APP_BUILD_TIME__}</div>
+          <Text size="xs" color="dimmed">{__APP_APPLICATION_NAME__}</Text>
+          <Text size="xs" color="dimmed">{__APP_VERSION__} Built</Text>
+          <Text size="xs" color="dimmed">{__APP_BUILD_DATE__}</Text>
+          <Text size="xs" color="dimmed">{__APP_BUILD_TIME__}</Text>
         </div>
 
       </Container> 
