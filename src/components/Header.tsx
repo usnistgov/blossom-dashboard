@@ -88,12 +88,14 @@ export default function HeaderMegaMenu() {
   return (<Box pb='sm'>
             <Header height={60} px="md">
               <Group position="apart" sx={{ height: "100%" }}>
+                
                 <Title
                   sx={{ ":hover": { cursor: "pointer" } }}
                   onClick={() => {
                     window.location.replace("#");
                   }}
-                >{import.meta.env.VITE_APP_NAME}</Title>
+                >{__APP_APPLICATION_NAME__}</Title>
+
                 <Group sx={{ height: "100%" }} spacing={0}>
                   <a href="#/" className={classes.link}>
                     Home

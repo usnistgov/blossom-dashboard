@@ -53,10 +53,9 @@ const Landing: React.FC = () => {
             flexDirection: "column",
           }}
         >
-          <Title>{import.meta.env.VITE_APP_NAME}</Title>
-          <Text size="lg" color="dimmed">
-            Service Dashboard
-          </Text>
+          <Title>{__APP_APPLICATION_NAME__}</Title>
+          <Text size="xs" color="dimmed">{__APP_VERSION__}</Text>
+          <Text size="lg" color="dimmed">Service Dashboard</Text>
 
           {authenticated ? (
             <button onClick={logout}>Logout</button>
