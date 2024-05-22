@@ -24,9 +24,9 @@ const useStyles = createStyles((theme) => ({
     },
   },
   rotated: {
-    marginLeft: 18,
-    paddingLeft: 18,
-    alignItems: "right",
+    marginLeft: 6,
+    paddingLeft: 11,
+    alignItems: "right", 
     fontSize:"0.88em",
     "filter": "brightness(40%)",
     "-webkit-transform": "rotate(90deg)",
