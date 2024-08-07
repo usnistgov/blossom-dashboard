@@ -11,3 +11,10 @@ The permissioned blockchain system has unique properties, including high through
 
 ## Code status: pre-release, production.
 The project is currently under development
+
+
+
+### To start local application
+```
+npx vite --port=4000
+```
