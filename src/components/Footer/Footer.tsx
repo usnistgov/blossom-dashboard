@@ -82,6 +82,5 @@ export function FooterSimple({ links }: FooterSimpleProps) {
 Bl⛓SS🌻M
 v1.0.11
 Was Built on:
-2024-05-22T15:09:00.429Z
-
+2024-08-23T12:59:00.429Z
 */
