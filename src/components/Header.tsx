@@ -97,14 +97,20 @@ export default function HeaderMegaMenu() {
                 >{__APP_APPLICATION_NAME__}</Title>
 
                 <Group sx={{ height: "100%" }} spacing={0}>
-                  <a href="#/" className={classes.link}>
-                    Home
+                  <a href="https://pages.nist.gov/blossom/" className={classes.link}>
+                    Info
                   </a>
                   <a href="#/transaction" className={classes.link}>
                   { authenticated ? '✅︎': '⛔'} Transaction Editor
                   </a>
                   <a href="#/admin-board" className={classes.link}>
                     { authenticated ? '✅︎': '⛔'} Admin Board
+                  </a>
+                  <a href="#/assessors-board" className={classes.link}>
+                    { authenticated ? '✅︎': '⛔'} Assessors Board
+                  </a>
+                  <a href="#/sam-board" className={classes.link}>
+                    { authenticated ? '✅︎': '⛔'} SAM Board
                   </a>
                 </Group>
 
