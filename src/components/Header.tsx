@@ -100,18 +100,24 @@ export default function HeaderMegaMenu() {
                   <a href="https://pages.nist.gov/blossom/" className={classes.link}>
                     Info
                   </a>
-                  <a href="#/transaction" className={classes.link}>
-                  { authenticated ? '✅︎': '⛔'} Transaction Editor
-                  </a>
-                  <a href="#/admin-board" className={classes.link}>
-                    { authenticated ? '✅︎': '⛔'} Admin Board
-                  </a>
-                  <a href="#/assessors-board" className={classes.link}>
-                    { authenticated ? '✅︎': '⛔'} Assessors Board
-                  </a>
-                  <a href="#/sam-board" className={classes.link}>
-                    { authenticated ? '✅︎': '⛔'} SAM Board
-                  </a>
+                  { authenticated ? 
+                    <>
+                      <a href="#/transaction" className={classes.link}>
+                        Transaction Editor
+                      </a>
+                      <a href="#/admin-board" className={classes.link}>
+                        Admin Board
+                      </a>
+                      <a href="#/assessors-board" className={classes.link}>
+                        Assessors Board
+                      </a>
+                      <a href="#/sam-board" className={classes.link}>
+                        SAM Board
+                      </a>
+                    </>
+                    :
+                    <></>
+                  }
                 </Group>
 
                 <Group>
