@@ -18,8 +18,59 @@ const AdminBoard: React.FC = () => {
                 <Title>{import.meta.env.VITE_APP_NAME}: Admin Board</Title>
                 <h1>Initial Info</h1>
                 <p>For User:{error ?? (info ? JSON.stringify(info, undefined, 2) : 'Loading...')}</p>
+
+                <NewAccountTab />
             </>;
 
 }
+
+const DropdownSelect = ({ items }: { items : string[] }) => {
+  const listItems = items.map(item => <li>{item}</li>);
+  return (
+    <>
+      <ul>
+        {listItems}
+      </ul>
+    </>
+  );
+}
+
+function CreateUserButton() {
+  return (
+    <button>
+      Create User (currently not functional)
+    </button>
+  );
+}
+
+function NewAccountTab() {
+  return (
+    <>
+      <h1>BLOSSOM NEW ACCOUNT TAB</h1>
+      <h2>NAME</h2>
+      <h2>ROLE: Select from:</h2>
+      <p>Choose an item.</p>
+      <DropdownSelect items={ROLES}/>
+      <h2>PRIVILEGES: Select from:</h2>
+      <p>Choose an item.</p>
+      <DropdownSelect items={PRIVILEGES} />
+      <CreateUserButton/>
+    </>
+  );
+}
+
+const ROLES = [
+  "System Owner",
+  "System Administrator",
+  "Security Assessor",
+  "Program Manager",
+  "Authorizing Official"
+];
+const PRIVILEGES = [
+  "Read Only",
+  "Read and Write Only",
+  "Read, Write, and Delete"
+];
+
 
 export default AdminBoard;
