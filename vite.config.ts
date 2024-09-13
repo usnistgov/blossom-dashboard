@@ -16,7 +16,7 @@ export default ({ mode }) => {
       __APP_BUILD_DATE_TIME__: JSON.stringify(new Date().toISOString()),
       __APP_BUILD_DATE__: JSON.stringify( (new Date().toISOString()).substring(0,10)),
       __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString().substring(10)),
-      __APP_VERSION__: JSON.stringify('v1.0.11'),
+      __APP_VERSION__: JSON.stringify('v1.0.13'),
       __APP_APPLICATION_NAME__: JSON.stringify('Bl⛓SS🌻M'),
     },
     plugins: [react(), eslint(), tsconfigPaths()],
