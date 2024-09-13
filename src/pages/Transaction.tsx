@@ -20,7 +20,9 @@ export default function Transaction() {
       let message = `Client Error: ${e}`;
       if (e instanceof AxiosError) {
         message = `Server Error (${e.code}): ${e.response?.data}`;
-      } else {}
+      } else {
+        message = `Non-Axios Server Error: (${JSON.stringify(e,null,2)})`;
+      }
       setResponses([{
         request,
         response: message,
