@@ -4,8 +4,6 @@ import { getUserInfo, UserInfoResponse } from "api/userinfo";
 import { useEffect, useState } from "react";
 import useParams from "util/useParams";
 
-
-
 const AssessorsBoard: React.FC = () => {
 //   const { code, error: error_response, error_description } = useParams();
 //   const { authorize, loading, error, authenticated, logout } = useAuth();

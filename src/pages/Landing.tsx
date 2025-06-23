@@ -7,6 +7,7 @@ import { Container, Title, Text, Center } from "@mantine/core";
 const Landing: React.FC = () => {
   const { code, error: error_response, error_description } = useParams();
   const { authorize, loading, error, authenticated, logout } = useAuth();
+  
   useEffect(() => {
     if (code) {
       authorize(code).then((_) => {

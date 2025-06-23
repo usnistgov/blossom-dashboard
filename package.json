@@ -10,6 +10,7 @@
     ]
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.775.0",
     "@emotion/react": "^11.10.4",
     "@mantine/carousel": "^5.4.0",
     "@mantine/core": "^5.4.0",
@@ -20,12 +21,15 @@
     "@mantine/notifications": "^5.4.0",
     "@mantine/nprogress": "^5.4.0",
     "@tabler/icons": "^1.97.0",
+    "aws-amplify": "^6.13.5",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "dayjs": "^1.11.5",
     "embla-carousel-react": "^7.0.3",
+    "oidc-client-ts": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-oidc-context": "^3.3.0",
     "react-router-dom": "^6.4.0",
     "yaml": "^2.4.2"
   },
@@ -34,11 +38,11 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8.23.1",
     "eslint-config-react-app": "^7.0.1",
     "typescript": "^4.6.4",
-    "vite": "^3.2.10",
+    "vite": "^6.2.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-tsconfig-paths": "^3.5.0"
   }

@@ -3,7 +3,10 @@ import { TextInput} from '@mantine/core';
 import { useEffect, useState } from "react";
 import BuilderInfo from "./BuilderInfo";
 
-const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
+
+// account:GetAccount 
+// with one parameter: Account Name
+const AccountGetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   const [account, setAccount] = useState<string>();
   const [accountError, setAccountError] = useState<string>();
   useEffect(() => {
@@ -32,4 +35,4 @@ const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   </>;
 }
 
-export default GetAccount;
+export default AccountGetAccount;

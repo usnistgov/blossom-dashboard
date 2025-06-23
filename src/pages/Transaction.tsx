@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 
 export default function Transaction() {
   const [responses, setResponses] = useState<TransactionResults[]>([])
+  
   const onSubmit = async (request: TransactionRequest) => {
     try {
       const response = await postTransaction(request);

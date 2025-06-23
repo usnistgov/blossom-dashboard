@@ -1,7 +1,8 @@
 import { TransactionBuilder } from "../builder";
 
-import GetAccount from "./GetAccount";
-import GetAccounts from "./GetAccounts";
+import accountGetAccount from "./AccountGetAccount";
+import accountGetAccounts from "./AccountGetAccounts";
+
 import GetAsset from "./GetAsset";
 import GetAssets from "./GetAssets";
 import RequestCheckout from "./RequestCheckout";
@@ -20,8 +21,8 @@ import UploadAto from "./UploadAto";
 
 // In case you would like to use a builder individually
 export {
-  GetAccounts,
-  GetAccount,
+  accountGetAccounts,
+  accountGetAccount,
   GetAssets,
   GetAsset,
   RequestCheckout,
@@ -43,8 +44,9 @@ export {
  * A pre-assembled list of transaction builders
  */
 const builders: Record<string, TransactionBuilder> = {
-  GetAccount,
-  GetAccounts,
+  accountGetAccount,
+  accountGetAccounts,
+  
   GetAsset,
   GetAssets,
   RequestCheckout,
