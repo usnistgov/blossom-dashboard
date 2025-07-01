@@ -15,6 +15,7 @@ export type UserInfoResponse = {
     name: string;
     value: string;
   }>;
+  profile?: string;
 };
 
 export async function getUserInfo(): Promise<AxiosResponse<UserInfoResponse>> {

@@ -47,8 +47,8 @@ const builders: Record<string, TransactionBuilder> = {
   accountGetAccount,
   accountGetAccounts,
   
-  GetAsset,
   GetAssets,
+  GetAsset,
   RequestCheckout,
   ApproveCheckout,
   GetLicenses,

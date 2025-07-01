@@ -25,3 +25,5 @@ dist-ssr
 
 .env.prod
 .env.development
+
+z-backups/*

@@ -6,10 +6,15 @@ import { AuthProvider,RequireAuth } from "api/auth";
 import { Landing, NotFound, Transaction, UserInfo, AdminBoard, AssessorsBoard, SAMBoard } from "pages";
 import { Footer, Header } from "components";
 
+export const AUTH_URL = (import.meta.env.VITE_AUTH_URL ?? "") as string;
+export const IDP_AUTH_URL = (import.meta.env.IDP_AUTH_URL) as string;
+export const CLIENT_ID = (import.meta.env.VITE_CLIENT_ID ?? "") as string;
+export const CLIENT_SECRET = (import.meta.env.VITE_CLIENT_SECRET ??
+  "") as string;
 // Example of the Cognito-IDP authentication
 const cognitoAuthConfig = {
-  authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_wioSQKwya",
-  client_id: "n5ukaqkov14g3ca37h2gl0ats",
+  authority: IDP_AUTH_URL,
+  client_id: CLIENT_ID,
   redirect_uri: "http://localhost:4000/dev/",
   response_type: "code",
   scope: "email openid",
