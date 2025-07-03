@@ -27,11 +27,12 @@ export function createInterceptors(
   }
 
   return [
-    axiosAuthInstance.interceptors.request.use((request) => {
-      if (request.headers) {
-        request.headers["Authorization"] = `Bearer ${getAuthTokenCookie()}`;
-      }
-      return request;
+    axiosAuthInstance.interceptors.request.use(
+      (request) => {
+        if (request.headers) {
+          request.headers["Authorization"] = `Bearer ${getAuthTokenCookie()}`;
+        }
+        return request;
     }),
     axiosAuthInstance.interceptors.response.use(
       (response) => {

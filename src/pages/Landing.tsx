@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { LoginButton } from "components";
+import { Button } from "@mantine/core";
 import { useAuth } from "api/auth";
 import useParams from "util/useParams";
 import { Container, Title, Text, Center } from "@mantine/core";
+import { IconKeyOff } from '@tabler/icons-react';
 
 const Landing: React.FC = () => {
   const { code, error: error_response, error_description } = useParams();
@@ -59,7 +61,10 @@ const Landing: React.FC = () => {
           <Text size="lg" color="dimmed">Service Dashboard</Text>
 
           {authenticated ? (
-            <button onClick={logout}>Logout</button>
+            <Button 
+            variant="default"
+            leftIcon={<IconKeyOff size="1rem" color="red"/>}
+            onClick={logout}>Logout</Button>
           ) : (
             <LoginButton />
           )}
