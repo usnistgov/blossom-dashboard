@@ -5,7 +5,7 @@ import { useState } from "react";
 import LoginButton from "./LoginButton";
 
 import { getUserInfo, useAuth } from "api";
-import { IconKeyOff } from "@tabler/icons-react";
+import { IconFileX, IconLogout } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -143,7 +143,7 @@ export default function HeaderMegaMenu() {
                             <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
                               Account settings
                             </Menu.Item>
-                            <Menu.Item icon={<IconKeyOff size={14} stroke={1.5} color="red"/>} onClick={() => { logout(); }}>
+                            <Menu.Item icon={<IconLogout size={14} stroke={1.5} color="red"/>} onClick={() => { logout(); }}>
                               Logout
                             </Menu.Item>
                           </Menu.Dropdown>

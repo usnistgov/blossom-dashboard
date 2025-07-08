@@ -1,13 +1,13 @@
 import React from "react";
 import { buildLoginHref } from "api/auth";
 import { Button } from "@mantine/core";
-import { IconKey, IconKeyOff } from '@tabler/icons-react';
+import { IconKey, IconLogin } from '@tabler/icons-react';
 
 //
 const LoginButton: React.FC = () => {
   return (
     <Button
-      leftIcon={<IconKey size="1rem" color="green"/>}
+      leftIcon={<IconLogin size="1rem" color="green"/>}
       variant="default"
       onClick={() => {
         console.log("Before window.location.href going to Cognito");
