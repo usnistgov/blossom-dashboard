@@ -5,7 +5,6 @@ import { useState } from "react";
 import LoginButton from "./LoginButton";
 
 import { getUserInfo, useAuth } from "api";
-import { IconFileX, IconLogout } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
