@@ -31,3 +31,23 @@ const BuilderInfo: React.FC<Params> = ({description, info, warn}) => {
 }
 
 export default BuilderInfo;
+/*
+ ╔  dac4@PN132649  3.11  ~/di2run/dio-src   jk-i651-entity-types-cleanup   Mon Aug 11 ▷
+ ╚▷ @10:04:19  git rebase dev
+warning: skipped previously applied commit c46063ae
+
+ ╔  dac4@PN132649  3.11  ~/di2run/dio-src   jk-i651-entity-types-cleanup   Mon Aug 11 ▷
+ ╚▷ @10:04:42  git pull --all
+warning: skipped previously applied commit f53daecf
+warning: skipped previously applied commit 11f3b0a3
+warning: skipped previously applied commit ee75880d
+warning: skipped previously applied commit 2c8bb9c5
+warning: skipped previously applied commit c35246ed
+warning: skipped previously applied commit b6e7a5e7
+warning: skipped previously applied commit 86f4094b
+warning: skipped previously applied commit 325ab886
+warning: skipped previously applied commit 0dae7bfe
+warning: skipped previously applied commit 5db794e3
+warning: skipped previously applied commit 8b6bd16a
+
+*/

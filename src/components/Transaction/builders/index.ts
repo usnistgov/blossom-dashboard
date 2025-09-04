@@ -18,6 +18,7 @@ import ApproveAccount from "./ApproveAccount";
 import OnboardAsset from "./OnboardAsset";
 import OffboardAsset from "./OffboardAsset";
 import UploadAto from "./UploadAto";
+import aaEC2_GetUsers from "../../AutoAssessment/aa_builders/AA_GetUsers";
 
 // In case you would like to use a builder individually
 export {
@@ -46,7 +47,9 @@ export {
 const builders: Record<string, TransactionBuilder> = {
   accountGetAccount,
   accountGetAccounts,
-  
+
+  // The Trans-Methods below still
+  // need to be scope prefixed
   GetAssets,
   GetAsset,
   RequestCheckout,

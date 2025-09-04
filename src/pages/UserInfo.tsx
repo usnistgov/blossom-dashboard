@@ -115,9 +115,9 @@ const UserInfo: React.FC = () => {
 
         <Tabs.Panel value="emails">
           <h4>Used User Emails: [Work in Progress]</h4>
-          <p>
+          <div>
             <UserEmailInfo currentInfo={info} />
-          </p>
+          </div>
         </Tabs.Panel>
 
         <Tabs.Panel value="extra">

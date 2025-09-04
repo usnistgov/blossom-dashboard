@@ -4,19 +4,28 @@ import { postTransaction, TransactionRequest } from "api";
 import { builders, TransactionResults, TransactionResultsDisplay, TransactionSelect } from "components";
 import { IconClearAll } from "@tabler/icons";
 import { AxiosError } from "axios";
+import useSessionDatesStore from "hooks/UseSessionStore";
 
 export default function Transaction() {
   const [responses, setResponses] = useState<TransactionResults[]>([])
   
-  const onSubmit = async (request: TransactionRequest) => {
+  const onSubmit = async (request: TransactionRequest) => {      
+    const responseStarted = {
+      request: request,
+      response: {},
+      transactionStart: new Date(),
+      transactionEnd: new Date(),
+    };
     try {
       const response = await postTransaction(request);
-  
-      setResponses([{
-        request,
-        response: response.data,
-        date: new Date()
-      }, ...responses]);
+      // Stuff in the response and timing data      
+      responseStarted.response = response.data;
+      responseStarted.transactionEnd = new Date();
+      // Populate the history queue
+      setResponses([
+        responseStarted
+       , ...responses]);
+
     } catch (e) {
       let message = `Client Error: ${e}`;
       if (e instanceof AxiosError) {
@@ -24,16 +33,32 @@ export default function Transaction() {
       } else {
         message = `Non-Axios Server Error: (${JSON.stringify(e,null,2)})`;
       }
-      setResponses([{
-        request,
-        response: message,
-        date: new Date()
-      }, ...responses])
+      // Stuff in the ERROR and timing data      
+      responseStarted.response = message;
+      responseStarted.transactionEnd = new Date();
+      // Populate the history queue with the ERROR
+      setResponses([
+        responseStarted, 
+        ...responses])
     }
   }
 
+  // const callStarts: 
+  // { arrayValue: Date[]; 
+  //   setArrayValue: React.Dispatch<React.SetStateAction<Date[]>>; 
+  //   addDate: () => Date; 
+  //   clearDates: () => void;
+  // } = useSessionDatesStore('transactionStartDates', []);
+
+  // const callEnds: 
+  // { arrayValue: Date[]; 
+  //   setArrayValue: React.Dispatch<React.SetStateAction<Date[]>>; 
+  //   addDate: () => Date; 
+  //   clearDates: () => void;
+  // } = useSessionDatesStore('transactionEndDates', []);
+
   return <>
-    <Title>Bloss@M Raw Transaction Editor</Title>
+    <Title>Transaction Editor (Raw)</Title>
     <Grid>
       <Grid.Col md={6}>
         <TransactionSelect
@@ -46,7 +71,11 @@ export default function Transaction() {
         <Button
           leftIcon={<IconClearAll size={16} />}
           disabled={responses.length === 0}
-          onClick={() => setResponses([])}
+          onClick={() => {
+            setResponses([])
+            callStarts.clearDates();
+            callEnds.clearDates();
+          }}
         >
           Clear Transactions
         </Button>

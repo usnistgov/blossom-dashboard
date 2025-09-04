@@ -103,8 +103,11 @@ export default function HeaderMegaMenu() {
                   { authenticated ? 
                     <>
                       <a href="#/transaction" className={classes.link}>
-                        Transaction Editor
+                        Transactions(Raw)
                       </a>
+                      <a href="#/assessment" className={classes.link}>
+                        Assessment(Raw)
+                      </a>                      
                       <a href="#/admin-board" className={classes.link}>
                         Admin Board
                       </a>

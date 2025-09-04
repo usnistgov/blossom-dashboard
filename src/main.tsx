@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { HashRouter, Outlet, Route, Routes } from "react-router-dom";
 import { AuthProvider,RequireAuth } from "api/auth";
 // import { AuthProvider } from "react-oidc-context";
-import { Landing, NotFound, Transaction, UserInfo, AdminBoard, AssessorsBoard, SAMBoard } from "pages";
+import { Landing, NotFound, Transaction, UserInfo, AdminBoard, AssessorsBoard, SAMBoard, Assessment } from "pages";
 import { Footer, Header } from "components";
 
 export const AUTH_URL = (import.meta.env.VITE_AUTH_URL ?? "") as string;
@@ -44,6 +44,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               {/* Put auth routes here */}
               <Route path="userinfo" element={<UserInfo />} />
               <Route path="transaction" element={<Transaction />} />
+              <Route path="assessment" element={<Assessment />} />
               <Route path="*" element={<NotFound />} />
               <Route path="admin-board" element={<AdminBoard />} />
               <Route path="assessors-board" element={<AssessorsBoard />} />

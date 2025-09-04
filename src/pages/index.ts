@@ -5,6 +5,7 @@ import Transaction from "./Transaction";
 import AdminBoard from "./AdminBoard";
 import AssessorsBoard from "./AssessorsBoard";
 import SAMBoard from "./SAMBoard";
+import Assessment from "./Assessment";
 
 
-export { Landing, NotFound, UserInfo, Transaction , AdminBoard, AssessorsBoard, SAMBoard};
+export { Landing, NotFound, UserInfo, Transaction, Assessment , AdminBoard, AssessorsBoard, SAMBoard};
