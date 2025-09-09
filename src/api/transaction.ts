@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { axiosAuthInstance } from "./auth";
 import { pinErrorMsg, pinLocationMsg } from "util/debugExtras";
+import { callbackify } from "util";
 
 export type TransactionRequest = {
   functionType: "query" | "invoke" // The original 2(Two) operations for Chaincode
@@ -19,10 +20,15 @@ export type TransactionResponse = Record<string, string>;
 export async function postTransaction(
   request: TransactionRequest
 ): Promise<AxiosResponse<TransactionResponse>> {
-  const liveSideBySide="https://pix35w1qac.execute-api.us-east-1.amazonaws.com/dev/kqy4o7/";
-  
-  console.log(`${import.meta.env.BASE_URL}/transaction`);
-  return axiosAuthInstance.post<TransactionResponse>(`${import.meta.env.BASE_URL}transaction`, request);
+  /// const liveSideBySide="https://pix35w1qac.execute-api.us-east-1.amazonaws.com/dev/kqy4o7/";
+  const callURL = `${import.meta.env.BASE_URL}transaction`;
+  console.log(`con-log: Will call URL: ${callURL}`);
+  pinErrorMsg(`pin-err-MSG: Reached the place to set URL: ${callURL}`);
+  console.log(`con-log: Will call ${callURL}\nwith request:\n${JSON.stringify(request, null, 2)}`);
+  pinLocationMsg(`pin-location-MSG: ${callURL}`);
+
+
+  return axiosAuthInstance.post<TransactionResponse>(callURL, request);
 
   // import.meta.env.PROXY_URL;
   // TODO: Should redo default mapping of the Lambda request URLs to allow for easier debugging
@@ -35,3 +41,13 @@ export async function postTransaction(
   //   return axiosAuthInstance.post<TransactionResponse>(`${import.meta.env.BASE_URL}transaction`, request);
   // }
 }
+
+
+/*
+Argument of type 
+'(response: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' 
+is not assignable to parameter of type
+'(value___: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+  Type 'AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+    Type 'undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.ts(2345)
+*/

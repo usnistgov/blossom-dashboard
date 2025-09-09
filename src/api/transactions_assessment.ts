@@ -24,11 +24,20 @@ export async function postAssessmentTransaction(
   request: AssessmentTransactionRequest
 ): Promise<AxiosResponse<AssessmentTransactionResponse>> {
   // TODO: Should RECONFIGURE default mapping of the Lambda request URLs to allow for easier debugging
-  console.log(`${import.meta.env.BASE_URL}/blossom-ec2-assessment`);
-  pinErrorMsg(`Reached the place to set URL: ${import.meta.env.BASE_URL}/blossom-ec2-assessment`);
-  pinLocationMsg(`${import.meta.env.BASE_URL}/blossom-ec2-assessment`);
+  // See if setting the expected structure members will resolve 401
+  request.functionType = "assess";
+  request.function = "aaEC2_GetUsers";
+  request.args = [];
+
+  const callURL = `${import.meta.env.BASE_URL}assessment`;
+  console.log(`con-log: Will call URL: ${callURL}`);
+  pinErrorMsg(`pin-err-MSG: Reached the place to set URL: ${callURL}`);
+  console.log(`con-log: Will call ${callURL}\nwith request:\n${JSON.stringify(request, null, 2)}`);
+  pinLocationMsg(`pin-location-MSG: ${callURL}`);
+  
+
 
   return axiosAuthInstance.post<AssessmentTransactionResponse>(
-    `${import.meta.env.BASE_URL}blossom-ec2-assessment`, 
+    callURL, 
     request);
 }

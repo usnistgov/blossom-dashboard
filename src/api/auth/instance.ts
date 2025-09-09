@@ -7,20 +7,23 @@ export const axiosAuthInstance = axios.create();
 
 export function createInterceptors(
   refresh: () => Promise<void>,
-  setError: (error: Error) => void,
-  logout: () => void
+  setError: (error: Error) => void, // Error function
+  logout: () => void                // Logout function
 ): [number, number] {
+  // Function to refresh AUTH token
   function refreshRetry(config: AxiosRequestConfig, error: Error) {
     if (!(config as Record<string, unknown>)["_retry"]) {
       (config as Record<string, unknown>)["_retry"] = true;
       return refresh().then(
         (_) => axiosAuthInstance(config),
         (error) => {
+          // Set error and auto-logout on error
           setError(error);
           logout();
         }
       );
     } else {
+      // Set error and auto-logout on error
       setError(error);
       logout();
     }
@@ -41,10 +44,12 @@ export function createInterceptors(
           JSON.parse(Buffer.from(response.data).toString()).data?.errors?.[0]
             ?.message === "Unauthenticated"
         ) {
-          return refreshRetry(
+          return (refreshRetry(
             response.config,
             new Error("refresh request failed?")
-          );
+          ) 
+          ?? 
+          Promise.reject(new Error("refresh request failed!")));
         }
         return response;
       },

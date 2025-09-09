@@ -72,9 +72,7 @@ export default function Transaction() {
           leftIcon={<IconClearAll size={16} />}
           disabled={responses.length === 0}
           onClick={() => {
-            setResponses([])
-            callStarts.clearDates();
-            callEnds.clearDates();
+            setResponses([]);
           }}
         >
           Clear Transactions

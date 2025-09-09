@@ -96,7 +96,6 @@ const TransactionSelect: React.FC<Params> = ({
               // callEnds.addDate();
               setLoading(false);
             });
-            callStarts.addDate();
           }
         }}
         mt="sm"
