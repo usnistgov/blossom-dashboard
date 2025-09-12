@@ -23,12 +23,12 @@ export default ({ mode }) => {
     base: process.env.BASE_URL ?? "/",
     server: {
       proxy: {
-        "/transaction": {
+        "/assessment": {
           target: process.env.PROXY_URL,
           // Fixes SSL error on some requests
           changeOrigin: true,
-        },
-        "/assessment": {
+        },      
+        "/transaction": {
           target: process.env.PROXY_URL,
           // Fixes SSL error on some requests
           changeOrigin: true,

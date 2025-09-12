@@ -43,11 +43,3 @@ export async function postTransaction(
 }
 
 
-/*
-Argument of type 
-'(response: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' 
-is not assignable to parameter of type
-'(value___: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
-  Type 'AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
-    Type 'undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.ts(2345)
-*/

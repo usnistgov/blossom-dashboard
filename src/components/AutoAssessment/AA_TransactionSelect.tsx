@@ -3,7 +3,6 @@ import { Alert, Button, Select } from "@mantine/core";
 import { IconAlertCircle, IconDatabase } from '@tabler/icons';
 import { AssessmentTransactionBuilder } from "./aa_builder";
 import { AssessmentTransactionRequest } from "api/transactions_assessment";
-import { Assessment } from "pages";
 
 type Params = {
   aa_transactionBuilders: Record<string, AssessmentTransactionBuilder>;

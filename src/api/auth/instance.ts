@@ -19,12 +19,14 @@ export function createInterceptors(
         (error) => {
           // Set error and auto-logout on error
           setError(error);
+          console.log("Logout at line 22 of 'src/api/auth/instance.ts'");
           logout();
         }
       );
     } else {
       // Set error and auto-logout on error
       setError(error);
+      console.log("Logout at line 29 of 'src/api/auth/instance.ts'");
       logout();
     }
   }
@@ -38,6 +40,16 @@ export function createInterceptors(
         return request;
     }),
     axiosAuthInstance.interceptors.response.use(
+      /* 
+      This is teh TypeScript error below formatted for better reading:
+
+      Argument of type 
+      '(response: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' 
+      is not assignable to parameter of type
+      '(value___: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+      Type 'AxiosResponse<any, any> | Promise<void | AxiosResponse<any, any>> | undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+      Type 'undefined' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.ts(2345)
+      */
       (response) => {
         if (
           response.config.url === "/rest/auth/graphql" &&

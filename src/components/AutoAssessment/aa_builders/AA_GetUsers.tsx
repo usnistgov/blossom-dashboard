@@ -18,8 +18,8 @@ const AA_GetUsers: AssessmentTransactionBuilder = ({ setAssessmentTransactionReq
         // args: [user],     
         setAssessmentTransactionRequest({
           type: "Assess",
-          key2:"",
-          key3:""
+          key2:"x",
+          key3:"y"
         });
       setAccountError(undefined);
     } else {
@@ -32,7 +32,7 @@ const AA_GetUsers: AssessmentTransactionBuilder = ({ setAssessmentTransactionReq
   return <>
     <BuilderInfo description="Get public (name, mspid, status) and private (ato, assets) info for an account"/>
     <TextInput
-      label="User Name"
+      label="User Name" value={"all"}
       onChange={(e) => setUser(e.target.value)}
       error={userError}
       withAsterisk
