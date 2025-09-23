@@ -27,3 +27,6 @@ dist-ssr
 .env.development
 
 z-backups/*
+
+BloSS@M/*
+Blossom/*

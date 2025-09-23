@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Title, Grid, Button } from "@mantine/core";
 import { postTransaction, TransactionRequest } from "api";
 import { builders, TransactionResults, TransactionResultsDisplay, TransactionSelect } from "components";
-import { IconClearAll } from "@tabler/icons";
+import { IconClearAll } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 import useSessionDatesStore from "hooks/UseSessionStore";
 
@@ -60,16 +60,16 @@ export default function Transaction() {
   return <>
     <Title>Transaction Editor (Raw)</Title>
     <Grid>
-      <Grid.Col md={6}>
+      <Grid.Col  span={{md:6}} >
         <TransactionSelect
           transactionBuilders={builders}
           onSubmit={onSubmit}
         />
       </Grid.Col>
-      <Grid.Col md={6}>
+      <Grid.Col  span={{md:6}} >
         <Title order={3} mb='xs'>Transaction Results</Title>
         <Button
-          leftIcon={<IconClearAll size={16} />}
+          leftSection={<IconClearAll size={16} />}
           disabled={responses.length === 0}
           onClick={() => {
             setResponses([]);

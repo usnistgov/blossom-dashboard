@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Select } from "@mantine/core";
-import { IconAlertCircle, IconDatabase } from "@tabler/icons";
+import { IconAlertCircle, IconDatabase } from "@tabler/icons-react";
 import { TransactionRequest } from "api";
 import { TransactionBuilder } from "./builder";
 import useSessionDatesStore from "hooks/UseSessionStore";
@@ -86,9 +86,9 @@ const TransactionSelect: React.FC<Params> = ({
 
       <Button
         disabled={transactionRequest === undefined}
-        leftIcon={<IconDatabase size={14} />}
+        leftSection={<IconDatabase size={14} />}
         loading={loading}
-        loaderPosition="right"
+        // loaderPosition="right"
         onClick={() => {
           if (transactionRequest) {
             setLoading(true);

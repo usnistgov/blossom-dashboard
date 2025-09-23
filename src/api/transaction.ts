@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { axiosAuthInstance } from "./auth";
 import { pinErrorMsg, pinLocationMsg } from "util/debugExtras";
-import { callbackify } from "util";
+// import { callbackify } from "util";
 
 export type TransactionRequest = {
   functionType: "query" | "invoke" // The original 2(Two) operations for Chaincode

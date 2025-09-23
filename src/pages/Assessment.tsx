@@ -5,7 +5,7 @@ import { aa_builders,
   AssessmentTransactionResults, 
   AssessmentTransactionResultsDisplay, 
   AssessmentTransactionSelect } from "components/AutoAssessment";
-import { IconClearAll } from "@tabler/icons";
+import { IconClearAll } from "@tabler/icons-react";
 import { AxiosError } from "axios";
 
 export default function Transaction() {
@@ -38,16 +38,16 @@ export default function Transaction() {
   return <>
     <Title>Assessment Editor (Raw)</Title>
     <Grid>
-      <Grid.Col md={6}>
+      <Grid.Col span={{md:6}}>
         <AssessmentTransactionSelect
           aa_transactionBuilders={aa_builders}
           onSubmit={onSubmit}
         />
       </Grid.Col>
-      <Grid.Col md={6}>
+      <Grid.Col  span={{md:6}}>
         <Title order={3} mb='xs'>Transaction Results</Title>
         <Button
-          leftIcon={<IconClearAll size={16} />}
+          leftSection={<IconClearAll size={16} />}
           disabled={responses.length === 0}
           onClick={() => setResponses([])}
         >

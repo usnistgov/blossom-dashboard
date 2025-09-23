@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Text } from "@mantine/core";
-import { IconAlertCircle, IconInfoCircle } from "@tabler/icons";
+import { IconAlertCircle, IconInfoCircle } from "@tabler/icons-react";
 
 type Params = {
   description: string;

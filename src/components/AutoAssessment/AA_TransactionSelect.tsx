@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Alert, Button, Select } from "@mantine/core";
-import { IconAlertCircle, IconDatabase } from '@tabler/icons';
+import { IconAlertCircle, IconDatabase } from '@tabler/icons-react';
 import { AssessmentTransactionBuilder } from "./aa_builder";
 import { AssessmentTransactionRequest } from "api/transactions_assessment";
 
@@ -73,9 +73,9 @@ const AssessmentTransactionSelect: React.FC<Params>
 
     <Button
       disabled={assessmentTransactionRequest === undefined}
-      leftIcon={<IconDatabase size={14} />}
+      leftSection={<IconDatabase size={14} />}
       loading={loading}
-      loaderPosition="right"
+      // loaderPosition="right"
       onClick={() => {
         if (assessmentTransactionRequest) {
           setLoading(true);
