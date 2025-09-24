@@ -7,7 +7,7 @@ import { IconKey, IconLogin } from '@tabler/icons-react';
 const LoginButton: React.FC = () => {
   return (
     <Button
-      leftIcon={<IconLogin size="1rem" color="green"/>}
+      leftSection={<IconLogin size="1rem" color="green"/>}
       variant="default"
       onClick={() => {
         console.log("Before window.location.href going to Cognito");
