@@ -45,7 +45,6 @@ interface FooterSimpleProps {
 export function FooterSimple({ links }: FooterSimpleProps) {
   // const { classes } = useStyles();
   const items = links.map((link) => (
-    <div>
       <Anchor
         style={{ color: "dimmed" }}
         key={link.label}
@@ -55,7 +54,6 @@ export function FooterSimple({ links }: FooterSimpleProps) {
       >
         {link.label}
       </Anchor>
-    </div>
   ));
   // Backup of inner style:
   // className={classes.inner}

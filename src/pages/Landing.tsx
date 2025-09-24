@@ -63,7 +63,7 @@ const Landing: React.FC = () => {
           {authenticated ? (
             <Button 
             variant="default"
-            leftIcon={<IconLogout size="1rem" color="red"/>}
+            leftSection={<IconLogout size="1rem" color="red"/>}
             onClick={logout}>Logout</Button>
           ) : (
             <LoginButton />
