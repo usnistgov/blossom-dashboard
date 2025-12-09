@@ -14,7 +14,14 @@ import {
   Assessment,
 } from "pages";
 import { Footer, Header } from "components";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider} from "@mantine/core";
+/// !!!!!! Do not remove the two lines  following this comment   !!!!!!
+/// !!!!!! the whole default styling of mantine breaks otherwise !!!!!!
+/// Sources:
+/// https://stackoverflow.com/questions/79098915/react-mantine-css-modules-do-not-load-properly
+/// https://mantine.dev/core/menu/
+import "@mantine/core/styles.css"
+import "@mantine/core/styles.layer.css"
 
 export const AUTH_URL = (import.meta.env.VITE_AUTH_URL ?? "") as string;
 export const IDP_AUTH_URL = import.meta.env.IDP_AUTH_URL as string;
