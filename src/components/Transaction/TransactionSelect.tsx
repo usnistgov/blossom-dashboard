@@ -66,7 +66,7 @@ const TransactionSelect: React.FC<Params> = ({
           setTransactionRequest(undefined);
           setSelectedKey(key);
         }}
-        mb="sm"
+        mt="sm"
       />
 
       {SelectedTransactionBuilder ? (
