@@ -16,7 +16,7 @@ import LoginButton from "./LoginButton";
 
 import { getUserInfo, useAuth } from "api";
 
-const useStyles = createStyles((theme, _, u) => ({
+const useStylesHeader = createStyles((theme, _, u) => ({
   link: {
     display: "flex",
     alignItems: "center",
@@ -95,6 +95,25 @@ const useStyles = createStyles((theme, _, u) => ({
     borderTop: `1px solid` ,
     // ${theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]}`,
   },
+
+  headerTitle: {
+
+  },
+
+  ":hover": {
+     cursor: "pointer", 
+     background: "darker",
+    },
+  // CSS Hookup Mantine 8 style
+  menuText:{
+     verticalAlign:"center",
+     height: "100%",
+     marginTop: "16px",
+     marginLeft: "18px",
+     marginRight: "10px",
+     fontSize: "16px",
+     // text
+  },
 }));
 
 export default function HeaderMegaMenu() {
@@ -126,13 +145,15 @@ export default function HeaderMegaMenu() {
     //
     // Backup className={classes.link}
   }, [authenticated]);
-
+  const { classes } = useStylesHeader();
   return (
+ 
     <Box pb="sm">
       <AppShell header={{ height: 60 }}>
         <AppShell.Header px="md">
           <Group justify="space-between" style={{ height: "100%" }}>
-            <Title
+            <Title 
+              className={classes.headerTitle}
               style={{ ":hover": { cursor: "pointer" } }}
               onClick={() => {
                 window.location.replace("#");
@@ -142,7 +163,7 @@ export default function HeaderMegaMenu() {
             </Title>
 
             <Group style={{ height: "100%" }} gap={0}>
-              <a
+              <a  className={classes.menuText} 
                 href="https://pages.nist.gov/blossom/"
                 
               >
@@ -150,19 +171,19 @@ export default function HeaderMegaMenu() {
               </a>
               {authenticated ? (
                 <>
-                  <a href="#/transaction" >
+                  <a className={classes.menuText} href="#/transaction" >
                     Transactions(Raw)
                   </a>
-                  <a href="#/assessment" >
+                  <a  className={classes.menuText} href="#/assessment" >
                     Assessment(Raw)
                   </a>
-                  <a href="#/admin-board" >
+                  <a className={classes.menuText}  href="#/admin-board" >
                     Admin Board
                   </a>
-                  <a href="#/assessors-board" >
+                  <a className={classes.menuText}  href="#/assessors-board" >
                     Assessors Board
                   </a>
-                  <a href="#/sam-board" >
+                  <a className={classes.menuText}  href="#/sam-board" >
                     SAM Board                   
                   </a>                    
 

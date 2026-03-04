@@ -1,1 +1,1 @@
-cp ../Blossom-Backup-Profiles/.env.development /Users/dac4/github/blossom-dashboard/.env.development
+cp ../Blossom-Backup-Profiles/.env.development .env.development
