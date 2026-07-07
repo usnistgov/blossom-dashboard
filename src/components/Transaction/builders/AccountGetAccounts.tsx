@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { TransactionBuilder } from "../builder";
 import BuilderInfo from "./BuilderInfo";
 
-const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
+// account:GetAccounts 
+// without any parameters
+const AccountGetAccounts: TransactionBuilder = ({ setTransactionRequest }) => {
   useEffect(() => setTransactionRequest({
     functionType: 'invoke',
     function: 'account:GetAccounts',
@@ -13,4 +15,4 @@ const GetAccount: TransactionBuilder = ({ setTransactionRequest }) => {
   return <BuilderInfo description="Get public (name, mspid, status) info for all accounts"/>
 }
 
-export default GetAccount;
+export default AccountGetAccounts;

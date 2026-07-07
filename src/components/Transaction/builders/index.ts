@@ -1,7 +1,8 @@
 import { TransactionBuilder } from "../builder";
 
-import GetAccount from "./GetAccount";
-import GetAccounts from "./GetAccounts";
+import accountGetAccount from "./AccountGetAccount";
+import accountGetAccounts from "./AccountGetAccounts";
+
 import GetAsset from "./GetAsset";
 import GetAssets from "./GetAssets";
 import RequestCheckout from "./RequestCheckout";
@@ -17,11 +18,12 @@ import ApproveAccount from "./ApproveAccount";
 import OnboardAsset from "./OnboardAsset";
 import OffboardAsset from "./OffboardAsset";
 import UploadAto from "./UploadAto";
+// import aaEC2_GetUsers from "../../AutoAssessment/aa_builders/AA_GetUsers";
 
 // In case you would like to use a builder individually
 export {
-  GetAccounts,
-  GetAccount,
+  accountGetAccounts,
+  accountGetAccount,
   GetAssets,
   GetAsset,
   RequestCheckout,
@@ -43,10 +45,13 @@ export {
  * A pre-assembled list of transaction builders
  */
 const builders: Record<string, TransactionBuilder> = {
-  GetAccount,
-  GetAccounts,
-  GetAsset,
+  accountGetAccount,
+  accountGetAccounts,
+
+  // The Trans-Methods below still
+  // need to be scope prefixed
   GetAssets,
+  GetAsset,
   RequestCheckout,
   ApproveCheckout,
   GetLicenses,

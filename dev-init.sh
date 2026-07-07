@@ -1,0 +1,1 @@
+cp ../Blossom-Backup-Profiles/.env.development .env.development

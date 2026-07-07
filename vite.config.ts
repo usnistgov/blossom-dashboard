@@ -16,13 +16,18 @@ export default ({ mode }) => {
       __APP_BUILD_DATE_TIME__: JSON.stringify(new Date().toISOString()),
       __APP_BUILD_DATE__: JSON.stringify( (new Date().toISOString()).substring(0,10)),
       __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString().substring(10)),
-      __APP_VERSION__: JSON.stringify('v1.0.11'),
-      __APP_APPLICATION_NAME__: JSON.stringify('Bl⛓SS🌻M'),
+      __APP_VERSION__: JSON.stringify('v1.0.18.09.2025'),
+      __APP_APPLICATION_NAME__: JSON.stringify('BloSS🌻M'), //Bl⛓SS🌻M Bl🔗SS🌻M
     },
     plugins: [react(), eslint(), tsconfigPaths()],
     base: process.env.BASE_URL ?? "/",
     server: {
       proxy: {
+        "/assessment": {
+          target: process.env.PROXY_URL,
+          // Fixes SSL error on some requests
+          changeOrigin: true,
+        },      
         "/transaction": {
           target: process.env.PROXY_URL,
           // Fixes SSL error on some requests
