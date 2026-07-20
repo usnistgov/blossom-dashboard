@@ -24,7 +24,7 @@
     "@tabler/icons": "^3.35.0",
     "@tabler/icons-react": "^3.35.0",
     "aws-amplify": "^6.15.6",
-    "axios": "^1.12.2",
+    "axios": "^1.18.0",
     "buffer": "^6.0.3",
     "dayjs": "^1.11.18",
     "embla-carousel-react": "^8.6.0",
