@@ -100,7 +100,7 @@ export function FooterSimple({ links }: FooterSimpleProps) {
       <Container className={classes.inner}>
         {/* <Image src={`${import.meta.env.BASE_URL}nist.png`} height={105} fit="contain" /> */}
         <Image
-          src="https://www.nist.gov/sites/default/files/styles/960_x_960_limit/public/images/2022/06/07/f_nist-logo-brand-black.png?itok=gDfvkqHO"
+          src="https://www.nist.gov/libraries/nist-component-library/dist/img/logo/NIST-Logo-Brand-White.svg"
           height={105}
           fit="contain"
           className={classes.versionTextChunk}
