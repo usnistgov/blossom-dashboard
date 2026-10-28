@@ -52,7 +52,8 @@ const useStylesFooter = createStyles((theme, _, u) => ({
   },
 
   versionTextChunk:{
-
+    filter: "brightness(0)",
+    opacity: 0.8,
   },
 
   root: {
