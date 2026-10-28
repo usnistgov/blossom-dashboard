@@ -58,26 +58,28 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               }}
             >
               <Header />
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route
-                  path="/"
-                  element={
-                    <RequireAuth>
-                      <Outlet />
-                    </RequireAuth>
-                  }
-                >
-                  {/* Put auth routes here */}
-                  <Route path="userinfo" element={<UserInfo />} />
-                  <Route path="transaction" element={<Transaction />} />
-                  <Route path="assessment" element={<Assessment />} />
-                  <Route path="*" element={<NotFound />} />
-                  <Route path="admin-board" element={<AdminBoard />} />
-                  <Route path="assessors-board" element={<AssessorsBoard />} />
-                  <Route path="sam-board" element={<SAMBoard />} />
-                </Route>
-              </Routes>
+              <main style={{ flex: 1, paddingTop: 50 }}>
+                <Routes>
+                  <Route path="/" element={<Landing />} />
+                  <Route
+                    path="/"
+                    element={
+                      <RequireAuth>
+                        <Outlet />
+                      </RequireAuth>
+                    }
+                  >
+                    {/* Put auth routes here */}
+                    <Route path="userinfo" element={<UserInfo />} />
+                    <Route path="transaction" element={<Transaction />} />
+                    <Route path="assessment" element={<Assessment />} />
+                    <Route path="*" element={<NotFound />} />
+                    <Route path="admin-board" element={<AdminBoard />} />
+                    <Route path="assessors-board" element={<AssessorsBoard />} />
+                    <Route path="sam-board" element={<SAMBoard />} />
+                  </Route>
+                </Routes>
+              </main>
               <Footer links={[{ link: "", label: "" }]} />
             </div>
           </AuthProvider>
