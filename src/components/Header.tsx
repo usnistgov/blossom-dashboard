@@ -12,6 +12,7 @@ import { createStyles } from "@mantine/emotion";
 import { IconChevronDown, IconLogout, IconSettings } from "@tabler/icons-react";
 import React from "react";
 import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 import LoginButton from "./LoginButton";
 
 import { getUserInfo, useAuth } from "api";
@@ -123,6 +124,8 @@ export default function HeaderMegaMenu() {
   // const { classes } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const { authenticated, logout } = useAuth();
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
 
   const [userName, setUserName] = useState("");
 
@@ -240,8 +243,10 @@ export default function HeaderMegaMenu() {
                     </Menu>
                   </Group>
                 </Container>
-              ) : (
+              ) : !isLanding ? (
                 <LoginButton />
+              ) : (
+                <></>
               )}
             </Group>
           </Group>
