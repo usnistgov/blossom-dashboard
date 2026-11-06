@@ -155,17 +155,19 @@ export default function HeaderMegaMenu() {
       <AppShell header={{ height: 60 }}>
         <AppShell.Header px="md">
           <Group justify="space-between" style={{ height: "100%" }}>
-            <Title 
-              className={classes.headerTitle}
-              style={{ ":hover": { cursor: "pointer" } }}
-              onClick={() => {
-                window.location.replace("#");
-              }}
-            >
-              {__APP_APPLICATION_NAME__}
-            </Title>
+            <Box style={{ flex: 1, display: "flex" }}>
+              <Title
+                className={classes.headerTitle}
+                style={{ ":hover": { cursor: "pointer" } }}
+                onClick={() => {
+                  window.location.replace("#");
+                }}
+              >
+                {__APP_APPLICATION_NAME__}
+              </Title>
+            </Box>
 
-            <Group style={{ height: "100%" }} gap={0}>
+            <Group style={{ height: "100%", justifyContent: "center" }} gap={0}>
               <a  className={classes.menuText} 
                 href="https://pages.nist.gov/blossom/"
                 
@@ -196,10 +198,10 @@ export default function HeaderMegaMenu() {
               )}
             </Group>
 
-            <Group>
+            <Box style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
               {authenticated ? (
-                <Container>
-                  <Group justify="space-between">
+                <Container style={{ margin: 0, padding: 0 }}>
+                  <Group justify="flex-end">
                     <Menu
                       width={260}
                       position="bottom-end"
@@ -248,7 +250,7 @@ export default function HeaderMegaMenu() {
               ) : (
                 <></>
               )}
-            </Group>
+            </Box>
           </Group>
         </AppShell.Header>
       </AppShell>

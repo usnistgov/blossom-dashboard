@@ -8,11 +8,11 @@ const useStylesFooter = createStyles((theme, _, u) => ({
     // ${theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]}`,
   },
   inner: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: theme.spacing.xl,
-    paddingBottom: theme.spacing.xl,
+    display: "grid",
+    gridTemplateColumns: "1fr auto 1fr",
+    alignItems: "end",
+    paddingTop: 4,
+    paddingBottom: 4,
 
     // [theme.fn.smallerThan("xs")]: {
     //   flexDirection: "column",
@@ -29,12 +29,13 @@ const useStylesFooter = createStyles((theme, _, u) => ({
     display: "grid",
     marginLeft: theme.spacing.xs,
     paddingLeft: theme.spacing.xs,
-    alignItems: "center",
+    alignItems: "flex-end",
+    textAlign: "right",
     // "-webkit-transform": "rotate(90deg)",
     // "-moz-transform": "rotate(90deg)",
     // "-o-transform": "rotate(90deg)",
     // "-ms-transform": "rotate(90deg)",
-    transform: "rotate(90deg)",
+    // transform: "rotate(90deg)",
     // size: "xs",
   },
 
@@ -98,29 +99,29 @@ export function FooterSimple({ links }: FooterSimpleProps) {
 
   return (
     <div >
-      <Container className={classes.inner}>
-        {/* <Image src={`${import.meta.env.BASE_URL}nist.png`} height={105} fit="contain" /> */}
+      <Container fluid className={classes.inner}>
+        <div />
         <Image
           src="https://www.nist.gov/libraries/nist-component-library/dist/img/logo/NIST-Logo-Brand-White.svg"
-          height={105}
+          height={50}
           fit="contain"
           className={classes.versionTextChunk}
         />
-        <Group >{items}</Group>
-   
-        <div className={classes.rotated}>
-          <Text className={classes.logoTextChunk}>
-            {__APP_APPLICATION_NAME__}
-          </Text>
-          <Text className={classes.infoTextChunk}>
-            {__APP_VERSION__} Built
-          </Text>
-          <Text className={classes.infoTextChunk}>
-            {__APP_BUILD_DATE__}
-          </Text>
-          <Text className={classes.infoTextChunk}>
-            {__APP_BUILD_TIME__}
-          </Text>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div className={classes.rotated}>
+            <Text className={classes.logoTextChunk}>
+              {__APP_APPLICATION_NAME__}
+            </Text>
+            <Text className={classes.infoTextChunk}>
+              {__APP_VERSION__} Built
+            </Text>
+            <Text className={classes.infoTextChunk}>
+              {__APP_BUILD_DATE__}
+            </Text>
+            <Text className={classes.infoTextChunk}>
+              {__APP_BUILD_TIME__}
+            </Text>
+          </div>
         </div>
    </Container>
     </div>

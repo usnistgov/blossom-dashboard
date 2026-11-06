@@ -3,7 +3,7 @@ import { LoginButton } from "components";
 import { Button } from "@mantine/core";
 import { useAuth } from "api/auth";
 import useParams from "util/useParams";
-import { Container, Title, Text, Center } from "@mantine/core";
+import { Container, Title, Text, Center, Box } from "@mantine/core";
 import { IconLogout } from '@tabler/icons-react';
 
 const Landing: React.FC = () => {
@@ -47,30 +47,49 @@ const Landing: React.FC = () => {
   }
 
   return (
-    <>
-      <Center sx={{ height: "auto", flexGrow: 1 }}>
-        <Container
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
+    <Center
+      style={{
+        flex: 1,
+        backgroundImage: `url(${import.meta.env.BASE_URL}blockchain_banner.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        marginTop: -50,
+        paddingTop: 50,
+      }}
+    >
+        <Box
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.55)",
+            borderRadius: 8,
+            padding: 24,
           }}
         >
-          <Title>{__APP_APPLICATION_NAME__}</Title>
-          <Text size="xs" color="dimmed">{__APP_VERSION__}</Text>
-          <Text size="lg" color="dimmed">Service Dashboard</Text>
+          <Container
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            {/* <Title>{__APP_APPLICATION_NAME__}</Title> */}
+            <Text size="lg" color="white" ta="center">{__APP_VERSION__}</Text>
+            <Text size="xl" color="white" ta="center">Service Dashboard</Text>
 
-          {authenticated ? (
-            <Button 
-            variant="default"
-            leftSection={<IconLogout size="1rem" color="red"/>}
-            onClick={logout}>Logout</Button>
-          ) : (
-            <LoginButton />
-          )}
-        </Container>
+            {authenticated ? (
+              <Button
+                variant="default"
+                leftSection={<IconLogout size="1rem" color="red" />}
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            ) : (
+              <LoginButton />
+            )}
+          </Container>
+        </Box>
       </Center>
-    </>
   );
 };
 

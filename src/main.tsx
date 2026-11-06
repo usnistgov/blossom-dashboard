@@ -58,7 +58,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               }}
             >
               <Header />
-              <main style={{ flex: 1, paddingTop: 50 }}>
+              <main
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingTop: 50,
+                }}
+              >
                 <Routes>
                   <Route path="/" element={<Landing />} />
                   <Route
