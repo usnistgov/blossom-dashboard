@@ -12,7 +12,7 @@ help: ## Show this help message
 
 .PHONY: serve
 serve: node_modules .env.development ## Serve the development dashboard
-	npx vite
+	npx vite --port=4000
 
 .PHONY: build
 build: node_modules .env.prod ## Build the production dashboard
