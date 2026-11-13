@@ -24,7 +24,7 @@ export default ({ mode }) => {
     base: process.env.BASE_URL ?? "/",
     server: {
       proxy: {
-        "/assessment": {
+        "/blossom-ec2-assessment": {
           target: process.env.PROXY_URL,
           // Fixes SSL error on some requests
           changeOrigin: true,

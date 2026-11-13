@@ -25,9 +25,9 @@ export async function postAssessmentTransaction(
 ): Promise<AxiosResponse<AssessmentTransactionResponse>> {
   // TODO: Should RECONFIGURE default mapping of the Lambda request URLs to allow for easier debugging
   // See if setting the expected structure members will resolve 401
-  request.functionType = "assess";
-  request.function = "aaEC2_GetUsers";
-  request.args = [];
+  // request.functionType = "assess";
+  // request.function = "aaEC2_GetUsers";
+  // request.args = [];
 
   const callURL = `${import.meta.env.BASE_URL}assessment`;
   console.log(`con-log: Will call URL: ${callURL}`);
